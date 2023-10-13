@@ -36,7 +36,31 @@ const routes = [
     name:'student_person',
     component:()=>import('../views/home/home_person.vue')
   },
-
+  {
+    path:'/teacher_index',
+    name:'teacher_index',
+    component:()=>import('../views/teacher/teacher_index.vue')
+  },
+  {
+    path:'/teacher_tasks',
+    name:'teacher_tasks',
+    component:()=>import('../views/teacher/teacher_tasks.vue')
+  },
+  {
+    path:'/teacher_book',
+    name:'teacher_book',
+    component:()=>import('../views/teacher/teacher_book.vue')
+  },
+  {
+    path:'/teacher_taskdetails',
+    name:'teacher_taskdetails',
+    component:()=>import('../views/teacher/teacher_taskdetails.vue')
+  },
+  {
+    path:'/teacher_changetask',
+    name:'teacher_changetask',
+    component:()=>import('../views/teacher/teacher_changetask.vue')
+  }
   // {
   //   path: '/login',
   //   name: 'login',

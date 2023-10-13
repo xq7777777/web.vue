@@ -88,7 +88,7 @@
           else if(loginForm.identity==="T")
           {
             router.push({
-              name:"teacher_home",
+              name:"teacher_index",
               params:{
                 
               }

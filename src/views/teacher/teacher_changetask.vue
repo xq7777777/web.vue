@@ -12,70 +12,53 @@
           width="200px"
           height="913px"
         > 
-        <h3>学生端</h3>
-          <el-menu-item index="3" >
-            <el-icon><document /></el-icon>
+        <h3>老师端</h3>
+
+        <el-sub-menu index="1">
+          <template #title>
             <span @click = clicktask>作业情况</span>
-          </el-menu-item>
-          <el-menu-item index="4" >
-            <el-icon><document />阅读情况</el-icon>
-            <span @click = clickread></span>
-          </el-menu-item>
+          </template>
+            <el-menu-item index="1-1">班级7</el-menu-item>
+            <el-menu-item index="1-2">班级8</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="2">
+          <template #title>
+            <span @click = clickread>阅读情况</span>
+          </template>
+            <el-menu-item index="2-1">班级7</el-menu-item>
+            <el-menu-item index="2-2">班级8</el-menu-item>
+        </el-sub-menu>
           <el-menu-item index="6">
             <el-icon><setting /></el-icon>
             <span @click = clickteacherperson>个人中心</span>
           </el-menu-item>
         </el-menu>
       </el-col>
-  
+
         </el-aside >
         <el-container>
-          <el-header></el-header>
+          <el-header>
+            <el-button type="info" @click="goback">返回</el-button>
+          </el-header>
           <el-main>
+            <el-descriptions
+                title="Vertical list with border"
+                direction="vertical"
+                :column="4"
+                :size="size"
+                border
+            >
+            <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
+            <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
+            <el-descriptions-item label="Place" :span="2">Suzhou</el-descriptions-item>
+            <el-descriptions-item label="Remarks">
+            <el-tag size="small">School</el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="Address"
+            >No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
+            </el-descriptions-item>
+        </el-descriptions>
 
-            <div class="user-profile">
-
-<el-card class="box-card">
-  <div slot="header" class="clearfix">
-    <span>个人信息</span>
-  </div>
-
-  <div class="user-info">
-    <div class="info" font-size="32px">
-        <span>姓名:{{users.username}}</span>
-        <br><br><br>
-        <span>学号:{{users.userID}}</span>
-        <br><br><br>
-        <span>班级:{{users.className}}</span>
-        <br><br><br>
-        <span>手机号:{{}}</span>
-        <br><br><br>
-        <el-button @click=" showModal = true ">修改密码</el-button>
-    </div>
-  </div>
-
-</el-card>
-<teleport to="body">
-        <el-dialog v-if="showModal" :model-value="showModal" title="修改密码"
-        font-size="32px">
-        <el-form v-model="passwordForm" label-width="80px">
-    <el-form-item label="旧密码">
-      <el-input v-model="passwordForm.oldPass"></el-input>
-    </el-form-item>
-    <el-form-item label="新密码">
-      <el-input v-model="passwordForm.newPass"></el-input>
-    </el-form-item>
-    <el-form-item label="确认密码">
-      <el-input v-model="passwordForm.confirmPass"></el-input>
-    </el-form-item>
-    <el-button type="primary" @click="change">确定修改</el-button>
-  </el-form>
-  <el-button @click="showModal = false">关闭</el-button>
-      </el-dialog>
-</teleport>
-
-
-</div>
           </el-main>
         </el-container>
       </el-container>
@@ -88,6 +71,14 @@
       ref
     
     } from "vue";
+    import {
+  Check,
+  Delete,
+  Edit,
+  Message,
+  Search,
+  Star,
+} from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
     import { computed } from 'vue'
     import { useStore } from 'vuex'
@@ -113,14 +104,21 @@
         const clickteacherperson=()=>{
 
         }
-      
+
+        const goback =()=>{
+          router.back() 
+        }
+
+        
+    
         return {
-          users,
+    
           clicktask,
           clickread,
           clickteacherperson,
-          passwordForm,
-          showModal,
+          goback,
+        
+      
         };
       },
     })
@@ -224,6 +222,7 @@
   color: #666;
   padding: 5px 0;
 }
+
 
 .user-info .info i {
   font-size: 18px;
