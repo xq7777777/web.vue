@@ -163,15 +163,16 @@
           handledelete,
           settasks,
           tableData,
+         
         };
       },
       methods: {
         handleClick(row) {
-         console.log(row)
+          console.log(row)
          this.$router.push({
           path:'/teacher_taskdetails',
           query:{
-            task:row
+            task: JSON.stringify(row) 
           }
           
           

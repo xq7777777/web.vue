@@ -48,14 +48,14 @@
               
                 border
             >
-            <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
-            <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
-            <el-descriptions-item label="Place" :span="2">Suzhou</el-descriptions-item>
-            <el-descriptions-item label="Remarks">
-            <el-tag size="small">School</el-tag>
+            <el-descriptions-item label="作业标题">{{ date }}</el-descriptions-item>
+            <el-descriptions-item label="阅读书目">{{ name }}</el-descriptions-item>
+            <el-descriptions-item label="布置时间" :span="2">{{ state }}</el-descriptions-item>
+            <el-descriptions-item label="截止时间">
+            <el-tag size="small">{{ city }}</el-tag>
             </el-descriptions-item>
-            <el-descriptions-item label="Address"
-            >No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
+            <el-descriptions-item label="完成情况"
+            >{{ address }}
             </el-descriptions-item>
         </el-descriptions>
 
@@ -79,15 +79,19 @@
   Search,
   Star,
 } from '@element-plus/icons-vue';
-    import { useRouter } from "vue-router";
+    import { useRoute } from "vue-router"; 
+    import { useRouter } from "vue-router"
     import { computed } from 'vue'
     import { useStore } from 'vuex'
+   
   
   
     export default defineComponent({
       setup() {
+        const route = useRoute()
         const router = useRouter()
-        
+		    const {date,name,state,city,address} = JSON.parse(route.query.task)
+       
         const store = useStore();
         const users = computed(() => store.state.users)
         
@@ -117,7 +121,11 @@
           clickread,
           clickteacherperson,
           goback,
-        
+          date,
+          name,
+          state,
+          city,
+          address,
       
         };
       },

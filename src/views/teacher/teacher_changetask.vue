@@ -80,6 +80,7 @@
   Star,
 } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
+    import { useRoute } from "vue-router"
     import { computed } from 'vue'
     import { useStore } from 'vuex'
   
@@ -87,6 +88,7 @@
     export default defineComponent({
       setup() {
         const store = useStore();
+        const route = useRoute()
         const users = computed(() => store.state.users)
         const router = useRouter()
         const showModal = ref(false)
@@ -95,7 +97,7 @@
             name:""
           })
         };
-  
+        const {date,name,state,city,address} = JSON.parse(route.query.task)
         const clickread =()=>{
           router.push({
             name:"student_person"
