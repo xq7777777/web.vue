@@ -102,8 +102,6 @@
        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
-      
-       console.log(className.value)
         const clicktask =()=>{
           router.push({
             name:""

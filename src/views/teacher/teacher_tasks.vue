@@ -14,19 +14,18 @@
         > 
         <h3>老师端</h3>
 
-        <el-sub-menu index="1">
+        <el-sub-menu  index="0">
           <template #title>
             <span @click = clicktask>作业情况</span>
           </template>
-            <el-menu-item index="1-1">班级7</el-menu-item>
-            <el-menu-item index="1-2">班级8</el-menu-item>
+          <el-menu-item v-for="cls in classname">{{ cls }}</el-menu-item>
+            
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
             <span @click = clickread>阅读情况</span>
           </template>
-            <el-menu-item index="2-1">班级7</el-menu-item>
-            <el-menu-item index="2-2">班级8</el-menu-item>
+          <el-menu-item v-for="cls in classname">{{ cls }}</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="6">
             <el-icon><setting /></el-icon>
@@ -102,6 +101,7 @@
       setup() {
         const store = useStore();
         const users = computed(() => store.state.users)
+        const classname = ref(users.value.className)
         const router = useRouter()
         const showModal = ref(false)
         const clicktask =()=>{
@@ -147,7 +147,7 @@
           set,
           taskForm,
           goback,
-        
+          classname,
         };
       },
     })
