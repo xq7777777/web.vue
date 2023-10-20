@@ -42,7 +42,7 @@
           </el-header>
           <el-main>
             <el-descriptions
-                title="Vertical list with border"
+                title="作业详情"
                 direction="vertical"
                 :column="4"
               
