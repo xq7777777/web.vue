@@ -40,24 +40,52 @@
           <el-header>
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
+          
           <el-main>
-            <el-descriptions
-                title="Vertical list with border"
-                direction="vertical"
-                :column="4"
-                :size="size"
-                border
-            >
-            <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
-            <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
-            <el-descriptions-item label="Place" :span="2">Suzhou</el-descriptions-item>
-            <el-descriptions-item label="Remarks">
-            <el-tag size="small">School</el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="Address"
-            >No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
-            </el-descriptions-item>
-        </el-descriptions>
+            <el-form :model="form" label-width="120px">
+            <el-form-item label="作业标题">
+              <el-input v-model="form.task_title" />
+            </el-form-item>
+            <el-form-item label="阅读书目">
+              <el-input v-model="form.task_book" />
+            </el-form-item>
+            <el-form-item label="布置时间">
+              <el-col :span="11">
+                <el-date-picker
+                  v-model="form.startedAt"
+                  type="date"
+                  placeholder="Pick a date"
+                  style="width: 100%"
+                />
+              </el-col>
+              <el-col :span="2" class="text-center">
+                <span class="text-gray-500">-</span>
+              </el-col>
+            </el-form-item>
+            <el-form-item label="截止时间">
+              <el-col :span="11">
+                <el-date-picker
+                  v-model="form.endedAt"
+                  type="date"
+                  placeholder="Pick a date"
+                  style="width: 100%"
+                />
+              </el-col>
+            </el-form-item>
+            <el-form-item label="布置班级">
+              <el-input v-model="form.className" />
+            </el-form-item>
+            <el-form-item label="作业详情">
+              <el-input v-model="form.address" type="textarea" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit">确认修改</el-button>
+             
+            </el-form-item>
+          </el-form>
+           
+            
+
 
           </el-main>
         </el-container>
@@ -68,7 +96,8 @@
     import {
       defineComponent,
       onMounted,
-      ref
+      ref,
+      reactive
     
     } from "vue";
     import {
@@ -91,13 +120,22 @@
         const route = useRoute()
         const users = computed(() => store.state.users)
         const router = useRouter()
-        const showModal = ref(false)
+        const showModal = ref(false) 
+        const {className,endedAt,startedAt,task_book,task_title,address} = JSON.parse(route.query.task)
+        const form = reactive({
+          className,
+          endedAt,
+          startedAt,
+          task_book,
+          task_title,
+          address,
+        })
         const clicktask =()=>{
           router.push({
             name:""
           })
         };
-        const {date,name,state,city,address} = JSON.parse(route.query.task)
+       
         const clickread =()=>{
           router.push({
             name:"student_person"
@@ -111,7 +149,12 @@
           router.back() 
         }
 
-        
+        const onSubmit = () => {
+          console.log(form)
+          router.push({
+            name:'teacher_index'
+          })
+        }
     
         return {
     
@@ -119,7 +162,14 @@
           clickread,
           clickteacherperson,
           goback,
-        
+          className,
+          endedAt,
+          startedAt,
+          task_book,
+          task_title,
+          address,
+          onSubmit,
+          form
       
         };
       },

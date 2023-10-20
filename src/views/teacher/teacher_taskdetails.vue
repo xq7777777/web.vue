@@ -48,12 +48,13 @@
               
                 border
             >
-            <el-descriptions-item label="作业标题">{{ date }}</el-descriptions-item>
-            <el-descriptions-item label="阅读书目">{{ name }}</el-descriptions-item>
-            <el-descriptions-item label="布置时间" :span="2">{{ state }}</el-descriptions-item>
+            <el-descriptions-item label="作业标题">{{ task_title }}</el-descriptions-item>
+            <el-descriptions-item label="阅读书目">{{ task_book }}</el-descriptions-item>
+            <el-descriptions-item label="布置时间" :span="2">{{ startedAt }}</el-descriptions-item>
             <el-descriptions-item label="截止时间">
-            <el-tag size="small">{{ city }}</el-tag>
+            <el-tag size="small">{{ endedAt }}</el-tag>
             </el-descriptions-item>
+            <el-descriptions-item label="布置班级">{{ className }}</el-descriptions-item>
             <el-descriptions-item label="完成情况"
             >{{ address }}
             </el-descriptions-item>
@@ -90,7 +91,7 @@
       setup() {
         const route = useRoute()
         const router = useRouter()
-		    const {date,name,state,city,address} = JSON.parse(route.query.task)
+		    const {className,endedAt,startedAt,task_book,task_title,address} = JSON.parse(route.query.task)
        
         const store = useStore();
         const users = computed(() => store.state.users)
@@ -121,10 +122,11 @@
           clickread,
           clickteacherperson,
           goback,
-          date,
-          name,
-          state,
-          city,
+          className,
+          endedAt,
+          startedAt,
+          task_book,
+          task_title,
           address,
       
         };

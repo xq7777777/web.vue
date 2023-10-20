@@ -1,4 +1,48 @@
 <template>
+
+  <div class="common-layout">
+      <el-container>
+        <el-aside width="200px" >
+        <el-col :span="12" width="200px" height="913px">
+        <el-menu
+          active-text-color="#ffd04b"
+          background-color="#545c64"
+          class="el-menu-vertical-demo"
+          default-active="2"
+          text-color="#fff"
+          width="200px"
+          height="913px"
+        > 
+        <h3>老师端</h3>
+
+        <el-sub-menu index="1">
+          <template #title>
+            <span @click = clicktask>作业情况</span>
+          </template>
+            <el-menu-item index="1-1">班级7</el-menu-item>
+            <el-menu-item index="1-2">班级8</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="2">
+          <template #title>
+            <span @click = clickread>阅读情况</span>
+          </template>
+            <el-menu-item index="2-1">班级7</el-menu-item>
+            <el-menu-item index="2-2">班级8</el-menu-item>
+        </el-sub-menu>
+          <el-menu-item index="6">
+            <el-icon><setting /></el-icon>
+            <span @click = clickteacherperson>个人中心</span>
+          </el-menu-item>
+        </el-menu>
+      </el-col>
+
+        </el-aside >
+        <el-container>
+          <el-header>
+            
+          </el-header>
+          
+          <el-main>
     <div class="user-header">
       <el-button type="primary" @click="handleAdd">+图书借阅</el-button>
       <el-form :inline="true" :model="formInline">
@@ -11,7 +55,7 @@
       </el-form>
     </div>
     <div class="table">
-      <el-table :data="list" style="width: 100%" height="500px">
+      <el-table :data="tableData" style="width: 100%" height="500px">
         <el-table-column
           v-for="item in tableLabel"
           :key="item.prop"
@@ -19,16 +63,6 @@
           :prop="item.prop"
           :width="item.width ? item.width : 125"
         />
-        <el-table-column fixed="right" label="操作" min-width="180">
-          <template #default="scope">
-            <el-button size="small" @click="handleEdit(scope.row)"
-              >编辑</el-button
-            >
-            <el-button type="danger" size="small" @click="handleDelete(scope.row)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
       </el-table>
       <el-pagination
         small
@@ -120,7 +154,11 @@
         </span>
       </template> -->
     </el-dialog>
-  </template>
+  </el-main>
+        </el-container>
+      </el-container>
+  </div>
+</template>
   
   
   <script>
@@ -131,10 +169,16 @@
     ref,
     reactive,
   } from "vue";
-  
+  import { useRouter } from "vue-router";
+    import { useRoute } from "vue-router"
+    import { computed } from 'vue'
+    import { useStore } from 'vuex'
   export default defineComponent({
     setup() {
-      const { proxy } = getCurrentInstance();
+      const store = useStore();
+        const route = useRoute()
+      
+        const router = useRouter()
       const list = ref([]);
       const tableLabel = reactive([
         {
@@ -160,6 +204,27 @@
           width: 320,
         },
       ]);
+      const tableData =[{
+        title: '百年孤独', 
+        bookid: '001',
+        userID: '00000001',
+        borrowedAt: '2022-10-10',
+        willreturn_At: '2022-10-25'
+      }]
+      const clicktask =()=>{
+          router.push({
+            name:""
+          })
+        };
+       
+        const clickread =()=>{
+          router.push({
+            name:"student_person"
+          })
+        }
+        const clickteacherperson=()=>{
+
+        }
       onMounted(() => {
         getUserData(config);
       });
@@ -259,43 +324,18 @@
       // 区分编辑和新增
       const action = ref("add");
       // 编辑用户
-      const handleEdit = (row) => {
-        // 浅拷贝
-  
-        action.value = "edit";
-        dialogVisible.value = true;
-        // row.sex == 1 ? (row.sex = "男") : (row.sex = "女");
-        proxy.$nextTick(() => {
-          Object.assign(formUser, row);
-        });
-      };
+
       // 新增借阅
       const handleAdd = () => {
         action.value = "add";
         dialogVisible.value = true;
       };
       // 归还图书
-      const handleDelete = (row) => {
-        ElMessageBox.confirm("你确定归还吗?")
-          .then(async () => {
-            await proxy.$api.deleteUser({
-              id: row.id,
-            });
-  
-            ElMessage({
-              showClose: true,
-              message: "还书成功",
-              type: "success",
-            });
-            getUserData(config);
-          })
-          .catch(() => {
-            // catch error
-          });
-      };
+
       return {
         list,
         tableLabel,
+        tableData,
         config,
         changePage,
         formInline,
@@ -306,16 +346,160 @@
         onSubmit,
         handleCancel,
         action,
-        handleEdit,
         handleAdd,
-        handleDelete,
+        clicktask,
+        clickread,
+        clickteacherperson,
       };
     },
   });
   </script>
   
   <style lang="less" scoped>
-  .table {
+    .home {
+      .user {
+        display: flex;
+        align-items: center;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 20px;
+        img {
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          margin-right: 40px;
+        }
+      }
+      .login-info {
+        p {
+          line-height: 30px;
+          font-size: 14px;
+          color: #999;
+          span {
+            color: #666;
+            margin-left: 60px;
+            font-size: 15px;
+          }
+        }
+      }
+      .num {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        .el-card {
+          width: 32%;
+          margin-bottom: 20px;
+        }
+        .icons {
+          width: 80px;
+          height: 80px;
+          font-size: 30px;
+          text-align: center;
+          line-height: 80px;
+          color: #fff;
+        }
+        .detail {
+          margin-left: 15px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          .num {
+            font-size: 30px;
+            margin-bottom: 10px;
+          }
+          .txt {
+            font-size: 14px;
+            text-align: center;
+            color: #999;
+          }
+        }
+      }
+      .graph {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        .el-card {
+          width: 48%;
+        }
+      }
+    .icons {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .box-card {
+  width: 500px;
+  margin: 20px auto;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.user-info img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 50px;
+}
+
+.user-info .info p {
+  display: flex;
+  align-items: center; 
+  font-size: 14px;
+  color: #666;
+  padding: 5px 0;
+}
+
+
+.user-info .info i {
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+  
+  
+  
+    }
+  .el-menu-item {
+    padding:30px;
+  font-size: 20px;
+  }
+  
+  
+  
+    
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+   
+    background: #333;
+  }
+  .el-menu {
+      position: fixed;
+      height: 100%;
+      border: none;
+      width:200px;
+       h3 {
+         padding:10px;
+         line-height: 48px;
+         color: #fff;
+         text-align: center;
+         font-size: 30px;
+       }
+      
+     }
+  html,body {
+        margin: 0;
+        height: 100%;
+  }
+
+.table {
     position: relative;
     height: 520px;
     .pager {

@@ -38,21 +38,24 @@
         </el-aside >
         <el-container>
           <el-header>
-            <el-button type="info" :icon="Message" @click="settasks">布置作业</el-button>
+            <el-button type="info"  @click="settasks">布置作业</el-button>
           </el-header>
           <el-main>
-            <el-table :data="tableData" style="width: 100%" >
-              <el-table-column fixed prop="date" label="作业标题" width="auto"/>
-              <el-table-column prop="name" label="阅读书目" width="auto"/>
-              <el-table-column prop="state" label="布置时间" width="auto"/>
-              <el-table-column prop="city" label="截止时间" width="auto"/>
+            <el-table :data="tasks" style="width: 100%" >
+              <el-table-column fixed prop="task_title" label="作业标题" width="auto"/>
+              <el-table-column prop="task_book" label="阅读书目" width="auto"/>
+              <el-table-column prop="startedAt" label="布置时间" width="auto"/>
+              <el-table-column prop="endedAt" label="截止时间" width="auto"/>
+              <el-table-column prop="className" label="布置班级" width="auto"/>
               <el-table-column prop="address" label="完成情况" width="auto">
-                  <el-progress
-                    :text-inside="true"
+                <template #default="scope">
+                  <el-progress 
+                    :percentage="scope.row.address"  
                     :stroke-width="22"
-                    :percentage="80"
-                    status="warning"
+                    :text-inside="true" 
+                    status="warning" 
                   />
+                </template>
               </el-table-column>
               <el-table-column fixed="right" label="操作" width="auto">
                 <template #default="scope">
@@ -91,9 +94,10 @@
     export default defineComponent({
       setup() {
         const store = useStore();
-        const users = computed(() => store.state.users)
         const router = useRouter()
         const showModal = ref(false)
+       const users = computed(() => store.state.users)
+       const tasks = computed(() => store.state.tasks)
         const clicktask =()=>{
           router.push({
             name:""
@@ -108,48 +112,24 @@
         const clickteacherperson=()=>{
 
         }
-      
-        const tableData = [
-  {
-    date: '魔幻现实主义小说', 
-    name: '百年孤独',
-    state: '2022-10-01',
-    city: '2022-10-10',
-    address: '80%'
-  },
-  {
-    date: '动物庄园',
-    name: '乔治·奥威尔', 
-    state: '2022-10-03',
-    city: '2022-10-15',
-    address: '60%'
-  }
-]
 
-      
-
-        const handlechange =(row)=>{
-          console.log(row)
-          router.push({
-            name:'teacher_changetask',
-            props: {
-              task: row
+        const handledelete = async(row)=>{
+          tasks.value = tasks.value.filter(item => item.id !== row.id)
+          try {
+            await deleteTask(row.id)
+          } catch(err) {
+            alert('删除失败')
             }
-
-        })
-      }
-
-        const handledelete =(row)=>{
-          console.log(row)
-    //       if(confirm('确定删除吗?')) {
-    //   tableData = tableData.filter(item => item !== row) 
-      
-    //   alert('删除成功!')
-    // }
         }
-
+        async function deleteTask(id) {
+          const res = await fetch(`....`, { method: 'DELETE' })
+          if (res.ok) {
+            // 删除成功
+            alert('删除成功')
+          }
+        }
         const settasks =()=>{
-          console.log(777)
+          
           router.push({
             name:"teacher_tasks"
           })
@@ -159,16 +139,18 @@
           clicktask,
           clickread,
           clickteacherperson,
-          handlechange,
+          users,
+          tasks,
           handledelete,
           settasks,
-          tableData,
+          deleteTask,
          
         };
       },
+     
       methods: {
         handleClick(row) {
-          console.log(row)
+          
          this.$router.push({
           path:'/teacher_taskdetails',
           query:{
@@ -178,9 +160,19 @@
           
          })
       },
+        handlechange(row){
+          
+          this.$router.push({
+            path:'/teacher_changetask',
+            query: {
+              task: JSON.stringify(row)
+            }
+
+        })
+      }
     },
     })
-
+    
  
    
     </script> 

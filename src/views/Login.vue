@@ -87,6 +87,11 @@
 
           else if(loginForm.identity==="T")
           {
+            const {Task, user} = response.data.data;
+            const users = response.data.data.user 
+            const tasks = response.data.data.Task
+            store.commit('setUser', users)  
+            store.commit('setTasks', tasks)
             router.push({
               name:"teacher_index",
               params:{
