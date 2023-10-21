@@ -16,20 +16,20 @@
 
         <el-sub-menu  index="0">
           <template #title>
-            <span @click = clicktask>作业情况</span>
+            <span >作业情况</span>
           </template>
-          <el-menu-item v-for="cls in className">{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clicktask>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span @click = clickread>阅读情况</span>
+            <span >阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in className">{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clickread(cls)>{{ cls }}</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="6">
             <el-icon><setting /></el-icon>
-            <span @click = clickteacherperson>个人中心</span>
+            <span @click = clickteacherperson>图书申请</span>
           </el-menu-item>
         </el-menu>
       </el-col>
@@ -88,17 +88,13 @@
     import { useRouter } from "vue-router";
     import { computed } from 'vue'
     import { useStore } from 'vuex'
-  
+    import axios from 'axios'
   
     export default defineComponent({
       setup() {
         const store = useStore();
         const router = useRouter()
         const showModal = ref(false)
-        // const className = ref([
-
-        // ])
-      
        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
@@ -107,11 +103,31 @@
             name:""
           })
         };
-  
-        const clickread =()=>{
-          router.push({
-            name:"student_person"
-          })
+       
+        const cls = ref('')
+        const clickread =async(item)=>{
+          cls.value = item
+          try{
+            console.log(cls)
+            const response =await axios.get('http://8.130.77.76:3000/api/class', cls)
+            if(response.status){
+              console.log(response.data)
+              const { username,className,userID} = response.data.students;
+              const userName = response.data.students.username 
+              const classname = response.data.students.className
+              const useid = response.data.students.userID
+              store.commit('setusername', userName)  
+              store.commit('setclassname', classname)
+              store.commit('setuserid', useid)
+            } 
+            router.push({
+              name:"teacher_studentlist"
+            })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+          
         }
         const clickteacherperson=()=>{
 
@@ -149,6 +165,7 @@
           settasks,
           deleteTask,
           className,
+          cls
         };
       },
      

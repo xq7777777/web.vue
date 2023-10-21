@@ -16,20 +16,20 @@
 
         <el-sub-menu  index="0">
           <template #title>
-            <span>作业情况</span>
+            <span >作业情况</span>
           </template>
-          <el-menu-item v-for="cls in classname" @click = clicktask>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clicktask>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span >阅读情况</span>
+            <span>阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in classname" @click = clickread>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className"  @click = clickread>{{ cls }}</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="6">
             <el-icon><setting /></el-icon>
-            <span @click = clickteacherperson>个人中心</span>
+            <span @click = clickteacherperson>图书申请</span>
           </el-menu-item>
         </el-menu>
       </el-col>
@@ -40,25 +40,10 @@
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-            <el-descriptions
-                title="作业详情"
-                direction="vertical"
-                :column="4"
-              
-                border
-            >
-            <el-descriptions-item label="作业标题">{{ task_title }}</el-descriptions-item>
-            <el-descriptions-item label="阅读书目">{{ task_book }}</el-descriptions-item>
-            <el-descriptions-item label="布置时间" :span="2">{{ startedAt }}</el-descriptions-item>
-            <el-descriptions-item label="截止时间">
-            <el-tag size="small">{{ endedAt }}</el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="布置班级">{{ className }}</el-descriptions-item>
-            <el-descriptions-item label="完成情况"
-            >{{ address }}
-            </el-descriptions-item>
-        </el-descriptions>
-
+            <el-table :data="tableData" style="width: 100%" @row-dblclick="handleRowDblClick">
+                <el-table-column prop="username" label="学生姓名" width="auto" />
+                <el-table-column prop="userid" label="学号" width="auto" />
+            </el-table>
           </el-main>
         </el-container>
       </el-container>
@@ -68,7 +53,8 @@
     import {
       defineComponent,
       onMounted,
-      ref
+      ref,
+      reactive
     
     } from "vue";
     import {
@@ -79,59 +65,82 @@
   Search,
   Star,
 } from '@element-plus/icons-vue';
-    import { useRoute } from "vue-router"; 
-    import { useRouter } from "vue-router"
+    import { useRouter } from "vue-router";
     import { computed } from 'vue'
     import { useStore } from 'vuex'
-   
   
   
     export default defineComponent({
       setup() {
-        const route = useRoute()
-        const router = useRouter()
-		    const {className,endedAt,startedAt,task_book,task_title,address} = JSON.parse(route.query.task)
-      
         const store = useStore();
-        const users = computed(() => store.state.users)
-        const classname = ref(users.value.className)
-        const showModal = ref(false)
+        const router = useRouter()
+        // const className = ref([
+
+        // ])
+      
+       const username = computed(() => store.state.userName)
+       const userid= computed(() => store.state.userid)
+       const classname = computed(()=>store.state.classname)
+       const className = ref(users.value.className)
+       
         const clicktask =()=>{
           router.push({
             name:""
           })
         };
-  
+        
+        const tableData =[
+            {
+                username:'1',
+                userID:'0',
+            }
+        ]
         const clickread =()=>{
           router.push({
             name:"teacher_studentlist"
           })
         }
         const clickteacherperson=()=>{
-          
+
         }
 
         const goback =()=>{
           router.back() 
         }
-
-        return {
     
+        return {
           clicktask,
           clickread,
           clickteacherperson,
-          goback,
-          className,
-          endedAt,
-          startedAt,
-          task_book,
-          task_title,
-          address,
+          username,
           classname,
+          userid,
+          className,
+          tableData,
+          goback,
+         
         };
       },
-     
+ 
+      methods: {
+        handleRowDblClick(row) {
+          
+         this.$router.push({
+          path:'/teacher_studentdetails',
+          query:{
+            task: JSON.stringify(row) 
+          }
+          
+          
+         })
+      },
+       
+    },
+ 
     })
+    
+ 
+   
     </script> 
     
     <style lang="less" scoped>

@@ -16,16 +16,16 @@
 
         <el-sub-menu  index="0">
           <template #title>
-            <span @click = clicktask>作业情况</span>
+            <span>作业情况</span>
           </template>
-          <el-menu-item v-for="cls in classname">{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in classname"  @click = clicktask>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span @click = clickread>阅读情况</span>
+            <span >阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in classname">{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in classname" @click = clickread>{{ cls }}</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="6">
             <el-icon><setting /></el-icon>
@@ -138,7 +138,7 @@
        
         const clickread =()=>{
           router.push({
-            name:"student_person"
+            name:"teacher_studentlist"
           })
         }
         const clickteacherperson=()=>{

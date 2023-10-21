@@ -16,20 +16,20 @@
 
         <el-sub-menu  index="0">
           <template #title>
-            <span>作业情况</span>
+            <span >作业情况</span>
           </template>
-          <el-menu-item v-for="cls in classname" @click = clicktask>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clicktask>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span >阅读情况</span>
+            <span>阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in classname" @click = clickread>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className"  @click = clickread(cls)>{{ cls }}</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="6">
             <el-icon><setting /></el-icon>
-            <span @click = clickteacherperson>个人中心</span>
+            <span @click = clickteacherperson>图书申请</span>
           </el-menu-item>
         </el-menu>
       </el-col>
@@ -40,25 +40,16 @@
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-            <el-descriptions
-                title="作业详情"
-                direction="vertical"
-                :column="4"
-              
-                border
-            >
-            <el-descriptions-item label="作业标题">{{ task_title }}</el-descriptions-item>
-            <el-descriptions-item label="阅读书目">{{ task_book }}</el-descriptions-item>
-            <el-descriptions-item label="布置时间" :span="2">{{ startedAt }}</el-descriptions-item>
-            <el-descriptions-item label="截止时间">
-            <el-tag size="small">{{ endedAt }}</el-tag>
+            <el-descriptions title="学生阅读信息">
+            <el-descriptions-item label="学生姓名">kooriookami</el-descriptions-item>
+            <el-descriptions-item label="学号">18100000000</el-descriptions-item>
+            <el-descriptions-item label="班级">Suzhou</el-descriptions-item>
+            <el-descriptions-item label="借阅情况">
+              <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
+                <li v-for="i in count" :key="i" class="infinite-list-item">{{ i }}</li>
+              </ul>
             </el-descriptions-item>
-            <el-descriptions-item label="布置班级">{{ className }}</el-descriptions-item>
-            <el-descriptions-item label="完成情况"
-            >{{ address }}
-            </el-descriptions-item>
-        </el-descriptions>
-
+          </el-descriptions>
           </el-main>
         </el-container>
       </el-container>
@@ -68,7 +59,8 @@
     import {
       defineComponent,
       onMounted,
-      ref
+      ref,
+      reactive
     
     } from "vue";
     import {
@@ -79,62 +71,84 @@
   Search,
   Star,
 } from '@element-plus/icons-vue';
-    import { useRoute } from "vue-router"; 
-    import { useRouter } from "vue-router"
+    import { useRouter } from "vue-router";
     import { computed } from 'vue'
     import { useStore } from 'vuex'
-   
   
   
     export default defineComponent({
       setup() {
-        const route = useRoute()
-        const router = useRouter()
-		    const {className,endedAt,startedAt,task_book,task_title,address} = JSON.parse(route.query.task)
-      
         const store = useStore();
-        const users = computed(() => store.state.users)
-        const classname = ref(users.value.className)
-        const showModal = ref(false)
+        const router = useRouter()
+        // const className = ref([
+
+        // ])
+      
+       const users = computed(() => store.state.users)
+       const tasks = computed(() => store.state.tasks)
+       const className = ref(users.value.className)
         const clicktask =()=>{
           router.push({
             name:""
           })
         };
-  
-        const clickread =()=>{
-          router.push({
-            name:"teacher_studentlist"
-          })
+        
+      
+        const clickread =async()=>{
+          try{
+            const response =await axios.get('http://8.130.77.76:3000/api/class', cls)
+            if(response.status === 200){
+              console.log(response.data)
+              const { username,className,userID} = response.data.data;
+              const userName = response.data.data.username 
+              const classname = response.data.data.className
+              const useid = response.data.data.useID
+              store.commit('setusername', userName)  
+              store.commit(' setclassname', classname)
+              store.commit('setuserid', useid)
+            } 
+            router.push({
+              name:"teacher_studentlist"
+            })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+          
         }
         const clickteacherperson=()=>{
-          
+
         }
 
         const goback =()=>{
           router.back() 
         }
-
-        return {
     
+        return {
           clicktask,
           clickread,
           clickteacherperson,
-          goback,
+          users,
+          tasks,
           className,
-          endedAt,
-          startedAt,
-          task_book,
-          task_title,
-          address,
-          classname,
+          goback, 
+         
         };
       },
-     
+ 
+      methods: {
+       
+       
+    },
+ 
     })
+    
+ 
+   
     </script> 
     
     <style lang="less" scoped>
+    
     .home {
       .user {
         display: flex;
