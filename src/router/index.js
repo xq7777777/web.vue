@@ -70,7 +70,12 @@ const routes = [
     path:'/teacher_studentdetails',
     name:'teacher_studentdetails',
     component:()=>import('../views/teacher/teacher_studentdetails.vue')
-  }
+  },
+  {
+    path:'/teacher_requirement',
+    name:'teacher_requirement',
+    component:()=>import('../views/teacher/teacher_requirement.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',
