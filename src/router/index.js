@@ -76,6 +76,11 @@ const routes = [
     name:'teacher_requirement',
     component:()=>import('../views/teacher/teacher_requirement.vue')
   },
+  {
+    path:'/teacher_borrow',
+    name:'teacher_borrow',
+    component:()=>import('../views/teacher/teacher_borrow.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',

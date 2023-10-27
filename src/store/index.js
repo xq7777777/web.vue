@@ -46,14 +46,9 @@ export default createStore({
     setRecords(state, records) {
       state.records = records
     },
-    setclassname(state,classname){
-      state.classname = classname
-    },
-    setuserid(state,userid){
-      state.userid = userid
-    },
-    setusername(state,userName){
-      state.userName = userName
+ 
+    setstudent(state,student){
+      state.student = student
     },
     // updateIsCollapse(state, payload) {
     //   // console.log(payload);

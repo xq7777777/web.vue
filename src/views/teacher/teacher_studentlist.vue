@@ -31,6 +31,10 @@
             <el-icon><setting /></el-icon>
             <span @click = clickteacherperson>图书申请</span>
           </el-menu-item>
+          <el-menu-item index="7">
+            <el-icon><setting /></el-icon>
+            <span @click = clickbookborrow>图书借阅</span>
+          </el-menu-item>
         </el-menu>
       </el-col>
 
@@ -68,7 +72,7 @@
     import { useRouter } from "vue-router";
     import { computed } from 'vue'
     import { useStore } from 'vuex'
-  
+    import axios from 'axios'
   
     export default defineComponent({
       setup() {
@@ -77,10 +81,9 @@
         // const className = ref([
 
         // ])
-      
-       const username = computed(() => store.state.userName)
-       const userid= computed(() => store.state.userid)
-       const classname = computed(()=>store.state.classname)
+        const cls = ref('')
+       const users = computed(() => store.state.users)
+       const students = computed(()=>store.state.student)
        const className = ref(users.value.className)
        
         const clicktask =()=>{
@@ -92,16 +95,43 @@
         const tableData =[
             {
                 username:'1',
-                userID:'0',
+                userid:'0',
             }
         ]
-        const clickread =()=>{
+        const clickread =async(className)=>{
+          try{
+            cls.value = className
+            const school = users.value.school
+            
+            const a ={
+              className,
+              school
+            }
+            console.log(a)
+            const response =await axios.get('http://139.9.118.223:3000/api/class', JSON.stringify(a))
+            if(response.status){
+              console.log(response.data)
+              const { students} = response.data;
+              const student = response.data.students
+              store.commit('setstudent',student)
+            } 
+            router.push({
+              name:"teacher_studentlist",
+            })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }}
+      const clickteacherperson=()=>{
           router.push({
-            name:"teacher_studentlist"
+            name:"teacher_requirement"
           })
         }
-        const clickteacherperson=()=>{
 
+        const clickbookborrow =()=>{
+          router.push({
+            name:'teacher_borrow'
+          }) 
         }
 
         const goback =()=>{
@@ -112,11 +142,13 @@
           clicktask,
           clickread,
           clickteacherperson,
-          username,
-          classname,
-          userid,
+          
+          students,
+          clickbookborrow,
           className,
           tableData,
+          users,
+          cls,
           goback,
          
         };

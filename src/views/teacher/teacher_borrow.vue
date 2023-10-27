@@ -23,9 +23,9 @@
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span >阅读情况</span>
+            <span>阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in className" @click = clickread(cls)>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className"  @click = clickread(cls)>{{ cls }}</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="6">
             <el-icon><setting /></el-icon>
@@ -41,33 +41,36 @@
         </el-aside >
         <el-container>
           <el-header>
-            <el-button type="info"  @click="settasks">布置作业</el-button>
+            <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-            <el-table :data="tasks" style="width: 100%" >
-              <el-table-column fixed prop="task_title" label="作业标题" width="auto"/>
-              <el-table-column prop="task_book" label="阅读书目" width="auto"/>
-              <el-table-column prop="startedAt" label="布置时间" width="auto"/>
-              <el-table-column prop="endedAt" label="截止时间" width="auto"/>
-              <el-table-column prop="className" label="布置班级" width="auto"/>
-              <el-table-column prop="address" label="完成情况" width="auto">
-                <template #default="scope">
-                  <el-progress 
-                    :percentage="scope.row.address"  
-                    :stroke-width="22"
-                    :text-inside="true" 
-                    status="warning" 
-                  />
-                </template>
-              </el-table-column>
-              <el-table-column fixed="right" label="操作" width="auto">
-                <template #default="scope">
-                  <el-button link type="primary" size="small" @click="handleClick(scope.row)">查看</el-button>
-                  <el-button link type="primary" size="small" @click="handlechange(scope.row)">修改</el-button>
-                  <el-button link type="primary" size="small" @click="handledelete( scope.row)">删除</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
+           
+            <el-form
+                label-width="100px"
+                :model="formLabelAlign"
+                style="max-width: 460px"
+            >
+           
+                <el-form-item label="借阅工号/学号">
+                <el-input v-model="formLabelAlign.userId" />
+                </el-form-item>
+                <el-form-item label="图书编号">
+                <el-input v-model="formLabelAlign.bookid" />
+                </el-form-item>
+                <el-form-item label="图书名称">
+                <el-input v-model="formLabelAlign.title" />
+                </el-form-item>
+                <el-form-item label="图书类型">
+                <el-input v-model="formLabelAlign.book_type" />
+                </el-form-item>
+                <el-form-item label="借阅时间">
+                <el-input v-model="formLabelAlign.borrowedAt" />
+                </el-form-item>
+                <el-form-item label="预计归还时间">
+                <el-input v-model="formLabelAlign.willreturn_At" />
+                </el-form-item>
+                <el-button type="info" @click="borrow">确认借阅</el-button>
+            </el-form>
           </el-main>
         </el-container>
       </el-container>
@@ -93,22 +96,32 @@
     import { computed } from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
-  
     export default defineComponent({
       setup() {
         const store = useStore();
         const router = useRouter()
-        const showModal = ref(false)
+        // const className = ref([
+
+        // ])
+        const cls = ref('')
        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
+       const formLabelAlign = reactive({
+                userId:"",
+                bookid:"",
+                title:"",
+                book_type:"",
+                borrowedAt:"",
+                willreturn_At:"",
+            })
         const clicktask =()=>{
           router.push({
             name:""
           })
         };
-       
-        const cls = ref('')
+        
+      
         const clickread =async(className)=>{
           try{
             cls.value = className
@@ -132,13 +145,11 @@
           }catch (error) {  
         // 请求错误处理
         console.log(error.message)
-      }
-          
-        }
+      }}
         const clickteacherperson=()=>{
-          router.push({
-            name:"teacher_requirement"
-          })
+            router.push({
+                name:"teacher_requirement"
+            })
         }
 
         const clickbookborrow =()=>{
@@ -146,66 +157,36 @@
             name:'teacher_borrow'
           }) 
         }
-        const handledelete = async(row)=>{
-          tasks.value = tasks.value.filter(item => item.id !== row.id)
-          try {
-            await deleteTask(row.id)
-          } catch(err) {
-            alert('删除失败')
-            }
+
+        const borrow =()=>{
+            console.log(formLabelAlign)
         }
-        async function deleteTask(id) {
-          const res = await fetch(`....`, { method: 'DELETE' })
-          if (res.ok) {
-            // 删除成功
-            alert('删除成功')
-          }
+        const goback =()=>{
+          router.back() 
         }
-        const settasks =()=>{
-          
-          router.push({
-            name:"teacher_tasks"
-          })
-        }
-    
+        const requirement =()=>{
+         console.log(formLabelAlign)
+        };
         return {
           clicktask,
           clickread,
           clickteacherperson,
           users,
           tasks,
-          handledelete,
-          settasks,
-          deleteTask,
           className,
-          cls,
+          goback, 
+          formLabelAlign,
+          requirement,
           clickbookborrow,
+          borrow,
         };
       },
-     
+ 
       methods: {
-        handleClick(row) {
-          
-         this.$router.push({
-          path:'/teacher_taskdetails',
-          query:{
-            task: JSON.stringify(row) 
-          }
-          
-          
-         })
-      },
-        handlechange(row){
-          
-          this.$router.push({
-            path:'/teacher_changetask',
-            query: {
-              task: JSON.stringify(row)
-            }
-
-        })
-      }
+       
+       
     },
+ 
     })
     
  
@@ -213,6 +194,7 @@
     </script> 
     
     <style lang="less" scoped>
+    
     .home {
       .user {
         display: flex;

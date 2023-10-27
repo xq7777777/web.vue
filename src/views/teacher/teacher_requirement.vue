@@ -31,6 +31,10 @@
             <el-icon><setting /></el-icon>
             <span @click = clickteacherperson>图书申请</span>
           </el-menu-item>
+          <el-menu-item index="7">
+            <el-icon><setting /></el-icon>
+            <span @click = clickbookborrow>图书借阅</span>
+          </el-menu-item>
         </el-menu>
       </el-col>
 
@@ -42,14 +46,13 @@
           <el-main>
            
             <el-form
-                :label-position="labelPosition"
                 label-width="100px"
                 :model="formLabelAlign"
                 style="max-width: 460px"
             >
            
                 <el-form-item label="申请工号/学号">
-                <el-input v-model="formLabelAlign.userID" />
+                <el-input v-model="formLabelAlign.userId" />
                 </el-form-item>
                 <el-form-item label="图书名称">
                 <el-input v-model="formLabelAlign.title" />
@@ -86,7 +89,7 @@
     import { useRouter } from "vue-router";
     import { computed } from 'vue'
     import { useStore } from 'vuex'
-  
+    import axios from 'axios'
     export default defineComponent({
       setup() {
         const store = useStore();
@@ -94,7 +97,7 @@
         // const className = ref([
 
         // ])
-      
+        const cls = ref('')
        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
@@ -111,34 +114,41 @@
         };
         
       
-        const clickread =async()=>{
+        const clickread =async(className)=>{
           try{
-            const response =await axios.get('http://8.130.77.76:3000/api/class', cls)
-            if(response.status === 200){
+            cls.value = className
+            const school = users.value.school
+            
+            const a ={
+              className,
+              school
+            }
+            console.log(a)
+            const response =await axios.get('http://139.9.118.223:3000/api/class', JSON.stringify(a))
+            if(response.status){
               console.log(response.data)
-              const { username,className,userID} = response.data.data;
-              const userName = response.data.data.username 
-              const classname = response.data.data.className
-              const useid = response.data.data.useID
-              store.commit('setusername', userName)  
-              store.commit(' setclassname', classname)
-              store.commit('setuserid', useid)
+              const { students} = response.data;
+              const student = response.data.students
+              store.commit('setstudent',student)
             } 
             router.push({
-              name:"teacher_studentlist"
+              name:"teacher_studentlist",
             })
           }catch (error) {  
         // 请求错误处理
         console.log(error.message)
-      }
-          
-        }
+      }}
         const clickteacherperson=()=>{
             router.push({
                 name:"teacher_requirement"
             })
         }
 
+        const clickbookborrow =()=>{
+          router.push({
+            name:'teacher_borrow'
+          }) 
+        }
         const goback =()=>{
           router.back() 
         }
@@ -155,6 +165,8 @@
           goback, 
           formLabelAlign,
           requirement,
+          cls,
+          clickbookborrow,
         };
       },
  

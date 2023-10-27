@@ -55,7 +55,7 @@
       // console.log(loginForm.identity)
       try {
         // 发送登录请求
-        const response = await axios.post('http://8.130.77.76:3000/api/login', loginForm)
+        const response = await axios.post('http://139.9.118.223:3000/api/login', loginForm)
         
         // 处理成功响应 
         if(response.status === 200) {
