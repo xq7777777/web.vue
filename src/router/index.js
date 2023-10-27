@@ -81,6 +81,11 @@ const routes = [
     name:'teacher_borrow',
     component:()=>import('../views/teacher/teacher_borrow.vue')
   },
+  {
+    path:'/teacher_person',
+    name:'teacher_person',
+    component:()=>import('../views/teacher/teacher_person.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',

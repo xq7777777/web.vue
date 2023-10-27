@@ -2,11 +2,7 @@
   <div class="common-layout">
     <el-container>
       <el-aside width="200px" >
-
-    
-  
       <el-col :span="12" width="200px" height="913px">
-      
       <el-menu
         active-text-color="#ffd04b"
         background-color="#545c64"

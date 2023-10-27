@@ -35,6 +35,10 @@
             <el-icon><setting /></el-icon>
             <span @click = clickbookborrow>图书借阅</span>
           </el-menu-item>
+          <el-menu-item index="8">
+            <el-icon><setting /></el-icon>
+            <span @click = person>个人中心</span>
+          </el-menu-item>
         </el-menu>
       </el-col>
 
@@ -192,6 +196,12 @@
           })
         }
     
+        const person =()=>{
+          router.push({
+            name:'teacher_person'
+          })
+        }
+
         return {
           clicktask,
           clickread,
@@ -202,6 +212,7 @@
           classname,
           cls,
           clickbookborrow,
+          person,
         };
       },
     })

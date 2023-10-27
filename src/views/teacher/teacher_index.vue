@@ -35,6 +35,10 @@
             <el-icon><setting /></el-icon>
             <span @click = clickbookborrow>图书借阅</span>
           </el-menu-item>
+          <el-menu-item index="8">
+            <el-icon><setting /></el-icon>
+            <span @click = person>个人中心</span>
+          </el-menu-item>
         </el-menu>
       </el-col>
 
@@ -102,7 +106,9 @@
        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
-        const clicktask =()=>{
+        const clicktask =async(className)=>{
+          cls.value=className
+          
           router.push({
             name:""
           })
@@ -122,7 +128,7 @@
             const response =await axios.get('http://139.9.118.223:3000/api/class', JSON.stringify(a))
             if(response.status){
               console.log(response.data)
-              const { students} = response.data;
+              const { students} = response.data
               const student = response.data.students
               store.commit('setstudent',student)
             } 
@@ -168,6 +174,11 @@
           })
         }
     
+        const person =()=>{
+          router.push({
+            name:'teacher_person'
+          })
+        }
         return {
           clicktask,
           clickread,
@@ -180,6 +191,7 @@
           className,
           cls,
           clickbookborrow,
+          person,
         };
       },
      

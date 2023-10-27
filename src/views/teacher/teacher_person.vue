@@ -48,16 +48,47 @@
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-            <el-descriptions title="学生阅读信息">
-            <el-descriptions-item label="学生姓名">kooriookami</el-descriptions-item>
-            <el-descriptions-item label="学号">18100000000</el-descriptions-item>
-            <el-descriptions-item label="班级">Suzhou</el-descriptions-item>
-            <el-descriptions-item label="借阅情况">
-              <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
-                <li v-for="i in count" :key="i" class="infinite-list-item">{{ i }}</li>
-              </ul>
-            </el-descriptions-item>
-          </el-descriptions>
+           
+            <div class="user-profile">
+
+                <el-card class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span>个人信息</span>
+                        <br><br><br>
+                    </div>
+                    <div class="user-info">
+                        <div class="info" font-size="32px">
+                            <span>姓名:{{users.username}}</span>
+                            <br><br><br>
+                            <span>学号:{{users.userID}}</span>
+                            <br><br><br>
+                            <span>手机号:{{}}</span>
+                            <br><br><br>
+                            <el-button @click=" showModal = true ">修改密码</el-button>
+                        </div>
+                    </div>
+                </el-card>
+                <teleport to="body">
+                    <el-dialog v-if="showModal" :model-value="showModal" title="修改密码" font-size="32px">
+                    <el-form v-model="passwordForm" label-width="80px">
+                    <el-form-item label="旧密码">
+                    <el-input v-model="passwordForm.oldPass"></el-input>
+                    </el-form-item>
+                    <el-form-item label="新密码">
+                    <el-input v-model="passwordForm.newPass"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码">
+                    <el-input v-model="passwordForm.confirmPass"></el-input>
+                    </el-form-item>
+                    <el-button type="primary" @click="change">确定修改</el-button>
+                    </el-form>
+                    <el-button @click="showModal = false">关闭</el-button>
+                    </el-dialog>
+                </teleport>
+
+
+            </div>
+
           </el-main>
         </el-container>
       </el-container>
@@ -83,7 +114,6 @@
     import { computed } from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
-  
     export default defineComponent({
       setup() {
         const store = useStore();
@@ -91,22 +121,27 @@
         // const className = ref([
 
         // ])
+        const showModal = ref(false)
         const cls = ref('')
        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
+     
         const clicktask =()=>{
           router.push({
             name:""
           })
         };
-        
+        const passwordForm = ref({
+      oldPass: '',
+      newPass: '',
+      confirmPass: '' 
+    })
       
         const clickread =async(className)=>{
           try{
             cls.value = className
             const school = users.value.school
-            
             const a ={
               className,
               school
@@ -126,10 +161,10 @@
         // 请求错误处理
         console.log(error.message)
       }}
-      const clickteacherperson=()=>{
-          router.push({
-            name:"teacher_requirement"
-          })
+        const clickteacherperson=()=>{
+            router.push({
+                name:"teacher_requirement"
+            })
         }
 
         const clickbookborrow =()=>{
@@ -138,10 +173,34 @@
           }) 
         }
 
+        const borrow =()=>{
+            console.log(formLabelAlign)
+        }
         const goback =()=>{
           router.back() 
         }
-    
+        const requirement =()=>{
+         console.log(formLabelAlign)
+        };
+
+        const change =()=>{
+          if(passwordForm.value.oldPass===passwordForm.value.newPass)
+          {
+            alert("新密码不可以和旧密码相同")
+            
+          }
+          else if(passwordForm.value.newPass!=passwordForm.value.confirmPass)
+          {
+            alert("请再次确认密码")
+            
+          }
+          else 
+          {
+            console.log(passwordForm.value)
+          }
+        
+        }
+
         const person =()=>{
           router.push({
             name:'teacher_person'
@@ -156,15 +215,21 @@
           tasks,
           className,
           goback, 
-          cls,
+          showModal,
+          requirement,
           clickbookborrow,
+          borrow,
+          passwordForm,
+          change,
           person,
         };
       },
  
       methods: {
-       
-       
+        handleRowDblClick(row) {
+          this.currentRow = row
+          this.showModal = true
+      },
     },
  
     })
