@@ -74,8 +74,7 @@
               <el-table-column prop="pressmark" label="书架编号" width="140" />
               <el-table-column prop="borrowedAt" label="借书时间" width="140" />
               <el-table-column prop="willreturn_At" label="计还书时间" width="140" />
-              <el-table-column fixed="right" label="Operations" width="120">
-              </el-table-column>
+              
         </el-table>
       </el-col>
     </el-row>

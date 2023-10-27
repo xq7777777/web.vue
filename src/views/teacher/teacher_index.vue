@@ -106,10 +106,14 @@
        
         const cls = ref('')
         const clickread =async(item)=>{
-          cls.value = item
           try{
-            console.log(cls)
-            const response =await axios.get('http://8.130.77.76:3000/api/class', cls)
+            const className =cls.value
+            const school = users.school 
+            const response =await axios.get('http://8.130.77.76:3000/api/class', 
+             {query: {
+                className, 
+                school
+              }})
             if(response.status){
               console.log(response.data)
               const { username,className,userID} = response.data.students;
