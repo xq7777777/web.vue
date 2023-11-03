@@ -18,7 +18,7 @@
           <template #title>
             <span >作业情况</span>
           </template>
-          <el-menu-item v-for="cls in className" @click = clicktask>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clicktask(cls)>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
@@ -103,16 +103,34 @@
         const store = useStore();
         const router = useRouter()
         const showModal = ref(false)
+        const filteredTasks = ref([])
+
        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
-        const clicktask =async(className)=>{
-          cls.value=className
-          router.push({
-            path:"/teacher_classtask",
-          })
-        };
        
+       function filterTasks(className) {
+
+        // 根据传入的班级参数过滤
+        return tasks.value.filter(task => {
+          if(task.className === className) {
+            return true 
+          }
+        })
+
+        }
+     
+        const clicktask =(className)=>{
+          filteredTasks.value = filterTasks(className)
+          console.log(filteredTasks.value)
+           router.push({
+             path:"/teacher_classtask",
+             query: {
+                task: JSON.stringify(filteredTasks.value) 
+                }
+           })
+        };
+        
         const cls = ref('')
         const clickread =async(className)=>{
           try{
@@ -147,6 +165,23 @@
             name:'teacher_borrow'
           }) 
         }
+
+        const handlechange =async(row)=>{
+          try{
+       
+            const response =await axios.get(`http://139.9.118.223:3000/api/class/tasks/recorrect`,)
+            if(response.status){
+              console.log(response.data)
+            } 
+            router.push({
+              name:"teacher_index",
+            })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }}
+      
+
         const handledelete = async(row)=>{
           tasks.value = tasks.value.filter(item => item.id !== row.id)
           try {
@@ -184,7 +219,10 @@
           settasks,
           deleteTask,
           className,
+          filteredTasks,
+          filterTasks,
           cls,
+          handlechange,
           clickbookborrow,
           person,
         };
@@ -202,16 +240,7 @@
           
          })
       },
-        handlechange(row){
-          
-          this.$router.push({
-            path:'/teacher_changetask',
-            query: {
-              task: JSON.stringify(row)
-            }
-
-        })
-      }
+       
     },
     })
     

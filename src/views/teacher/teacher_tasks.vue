@@ -64,7 +64,7 @@
             </el-form-item>
             <br>
             <el-form-item label="截止时间">
-              <el-input v-model="taskForm.ehdedAt"></el-input>
+              <el-input v-model="taskForm.endedAt"></el-input>
             </el-form-item>
             <br>
             <el-form-item label="选择班级">
@@ -73,6 +73,9 @@
             <br>
             <el-form-item label="作业描述">
               <el-input v-model="taskForm.task_description"></el-input>
+            </el-form-item>
+            <el-form-item label="学校">
+              <el-input v-model="taskForm.school"></el-input>
             </el-form-item>
             <br>
           <el-form-item>
@@ -146,7 +149,8 @@
           className:"",
           startedAt:"",
           endedAt:"",
-          task_description:""
+          task_description:"",
+          school:"",
       });
 
       const clickread =async(className)=>{
@@ -187,17 +191,30 @@
           router.back() 
         }
         
-        const set =()=>{
-          console.log(taskForm)
-          router.push({
-            name:'teacher_index'
-          })
-        }
     
         const person =()=>{
           router.push({
             name:'teacher_person'
           })
+        }
+        const set =async()=>{
+          try{
+           
+            const response =await axios.post(`http://139.9.118.223:3000/api/class/tasks`,taskForm)
+            if(response.status){
+              console.log(response.data)
+              router.push({
+            name:'teacher_index'
+          })
+            } 
+           
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+          
+         
+         
         }
 
         return {

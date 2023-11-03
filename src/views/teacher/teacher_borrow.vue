@@ -61,9 +61,10 @@
                 <el-form-item label="图书编号">
                 <el-input v-model="formLabelAlign.bookid" />
                 </el-form-item>
-                <el-form-item label="书架编号">
-                <el-input v-model="formLabelAlign.pressmark" />
+                <el-form-item label="图书名称">
+                <el-input v-model="formLabelAlign.title" />
                 </el-form-item>
+               
                 
                 
                
@@ -108,9 +109,7 @@
        const formLabelAlign = reactive({
                 userId:"",
                 bookid:"",
-                pressmark:"",
-              
-              
+                title:"",  
             })
         const clicktask =()=>{
           router.push({
@@ -162,7 +161,7 @@
               console.log(response.data)
             } 
             router.push({
-              name:"teacher_borrow",
+              name:"teacher_index",
             })
           }catch (error) {  
         // 请求错误处理

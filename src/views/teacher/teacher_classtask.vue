@@ -48,7 +48,13 @@
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-          
+            <el-table :data="taskData" style="width: 100%">
+              <el-table-column prop="className" label="班级" width=auto />
+              <el-table-column prop="task_book" label="阅读书目" width=auto />
+              <el-table-column prop="task_title" label="任务标题" width=auto />
+              <el-table-column prop="startedAt" label="开始时间" width=auto />
+              <el-table-column prop="endedAt" label="截止时间" width=auto />
+            </el-table>
           </el-main>
         </el-container>
       </el-container>
@@ -71,6 +77,7 @@
   Star,
 } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
+    import { useRoute } from "vue-router";
     import { computed } from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
@@ -78,6 +85,12 @@
       setup() {
         const store = useStore();
         const router = useRouter()
+        const route = useRoute()
+        const taskData = ref([])
+
+        const { task } = route.query
+        taskData.value = JSON.parse(task)
+        console.log(taskData.value)
         // const className = ref([
 
         // ])
@@ -147,7 +160,9 @@
           goback, 
           users,
           tasks,
-          className,        
+          taskData,
+          className,
+                
         
           
         };

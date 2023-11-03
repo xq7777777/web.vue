@@ -56,7 +56,7 @@
             >
            
                 <el-form-item label="申请工号/学号">
-                <el-input v-model="formLabelAlign.userId" />
+                <el-input v-model="formLabelAlign.req_userID" />
                 </el-form-item>
                 <el-form-item label="图书名称">
                 <el-input v-model="formLabelAlign.title" />
@@ -66,6 +66,15 @@
                 </el-form-item>
                 <el-form-item label="图书作者">
                 <el-input v-model="formLabelAlign.author" />
+                </el-form-item>
+                <el-form-item label="图书数量">
+                <el-input v-model="formLabelAlign.Tquantity" />
+                </el-form-item>
+                <el-form-item label="申请人">
+                <el-input v-model="formLabelAlign.username" />
+                </el-form-item>
+                <el-form-item label="接收人">
+                <el-input v-model="formLabelAlign.res_userID" />
                 </el-form-item>
                 <el-button type="info" @click="requirement">确认申请</el-button>
             </el-form>
@@ -106,10 +115,13 @@
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
        const formLabelAlign = reactive({
-            userId:"",
             title:"",
             publisher:"",
-            author:""
+            author:"",
+            Tquantity:"",
+            username:"",
+            req_userID:"",
+            res_userID:"Atest9",
             })
         const clicktask =()=>{
           router.push({
@@ -126,7 +138,7 @@
             console.log(school)
            
        
-            const response =await axios.get(`http://139.9.118.223:3000/api/class?className=${className}&school=${school}`)
+            const response =await axios.post(`http://139.9.118.223:3000/api/class?className=${className}&school=${school}`)
             if(response.status){
               console.log(response.data)
               const { students} = response.data;
@@ -161,12 +173,12 @@
          })
          try{
             
-            const response = await axios.get('http://139.9.118.223:3000/api/B_application/T',formLabelAlign)
+            const response = await axios.post('http://139.9.118.223:3000/api/B_application/T',formLabelAlign)
             if(response.status){
               console.log(response.data)
             } 
             router.push({
-            name:'teacher_person'
+            name:'teacher_index'
           })
           }catch (error) {  
         // 请求错误处理
