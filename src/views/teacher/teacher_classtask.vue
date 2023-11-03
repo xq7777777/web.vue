@@ -16,18 +16,18 @@
 
         <el-sub-menu  index="0">
           <template #title>
-            <span>作业情况</span>
+            <span >作业情况</span>
           </template>
-          <el-menu-item v-for="cls in classname"  @click = clicktask>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clicktask>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span >阅读情况</span>
+            <span>阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in classname" @click = clickread>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className"  @click = clickread(cls)>{{ cls }}</el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="6">
+          <el-menu-item index="6">
             <el-icon><setting /></el-icon>
             <span @click = clickteacherperson>图书申请</span>
           </el-menu-item>
@@ -47,53 +47,8 @@
           <el-header>
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
-          
           <el-main>
-            <el-form :model="form" label-width="120px">
-            <el-form-item label="作业标题">
-              <el-input v-model="form.task_title" />
-            </el-form-item>
-            <el-form-item label="阅读书目">
-              <el-input v-model="form.task_book" />
-            </el-form-item>
-            <el-form-item label="布置时间">
-              <el-col :span="11">
-                <el-date-picker
-                  v-model="form.startedAt"
-                  type="date"
-                  placeholder="Pick a date"
-                  style="width: 100%"
-                />
-              </el-col>
-              <el-col :span="2" class="text-center">
-                <span class="text-gray-500">-</span>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="截止时间">
-              <el-col :span="11">
-                <el-date-picker
-                  v-model="form.endedAt"
-                  type="date"
-                  placeholder="Pick a date"
-                  style="width: 100%"
-                />
-              </el-col>
-            </el-form-item>
-            <el-form-item label="布置班级">
-              <el-input v-model="form.className" />
-            </el-form-item>
-            <el-form-item label="作业详情">
-              <el-input v-model="form.address" type="textarea" />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSubmit">确认修改</el-button>
-             
-            </el-form-item>
-          </el-form>
-           
-            
-
-
+          
           </el-main>
         </el-container>
       </el-container>
@@ -116,35 +71,28 @@
   Star,
 } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
-    import { useRoute } from "vue-router"
     import { computed } from 'vue'
     import { useStore } from 'vuex'
-  
     import axios from 'axios'
     export default defineComponent({
       setup() {
         const store = useStore();
-        const route = useRoute()
-        const users = computed(() => store.state.users)
         const router = useRouter()
+        // const className = ref([
+
+        // ])
         const cls = ref('')
-        const showModal = ref(false) 
-        const {className,endedAt,startedAt,task_book,task_title,address} = JSON.parse(route.query.task)
-        const classname = ref(users.value.className)
-        const form = reactive({
-          className,
-          endedAt,
-          startedAt,
-          task_book,
-          task_title,
-          address,
-        })
+       const users = computed(() => store.state.users)
+       const tasks = computed(() => store.state.tasks)
+       const className = ref(users.value.className)
+      
         const clicktask =()=>{
           router.push({
             name:""
           })
         };
-       
+        
+      
         const clickread =async(className)=>{
           try{
             cls.value = className
@@ -167,26 +115,21 @@
         // 请求错误处理
         console.log(error.message)
       }}
-      const clickteacherperson=()=>{
-          router.push({
-            name:"teacher_requirement"
-          })
+        const clickteacherperson=()=>{
+            router.push({
+                name:"teacher_requirement"
+            })
         }
 
-        const goback =()=>{
-          router.back() 
-        }
-
-        const onSubmit = () => {
-          console.log(form)
-          router.push({
-            name:'teacher_index'
-          })
-        }
         const clickbookborrow =()=>{
           router.push({
             name:'teacher_borrow'
           }) 
+        }
+
+        
+        const goback =()=>{
+          router.back() 
         }
 
         const person =()=>{
@@ -196,29 +139,33 @@
         }
 
         return {
-    
           clicktask,
           clickread,
           clickteacherperson,
-          goback,
-          className,
-          endedAt,
-          startedAt,
-          task_book,
-          task_title,
-          address,
-          onSubmit,
-          form,
-          classname,
-          cls,
           clickbookborrow,
           person,
+          goback, 
+          users,
+          tasks,
+          className,        
+        
+          
         };
       },
+ 
+      methods: {
+       
+       
+    },
+ 
     })
+    
+ 
+   
     </script> 
     
     <style lang="less" scoped>
+    
     .home {
       .user {
         display: flex;

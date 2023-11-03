@@ -48,9 +48,10 @@
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-            <el-table :data="tableData" style="width: 100%" @row-dblclick="handleRowDblClick">
+            <el-table :data="students" style="width: 100%" @row-dblclick="handleRowDblClick">
                 <el-table-column prop="username" label="学生姓名" width="auto" />
-                <el-table-column prop="userid" label="学号" width="auto" />
+                <el-table-column prop="userID" label="学号" width="auto" />
+                <el-table-column prop="className" label="班级" width="auto" />
             </el-table>
           </el-main>
         </el-container>
@@ -74,6 +75,7 @@
   Star,
 } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
+    import { useRoute } from "vue-router";
     import { computed } from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
@@ -82,6 +84,7 @@
       setup() {
         const store = useStore();
         const router = useRouter()
+        const route = useRoute();
         // const className = ref([
 
         // ])
@@ -96,23 +99,16 @@
           })
         };
         
-        const tableData =[
-            {
-                username:'1',
-                userid:'0',
-            }
-        ]
+       
         const clickread =async(className)=>{
           try{
             cls.value = className
             const school = users.value.school
-            
-            const a ={
-              className,
-              school
-            }
-            console.log(a)
-            const response =await axios.get('http://139.9.118.223:3000/api/class', JSON.stringify(a))
+            console.log(className)
+            console.log(school)
+           
+       
+            const response =await axios.get(`http://139.9.118.223:3000/api/class?className=${className}&school=${school}`)
             if(response.status){
               console.log(response.data)
               const { students} = response.data;
@@ -147,7 +143,38 @@
             name:'teacher_person'
           })
         }
-
+        
+        const handleRowDblClick =async(row)=>{
+          console.log(row)
+          try{
+            const username = row.username
+            const userID = row.userID
+            const userclass = row.className
+            const response = await axios.get(`http://139.9.118.223:3000/api/books/borrowRecords/userID?username=${username}&userID=${userID}`)
+            if(response.status){
+              console.log(response.data)
+            } 
+             router.push({
+               path:'/teacher_studentdetails',
+               query:{
+                 task:
+                  JSON.stringify({username:username,
+                   userID:userID,
+                   userclass:userclass,
+                   borrowRecords:response.data})
+                 
+                
+               }
+             })
+            
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+          err=>{}
+      
+      
+        }
         return {
           clicktask,
           clickread,
@@ -156,7 +183,7 @@
           students,
           clickbookborrow,
           className,
-          tableData,
+          handleRowDblClick,
           users,
           cls,
           goback,
@@ -164,20 +191,7 @@
         };
       },
  
-      methods: {
-        handleRowDblClick(row) {
-          
-         this.$router.push({
-          path:'/teacher_studentdetails',
-          query:{
-            task: JSON.stringify(row) 
-          }
-          
-          
-         })
-      },
-       
-    },
+ 
  
     })
     

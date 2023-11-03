@@ -57,7 +57,7 @@
               <el-table-column prop="address" label="完成情况" width="auto">
                 <template #default="scope">
                   <el-progress 
-                    :percentage="scope.row.address"  
+                    :percentage="scope.address"  
                     :stroke-width="22"
                     :text-inside="true" 
                     status="warning" 
@@ -108,9 +108,8 @@
        const className = ref(users.value.className)
         const clicktask =async(className)=>{
           cls.value=className
-          
           router.push({
-            name:""
+            path:"/teacher_classtask",
           })
         };
        
@@ -119,16 +118,14 @@
           try{
             cls.value = className
             const school = users.value.school
-            
-            const a ={
-              className,
-              school
-            }
-            console.log(a)
-            const response =await axios.get('http://139.9.118.223:3000/api/class', JSON.stringify(a))
+            console.log(className)
+            console.log(school)
+           
+       
+            const response =await axios.get(`http://139.9.118.223:3000/api/class?className=${className}&school=${school}`)
             if(response.status){
               console.log(response.data)
-              const { students} = response.data
+              const { students} = response.data;
               const student = response.data.students
               store.commit('setstudent',student)
             } 
@@ -138,9 +135,7 @@
           }catch (error) {  
         // 请求错误处理
         console.log(error.message)
-      }
-          
-        }
+      }}
         const clickteacherperson=()=>{
           router.push({
             name:"teacher_requirement"

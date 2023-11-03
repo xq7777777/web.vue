@@ -122,13 +122,11 @@
           try{
             cls.value = className
             const school = users.value.school
-            
-            const a ={
-              className,
-              school
-            }
-            console.log(a)
-            const response =await axios.get('http://139.9.118.223:3000/api/class', JSON.stringify(a))
+            console.log(className)
+            console.log(school)
+           
+       
+            const response =await axios.get(`http://139.9.118.223:3000/api/class?className=${className}&school=${school}`)
             if(response.status){
               console.log(response.data)
               const { students} = response.data;
@@ -156,17 +154,28 @@
         const goback =()=>{
           router.back() 
         }
-        const requirement =()=>{
+        const requirement =async()=>{
          console.log(formLabelAlign)
          router.push({
           name:'teacher_index'
          })
+         try{
+            
+            const response = await axios.get('http://139.9.118.223:3000/api/B_application/T',formLabelAlign)
+            if(response.status){
+              console.log(response.data)
+            } 
+            router.push({
+            name:'teacher_person'
+          })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
         };
 
         const person =()=>{
-          router.push({
-            name:'teacher_person'
-          })
+         
         }
 
         return {

@@ -66,11 +66,7 @@ const routes = [
     name:'teacher_studentlist',
     component:()=>import('../views/teacher/teacher_studentlist.vue')
   },
-  {
-    path:'/teacher_studentdetails',
-    name:'teacher_studentdetails',
-    component:()=>import('../views/teacher/teacher_studentdetails.vue')
-  },
+  
   {
     path:'/teacher_requirement',
     name:'teacher_requirement',
@@ -85,6 +81,16 @@ const routes = [
     path:'/teacher_person',
     name:'teacher_person',
     component:()=>import('../views/teacher/teacher_person.vue')
+  },
+  {
+    path:'/teacher_classtask',
+    name:'teacher_classtask',
+    component:()=>import('../views/teacher/teacher_classtask.vue')
+  },
+  {
+    path:'/teacher_studentdetails',
+    name:'teacher_studentdetails',
+    component:()=>import('../views/teacher/teacher_studentdetails.vue')
   },
   // {
   //   path: '/login',

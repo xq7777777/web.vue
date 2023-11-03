@@ -61,18 +61,12 @@
                 <el-form-item label="图书编号">
                 <el-input v-model="formLabelAlign.bookid" />
                 </el-form-item>
-                <el-form-item label="图书名称">
-                <el-input v-model="formLabelAlign.title" />
+                <el-form-item label="书架编号">
+                <el-input v-model="formLabelAlign.pressmark" />
                 </el-form-item>
-                <el-form-item label="图书类型">
-                <el-input v-model="formLabelAlign.book_type" />
-                </el-form-item>
-                <el-form-item label="借阅时间">
-                <el-input v-model="formLabelAlign.borrowedAt" />
-                </el-form-item>
-                <el-form-item label="预计归还时间">
-                <el-input v-model="formLabelAlign.willreturn_At" />
-                </el-form-item>
+                
+                
+               
                 <el-button type="info" @click="borrow">确认借阅</el-button>
             </el-form>
           </el-main>
@@ -114,10 +108,9 @@
        const formLabelAlign = reactive({
                 userId:"",
                 bookid:"",
-                title:"",
-                book_type:"",
-                borrowedAt:"",
-                willreturn_At:"",
+                pressmark:"",
+              
+              
             })
         const clicktask =()=>{
           router.push({
@@ -130,13 +123,11 @@
           try{
             cls.value = className
             const school = users.value.school
-            
-            const a ={
-              className,
-              school
-            }
-            console.log(a)
-            const response =await axios.get('http://139.9.118.223:3000/api/class', JSON.stringify(a))
+            console.log(className)
+            console.log(school)
+           
+       
+            const response =await axios.get(`http://139.9.118.223:3000/api/class?className=${className}&school=${school}`)
             if(response.status){
               console.log(response.data)
               const { students} = response.data;
@@ -162,8 +153,21 @@
           }) 
         }
 
-        const borrow =()=>{
+        const borrow =async()=>{
             console.log(formLabelAlign)
+            try{
+           
+            const response =await axios.post('http://139.9.118.223:3000/api/books/school', formLabelAlign)
+            if(response.status){
+              console.log(response.data)
+            } 
+            router.push({
+              name:"teacher_borrow",
+            })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
         }
         const goback =()=>{
           router.back() 

@@ -49,14 +49,19 @@
           </el-header>
           <el-main>
             <el-descriptions title="学生阅读信息">
-            <el-descriptions-item label="学生姓名">kooriookami</el-descriptions-item>
-            <el-descriptions-item label="学号">18100000000</el-descriptions-item>
-            <el-descriptions-item label="班级">Suzhou</el-descriptions-item>
-            <el-descriptions-item label="借阅情况">
-              <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
-                <li v-for="i in count" :key="i" class="infinite-list-item">{{ i }}</li>
-              </ul>
-            </el-descriptions-item>
+              <el-descriptions-item label="学生姓名">{{ username }}</el-descriptions-item>
+              <el-descriptions-item label="学号">{{ userID }}</el-descriptions-item>
+              <el-descriptions-item label="班级">{{ userclass }}</el-descriptions-item>
+              <el-descriptions-item label="借阅情况">
+                <el-table :data="borrowRecords" height="250" style="width: 100%">
+                  <el-table-column prop="book_type" label="图书类型" width=auto />
+                  <el-table-column prop="title" label="图书名称" width=auto />
+                  <el-table-column prop="bookid" label="图书编号" width=auto />
+                  <el-table-column prop="borrowedAt" label="借阅时间" width=auto />
+                  <el-table-column prop="returnedAt" label="归还时间" width=auto />
+                  <el-table-column prop="willreturn_At" label="预计归还时间" width=auto />
+                </el-table>
+              </el-descriptions-item>
           </el-descriptions>
           </el-main>
         </el-container>
@@ -66,11 +71,12 @@
     <script>
     import {
       defineComponent,
+      reactive,
       onMounted,
-      ref,
-      reactive
+      onUnmounted, ref, getCurrentInstance,
     
     } from "vue";
+    import {  } from 'vue'
     import {
   Check,
   Delete,
@@ -80,6 +86,7 @@
   Star,
 } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
+    import {useRoute} from 'vue-router';
     import { computed } from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
@@ -95,6 +102,8 @@
        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
+       const route = useRoute()
+       const {username,userID,userclass,borrowRecords} = JSON.parse(route.query.task)
         const clicktask =()=>{
           router.push({
             name:""
@@ -106,13 +115,11 @@
           try{
             cls.value = className
             const school = users.value.school
-            
-            const a ={
-              className,
-              school
-            }
-            console.log(a)
-            const response =await axios.get('http://139.9.118.223:3000/api/class', JSON.stringify(a))
+            console.log(className)
+            console.log(school)
+           
+       
+            const response =await axios.get(`http://139.9.118.223:3000/api/class?className=${className}&school=${school}`)
             if(response.status){
               console.log(response.data)
               const { students} = response.data;
@@ -157,6 +164,7 @@
           className,
           goback, 
           cls,
+          username,userID,userclass,borrowRecords,
           clickbookborrow,
           person,
         };
