@@ -50,6 +50,20 @@ export default createStore({
     setstudent(state,student){
       state.student = student
     },
+    setUser(state,userName)
+    {
+      state.username = userName
+    },
+    setWork_unit(state, Work_unit){
+      state.Work_unit = Work_unit
+    },
+    setID(state,userID){
+      state.userID = userID
+    },
+    setdata(state,data){
+      state.data = data
+    },
+    
     // updateIsCollapse(state, payload) {
     //   // console.log(payload);
     //   state.isCollapse = !state.isCollapse

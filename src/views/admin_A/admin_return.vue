@@ -13,6 +13,7 @@
           height="913px"
         > 
         <h3>学校端</h3>
+
         <el-sub-menu  index="0">
           <template #title>
             <span >图书管理</span>
@@ -31,22 +32,22 @@
             <span >图书申请</span>
           </template>
           <el-menu-item >申请查看</el-menu-item>
-          <el-menu-item @click="require">提交申请</el-menu-item>
+          <el-menu-item >提交申请</el-menu-item>
         </el-sub-menu>
         <el-sub-menu  index="4">
           <template #title>
             <span >书架管理</span>
           </template>
-          <el-menu-item @click="bookshelf">查看书架</el-menu-item>
+          <el-menu-item >查看书架</el-menu-item>
           <el-menu-item >书架申请</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="7">
             <el-icon><setting /></el-icon>
-            <span @click="maintenance" >维修申请</span>
+            <span >维修申请</span>
           </el-menu-item>
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
-            <span @click="adminperson" >个人中心</span>
+            <span >个人中心</span>
           </el-menu-item>
         </el-menu>
       </el-col>
@@ -54,17 +55,33 @@
         </el-aside >
         <el-container>
           <el-header>
-            <el-input v-model="search" placeholder="请输入图书名称或书架编号" style="width: 240px"/>
-            <!-- <el-button @click="onSearch">搜索</el-button>  -->
+            <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-            <el-table :data="tableData" style="width: 100%">
-                <el-table-column fixed prop="title" label="图书名称" width=auto />
-                <el-table-column prop="bookid" label="图书编号" width=auto />
-                <el-table-column prop="Tquantity" label="图书总量" width=auto />
-                <el-table-column prop="quantity" label="图书余量" width=auto />
-                <el-table-column prop="pressmark" label="书架编号" width=auto />
-            </el-table>
+            <el-form
+                label-width="100px"
+                :model="formLabelAlign"
+                style="max-width: 460px"
+            >
+           
+                <el-form-item label="借阅工号/学号">
+                <el-input v-model="formLabelAlign.userId" />
+                </el-form-item>
+                <el-form-item label="图书编号">
+                <el-input v-model="formLabelAlign.bookid" />
+                </el-form-item>
+                <el-form-item label="原书架编号">
+                <el-input v-model="formLabelAlign.pressmark" />
+                </el-form-item>
+                <el-form-item label="现书架编号">
+                <el-input v-model="formLabelAlign.newpressmark" />
+                </el-form-item>
+               
+                
+                
+               
+                <el-button type="info" @click="returnbook">确认借阅</el-button>
+            </el-form>
             
           </el-main>
         </el-container>
@@ -76,8 +93,7 @@
       defineComponent,
       onMounted,
       ref,
-      reactive,
-      watch,
+      reactive
     } from "vue";
     import {
   Check,
@@ -96,7 +112,6 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const search = ref('') 
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
@@ -107,102 +122,37 @@
             name:'adminA_return'
           }) 
         }
-        const require =()=>{
-          router.push({
-            name:'adminA_requirement'
-          }) 
+        const goback =()=>{
+          router.back() 
         }
-        const maintenance =()=>{
-          router.push({
-            name:'adminA_maintenance'
-          }) 
-        }
-        const adminperson =()=>{
-          router.push({
-            name:'adminA_person'
-          }) 
-        }
-        const bookshelf =async()=>{
+        const formLabelAlign = reactive({
+                userId:"",
+                bookid:"",
+                pressmark:"",  
+                newpressmark:"",
+            })
+        const returnbook =async()=>{
+            console.log(formLabelAlign)
             try{
-                const school =computed(() => store.state.Work_unit)
-            const response =await axios.get(`http://139.9.118.223:3000/api/bookshelf/school}`,school)
+           
+            const response =await axios.patch('http://139.9.118.223:3000/api/books/school', formLabelAlign)
             if(response.status){
               console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data.data
-              
-              store.commit('setdata', Data)
-              
             } 
             router.push({
-            name:'adminA_bookshelf'
-          }) 
+              name:"teacher_index",
+            })
           }catch (error) {  
         // 请求错误处理
         console.log(error.message)
       }
-         
         }
-        const originData= [
-            {
-                title: '2016-05-03',
-                bookid: 'Amy',
-                Tquantity: 'California',
-                quantity: 'Los Angeles',
-                pressmark: 'No. 189, Grove St, Los Angeles',
-            },
-            {
-                title: '2016-10-02',
-                bookid: 'Tom',
-                Tquantity: 'California',
-                quantity: 'Los Angeles',
-                pressmark: 'No. 189, Grove St, Los Angeles',
-            },
-            {
-                title: '2017-05-04',
-                bookid: 'Tom',
-                Tquantity: 'California',
-                quantity: 'Los Angeles',
-                pressmark: 'No. 189, Grove St, Los Angeles',
-            },
-            {
-                title: '2016-08-01',
-                bookid: 'Linda',
-                Tquantity: 'California',
-                quantity: 'Los Angeles',
-                pressmark: 'No. 189, Grove St, Los Angeles',
-            },
-        ]
-        const tableData = ref(originData) 
-        const filterData = computed(() => {
-      if (!search.value) {
-        return originData
-      }
-
-      return originData.filter(item => {
-        return item.title.includes(search.value) || 
-           item.pressmark.includes(search.value) ||
-           item.bookid.includes(search.value)
-      })
-    })
-
-    watch(search, (newVal) => {
-      if (!newVal) {
-        tableData.value = originData
-      } else {
-        tableData.value = filterData.value
-      }
-    })
         return{
             bookborrow,
             bookreturn,
-            require,
-            maintenance,
-            adminperson,
-            bookshelf,
-            search,
-            originData,
-            tableData,
+            returnbook,
+            goback,
+            formLabelAlign,
         }
       }
     })

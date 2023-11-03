@@ -97,6 +97,36 @@ const routes = [
     name:'adminA_index',
     component:()=>import('../views/admin_A/admin_index.vue')
   },
+  {
+    path:'/admin_borrow',
+    name:'adminA_borrow',
+    component:()=>import('../views/admin_A/admin_borrow.vue')
+  },
+  {
+    path:'/admin_return',
+    name:'adminA_return',
+    component:()=>import('../views/admin_A/admin_return.vue')
+  },
+  {
+    path:'/admin_requirement',
+    name:'adminA_requirement',
+    component:()=>import('../views/admin_A/admin_requirement.vue')
+  },
+  {
+    path:'/admin_maintenance',
+    name:'adminA_maintenance',
+    component:()=>import('../views/admin_A/admin_maintenance.vue')
+  },
+  {
+    path:'/admin_person',
+    name:'adminA_person',
+    component:()=>import('../views/admin_A/admin_person.vue')
+  },
+  {
+    path:'/admin_bookshelf',
+    name:'adminA_bookshelf',
+    component:()=>import('../views/admin_A/admin_bookshelf.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',

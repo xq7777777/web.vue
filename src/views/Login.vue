@@ -100,10 +100,17 @@
             })
           }
           else if(loginForm.identity==="A"){
-            const{work_unit}=response.data.data
-            if(work_unit==="A")
+            const{userID,username,work_unit}=response.data.data
+            const userid =response.data.data.userID
+            const userName =response.data.data.username
+            const Work_unit =response.data.data.work_unit
+            store.commit('setUser', userName)
+            store.commit('setID', userID)
+            store.commit('setWork_unit', Work_unit)
+            if(work_unit==="红星小学")
+
             router.push({
-                        name: "admin_index",
+                        name: "adminA_index",
                       
                       });
           }
