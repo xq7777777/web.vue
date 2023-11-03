@@ -99,6 +99,14 @@
               }
             })
           }
+          else if(loginForm.identity==="A"){
+            const{work_unit}=response.data.data
+            if(work_unit==="A")
+            router.push({
+                        name: "admin_index",
+                      
+                      });
+          }
           
         }
       } catch (error) {  

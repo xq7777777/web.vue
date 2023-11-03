@@ -92,6 +92,11 @@ const routes = [
     name:'teacher_studentdetails',
     component:()=>import('../views/teacher/teacher_studentdetails.vue')
   },
+  {
+    path:'/admin_index',
+    name:'adminA_index',
+    component:()=>import('../views/admin_A/admin_index.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',

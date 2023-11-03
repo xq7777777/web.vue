@@ -16,28 +16,33 @@
 
         <el-sub-menu  index="0">
           <template #title>
-            <span >作业情况</span>
+            <span >图书管理</span>
           </template>
-          <el-menu-item v-for="cls in className" @click = clicktask>{{ cls }}</el-menu-item>
+          <el-menu-item ></el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span>阅读情况</span>
+            <span>用户管理</span>
           </template>
-          <el-menu-item v-for="cls in className"  @click = clickread(cls)>{{ cls }}</el-menu-item>
+          <el-menu-item ></el-menu-item>
         </el-sub-menu>
-          <el-menu-item index="6">
+        <el-menu-item index="4">
             <el-icon><setting /></el-icon>
-            <span @click = clickteacherperson>图书申请</span>
+            <span >书架管理</span>
+          </el-menu-item>
+        <el-menu-item index="6">
+            <el-icon><setting /></el-icon>
+            <span >图书申请</span>
           </el-menu-item>
           <el-menu-item index="7">
             <el-icon><setting /></el-icon>
-            <span @click = clickbookborrow>图书借阅</span>
+            <span >维修申请</span>
           </el-menu-item>
+
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
-            <span @click = person>个人中心</span>
+            <span >个人中心</span>
           </el-menu-item>
         </el-menu>
       </el-col>
@@ -48,28 +53,8 @@
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-           
-            <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-            >
-           
-                <el-form-item label="借阅工号/学号">
-                <el-input v-model="formLabelAlign.userId" />
-                </el-form-item>
-                <el-form-item label="图书编号">
-                <el-input v-model="formLabelAlign.bookid" />
-                </el-form-item>
-                <el-form-item label="书架编号">
-                <el-input v-model="formLabelAlign.pressmark" />
-                </el-form-item>
-               
-                
-                
-               
-                <el-button type="info" @click="borrow">确认借阅</el-button>
-            </el-form>
+          
+            
           </el-main>
         </el-container>
       </el-container>
@@ -81,7 +66,6 @@
       onMounted,
       ref,
       reactive
-    
     } from "vue";
     import {
   Check,
@@ -95,121 +79,20 @@
     import { computed } from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
+  
     export default defineComponent({
       setup() {
         const store = useStore();
+        const users = computed(() => store.state.users)
+        const classname = ref(users.value.className)
         const router = useRouter()
-        // const className = ref([
-
-        // ])
+        const showModal = ref(false)
         const cls = ref('')
-       const users = computed(() => store.state.users)
-       const tasks = computed(() => store.state.tasks)
-       const className = ref(users.value.className)
-       const formLabelAlign = reactive({
-                userId:"",
-                bookid:"",
-                pressmark:"",  
-            })
-        const clicktask =()=>{
-          router.push({
-            name:""
-          })
-        };
-        
-      
-        const clickread =async(className)=>{
-          try{
-            cls.value = className
-            const school = users.value.school
-            console.log(className)
-            console.log(school)
-           
-       
-            const response =await axios.get(`http://139.9.118.223:3000/api/class?className=${className}&school=${school}`)
-            if(response.status){
-              console.log(response.data)
-              const { students} = response.data;
-              const student = response.data.students
-              store.commit('setstudent',student)
-            } 
-            router.push({
-              name:"teacher_studentlist",
-            })
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }}
-        const clickteacherperson=()=>{
-            router.push({
-                name:"teacher_requirement"
-            })
-        }
-
-        const clickbookborrow =()=>{
-          router.push({
-            name:'teacher_borrow'
-          }) 
-        }
-
-        const borrow =async()=>{
-            console.log(formLabelAlign)
-            try{
-           
-            const response =await axios.post('http://139.9.118.223:3000/api/books/school', formLabelAlign)
-            if(response.status){
-              console.log(response.data)
-            } 
-            router.push({
-              name:"teacher_index",
-            })
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
       }
-        }
-        const goback =()=>{
-          router.back() 
-        }
-        const requirement =()=>{
-         console.log(formLabelAlign)
-        };
-
-        const person =()=>{
-          router.push({
-            name:'teacher_person'
-          })
-        }
-
-        return {
-          clicktask,
-          clickread,
-          clickteacherperson,
-          users,
-          tasks,
-          className,
-          goback, 
-          formLabelAlign,
-          requirement,
-          clickbookborrow,
-          borrow,
-          person,
-        };
-      },
- 
-      methods: {
-       
-       
-    },
- 
     })
-    
- 
-   
     </script> 
     
     <style lang="less" scoped>
-    
     .home {
       .user {
         display: flex;
@@ -346,7 +229,6 @@
          text-align: center;
          font-size: 30px;
        }
-      
      }
   html,body {
         margin: 0;

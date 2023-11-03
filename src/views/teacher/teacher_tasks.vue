@@ -198,6 +198,7 @@
           })
         }
         const set =async()=>{
+          //加上核验表单是否完整
           try{
            
             const response =await axios.post(`http://139.9.118.223:3000/api/class/tasks`,taskForm)
