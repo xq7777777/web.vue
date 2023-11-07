@@ -127,6 +127,11 @@ const routes = [
     name:'adminA_bookshelf',
     component:()=>import('../views/admin_A/admin_bookshelf.vue')
   },
+  {
+    path:'/admin_checkrequire',
+    name:'adminA_checkrequire',
+    component:()=>import('../views/admin_A/admin_checkrequire.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',
