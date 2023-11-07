@@ -68,7 +68,7 @@
                 
                 
                
-                <el-button type="info" @click="borrow">确认借阅</el-button>
+                <el-button type="success" round @click="borrow">确认借阅</el-button>
             </el-form>
           </el-main>
         </el-container>
@@ -154,6 +154,12 @@
 
         const borrow =async()=>{
             console.log(formLabelAlign)
+            if(!formLabelAlign.userId || !formLabelAlign.bookid || !formLabelAlign.pressmark){
+              alert('请输入完整信息')
+              return
+            }
+
+            alert('确认借阅图书信息无误,再次点击确认')
             try{
            
             const response =await axios.post('http://139.9.118.223:3000/api/books/school', formLabelAlign)

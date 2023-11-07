@@ -108,7 +108,7 @@
             store.commit('setID', userID)
             store.commit('setWork_unit', Work_unit)
             if(work_unit==="红星小学")
-
+            
             router.push({
                         name: "adminA_index",
                       
