@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 export default createStore({
   state: {
+    
     isCollapse: true,
     currentMenu: null,
     tabsList: [
@@ -11,6 +12,8 @@ export default createStore({
         icon: 'home'
       }
     ],
+    users:{},
+    userID:{},
     user: {
       // className:"",
       // school:"",
@@ -62,6 +65,9 @@ export default createStore({
     },
     setdata(state,data){
       state.data = data
+    },
+    setBookfuben(state,bookfuben){
+      state.bookfuben = bookfuben
     },
     
     // updateIsCollapse(state, payload) {

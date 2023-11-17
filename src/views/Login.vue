@@ -76,6 +76,7 @@
             store.commit('setTasks', tasks)
             store.commit('setRecords', records)
             // 提交 mutations
+            console.log(users)
             console.log(tasks)
             console.log(records)
             router.push({
@@ -100,19 +101,29 @@
             })
           }
           else if(loginForm.identity==="A"){
-            const{userID,username,work_unit}=response.data.data
+            const{userID,username,work_unit,bookfuben}=response.data.data
             const userid =response.data.data.userID
             const userName =response.data.data.username
             const Work_unit =response.data.data.work_unit
+            const Bookfuben =response.data.data.bookfuben
             store.commit('setUser', userName)
             store.commit('setID', userID)
             store.commit('setWork_unit', Work_unit)
-            if(work_unit==="红星小学")
+            store.commit('setBookfuben', Bookfuben)
+            console.log(Bookfuben)
+            if(work_unit==="红星小学"){
             
             router.push({
                         name: "adminA_index",
                       
+                      });}
+            else if(work_unit==="智慧图书")
+            {
+              router.push({
+                        name: "adminB_index",
+
                       });
+            }
           }
           
         }

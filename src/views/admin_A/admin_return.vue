@@ -296,7 +296,7 @@
          font-size: 30px;
        }
      }
-  html,body {
+ html,body {
         margin: 0;
         height: 100%;
   }

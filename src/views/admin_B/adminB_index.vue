@@ -17,8 +17,8 @@
           <template #title>
             <span >图书管理</span>
           </template>
-          <el-menu-item @click="bookborrow">图书借阅</el-menu-item>
-          <el-menu-item @click="bookreturn">图书归还</el-menu-item>
+          <el-menu-item @click="bookborrow">图书增减</el-menu-item>
+          <el-menu-item @click="bookreturn">图书申请</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
@@ -27,8 +27,8 @@
           <el-menu-item ></el-menu-item>
         </el-sub-menu>
           <el-sub-menu  index="3">
-          <template #title>
-            <span >图书申请</span>
+          <template >
+            <span >查看申请</span>
           </template>
           <el-menu-item @click="checkrequire">申请查看</el-menu-item>
           <el-menu-item @click="requirement">提交申请</el-menu-item>
@@ -97,8 +97,6 @@
         const store = useStore();
         const router = useRouter()
         const search = ref('') 
-        const bookfuben =computed(() => store.state.bookfuben)
-        console.log(bookfuben.value)
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
@@ -228,7 +226,6 @@
             bookshelf,
             checkrequire,
             search,
-            bookfuben,
             originData,
             tableData,
         }
