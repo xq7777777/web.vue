@@ -38,6 +38,8 @@ export default createStore({
       },
     ],
     menu: [],
+    user:{},
+    userID:{}
   },
   mutations: {
     setUser(state, users) {

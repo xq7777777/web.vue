@@ -134,7 +134,7 @@
       });
       
       const store = useStore();
-      const users = ref()
+       const users = ref()
        const tasks = computed(() => store.state.tasks)
        const records = computed(() => store.state.records)
        const router = useRouter();
@@ -149,12 +149,11 @@
           name:"student_person"
         })
       }
-     
-      onMounted(() => {
-  users.value = store.state.users
-})
-console.log(users.value)
-  
+
+      onMounted(() =>{
+        users.value = store.state.users
+      })
+        console.log(users.value)
       return {
         users,
         tasks,

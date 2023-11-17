@@ -13,6 +13,7 @@
           height="913px"
         > 
         <h3>学校端</h3>
+
         <el-sub-menu  index="0">
           <template #title>
             <span >图书管理</span>
@@ -30,23 +31,23 @@
           <template #title>
             <span >图书申请</span>
           </template>
-          <el-menu-item @click="checkrequire">申请查看</el-menu-item>
-          <el-menu-item @click="requirement">提交申请</el-menu-item>
+          <el-menu-item >申请查看</el-menu-item>
+          <el-menu-item >提交申请</el-menu-item>
         </el-sub-menu>
         <el-sub-menu  index="4">
           <template #title>
             <span >书架管理</span>
           </template>
-          <el-menu-item @click="bookshelf">查看书架</el-menu-item>
+          <el-menu-item >查看书架</el-menu-item>
           <el-menu-item >书架申请</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="7">
             <el-icon><setting /></el-icon>
-            <span @click="maintenance" >维修申请</span>
+            <span >维修申请</span>
           </el-menu-item>
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
-            <span @click="adminperson" >个人中心</span>
+            <span >个人中心</span>
           </el-menu-item>
         </el-menu>
       </el-col>
@@ -54,17 +55,52 @@
         </el-aside >
         <el-container>
           <el-header>
-            <el-input v-model="search" placeholder="请输入图书名称或书架编号" style="width: 240px"/>
-            <!-- <el-button @click="onSearch">搜索</el-button>  -->
+            <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-            <el-table :data="tableData" style="width: 100%">
-                <el-table-column fixed prop="title" label="图书名称" width=auto />
-                <el-table-column prop="bookid" label="图书编号" width=auto />
-                <el-table-column prop="Tquantity" label="图书总量" width=auto />
-                <el-table-column prop="quantity" label="图书余量" width=auto />
-                <el-table-column prop="pressmark" label="书架编号" width=auto />
-            </el-table>
+            <div class="user-profile">
+
+<el-card class="box-card">
+  <div slot="header" class="clearfix">
+    <span>个人信息</span>
+  </div>
+
+  <div class="user-info">
+    <div class="info" font-size="32px">
+        <span>姓名:{{userName}}</span>
+        <br><br><br>
+        <span>工号:{{userID}}</span>
+        <br><br><br>
+        <span>学校:{{work_unit}}</span>
+        <br><br><br>
+        <span>手机号:{{}}</span>
+        <br><br><br>
+        <el-button @click=" showModal = true ">修改密码</el-button>
+    </div>
+  </div>
+
+</el-card>
+<teleport to="body">
+        <el-dialog v-if="showModal" :model-value="showModal" title="修改密码"
+        font-size="32px">
+        <el-form v-model="passwordForm" label-width="80px">
+    <el-form-item label="旧密码">
+      <el-input v-model="passwordForm.oldPass"></el-input>
+    </el-form-item>
+    <el-form-item label="新密码">
+      <el-input v-model="passwordForm.newPass"></el-input>
+    </el-form-item>
+    <el-form-item label="确认密码">
+      <el-input v-model="passwordForm.confirmPass"></el-input>
+    </el-form-item>
+    <el-button type="primary" @click="change">确定修改</el-button>
+  </el-form>
+  <el-button @click="showModal = false">关闭</el-button>
+      </el-dialog>
+</teleport>
+
+
+</div>
             
           </el-main>
         </el-container>
@@ -76,8 +112,7 @@
       defineComponent,
       onMounted,
       ref,
-      reactive,
-      watch,
+      reactive
     } from "vue";
     import {
   Check,
@@ -88,7 +123,7 @@
   Star,
 } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
-    import { computed ,toRaw} from 'vue'
+    import { computed } from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
   
@@ -96,125 +131,57 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const search = ref('') 
-        const bookfuben =computed(() => store.state.bookfuben)
-        const originData= []  
-        for (let item of bookfuben.value) {
-  originData.push({
-    title: item.title,
-    bookid: item.bookid,
-    Tquantity: item.Tquantity,
-    quantity: item.quantity,
-    pressmark: item.pressmark,
-  });
-}
-
-
-        console.log(originData)
+        const userID = computed(() => store.state.userID)
+        const userName = computed(() => store.state.username)
+        const work_unit = computed(() => store.state.Work_unit)
+        const showModal = ref(false);
+        const passwordForm = ref({
+      oldPass: '',
+      newPass: '',
+      confirmPass: '' 
+    })
+        const change =()=>{
+          if(passwordForm.value.oldPass===passwordForm.value.newPass)
+          {
+            alert("新密码不可以和旧密码相同")
+            
+          }
+          else if(passwordForm.value.newPass!=passwordForm.value.confirmPass)
+          {
+            alert("请再次确认密码")
+            
+          }
+          else 
+          {
+            console.log(passwordForm.value)
+          }
+        
+        }
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
           }) 
-        }//bug，连接不上
+        }
         const bookreturn =()=>{
           router.push({
             name:'adminA_return'
           }) 
-        }//bug
-        const requirement =()=>{
-          router.push({
-            name:'adminA_requirement'
-          }) 
         }
-        const maintenance =()=>{
-          router.push({
-            name:'adminA_maintenance'
-          }) 
+        const goback =()=>{
+          router.back() 
         }
-        const adminperson =()=>{
-          router.push({
-            name:'adminA_person'
-          }) 
-        }
-        const checkrequire =async()=>{
-          try{
-                const userid =computed(() => store.state.userid)
-                const rawUserid = toRaw(userid.value)
 
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/T`,rawUserid)
-            if(response.status){
-              console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data.data
-              
-              store.commit('setdata', Data)
-              
-            } 
-            router.push({
-            name:'adminA_checkrequire'
-          })
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
-         
-        
-        }
-        const bookshelf =async()=>{
-            try{
-                const school =computed(() => store.state.Work_unit)
-                const rawschool = toRaw(school.value)
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,rawschool)
-            if(response.status){
-              console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data.data
-              
-              store.commit('setdata', Data)
-              
-            } 
-            router.push({
-            name:'adminA_bookshelf'
-          }) 
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
-         
-        }
-       
-        const tableData = ref(originData) 
-        const filterData = computed(() => {
-      if (!search.value) {
-        return originData
-      }
-
-      return originData.filter(item => {
-        return item.title.includes(search.value) || 
-           item.pressmark.includes(search.value) ||
-           item.bookid.includes(search.value)
-      })
-    })
-
-    watch(search, (newVal) => {
-      if (!newVal) {
-        tableData.value = originData
-      } else {
-        tableData.value = filterData.value
-      }
-    })
         return{
             bookborrow,
             bookreturn,
-            requirement,
-            maintenance,
-            adminperson,
-            bookshelf,
-            checkrequire,
-            search,
-            bookfuben,
-            originData,
-            tableData,
+            goback,
+            userID,
+            userName,
+            work_unit,
+            showModal,
+            passwordForm,
+            change,
+     
         }
       }
     })
@@ -367,3 +334,4 @@
   
   
   
+
