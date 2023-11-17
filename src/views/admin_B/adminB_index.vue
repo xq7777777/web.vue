@@ -17,8 +17,8 @@
           <template #title>
             <span >图书管理</span>
           </template>
-          <el-menu-item @click="bookborrow">图书借阅</el-menu-item>
-          <el-menu-item @click="bookreturn">图书归还</el-menu-item>
+          <el-menu-item @click="bookborrow">图书增减</el-menu-item>
+          <el-menu-item @click="bookreturn">图书申请</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
@@ -27,8 +27,8 @@
           <el-menu-item ></el-menu-item>
         </el-sub-menu>
           <el-sub-menu  index="3">
-          <template #title>
-            <span >图书申请</span>
+          <template >
+            <span >查看申请</span>
           </template>
           <el-menu-item @click="checkrequire">申请查看</el-menu-item>
           <el-menu-item @click="requirement">提交申请</el-menu-item>
@@ -65,7 +65,7 @@
                 <el-table-column prop="quantity" label="图书余量" width=auto />
                 <el-table-column prop="pressmark" label="书架编号" width=auto />
             </el-table>
-            
+
           </el-main>
         </el-container>
       </el-container>
@@ -97,30 +97,16 @@
         const store = useStore();
         const router = useRouter()
         const search = ref('') 
-        const bookfuben =computed(() => store.state.bookfuben)
-        const originData= []  
-        for (let item of bookfuben.value) {
-  originData.push({
-    title: item.title,
-    bookid: item.bookid,
-    Tquantity: item.Tquantity,
-    quantity: item.quantity,
-    pressmark: item.pressmark,
-  });
-}
-
-
-        console.log(originData)
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
           }) 
-        }//bug，连接不上
+        }
         const bookreturn =()=>{
           router.push({
             name:'adminA_return'
           }) 
-        }//bug
+        }
         const requirement =()=>{
           router.push({
             name:'adminA_requirement'
@@ -140,7 +126,6 @@
           try{
                 const userid =computed(() => store.state.userid)
                 const rawUserid = toRaw(userid.value)
-
             const response =await axios.post(`http://139.9.118.223:3000/api/B_application/T`,rawUserid)
             if(response.status){
               console.log(response.data)
@@ -163,8 +148,7 @@
         const bookshelf =async()=>{
             try{
                 const school =computed(() => store.state.Work_unit)
-                const rawschool = toRaw(school.value)
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,rawschool)
+            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,school)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -182,20 +166,47 @@
       }
          
         }
-       
+        const originData= [
+            {
+                title: '2016-05-03',
+                bookid: 'Amy',
+                Tquantity: 'California',
+                quantity: 'Los Angeles',
+                pressmark: 'No. 189, Grove St, Los Angeles',
+            },
+            {
+                title: '2016-10-02',
+                bookid: 'Tom',
+                Tquantity: 'California',
+                quantity: 'Los Angeles',
+                pressmark: 'No. 189, Grove St, Los Angeles',
+            },
+            {
+                title: '2017-05-04',
+                bookid: 'Tom',
+                Tquantity: 'California',
+                quantity: 'Los Angeles',
+                pressmark: 'No. 189, Grove St, Los Angeles',
+            },
+            {
+                title: '2016-08-01',
+                bookid: 'Linda',
+                Tquantity: 'California',
+                quantity: 'Los Angeles',
+                pressmark: 'No. 189, Grove St, Los Angeles',
+            },
+        ]
         const tableData = ref(originData) 
         const filterData = computed(() => {
       if (!search.value) {
         return originData
       }
-
       return originData.filter(item => {
         return item.title.includes(search.value) || 
            item.pressmark.includes(search.value) ||
            item.bookid.includes(search.value)
       })
     })
-
     watch(search, (newVal) => {
       if (!newVal) {
         tableData.value = originData
@@ -212,14 +223,13 @@
             bookshelf,
             checkrequire,
             search,
-            bookfuben,
             originData,
             tableData,
         }
       }
     })
     </script> 
-    
+
     <style lang="less" scoped>
     .home {
       .user {
@@ -296,21 +306,18 @@
   width: 500px;
   margin: 20px auto;
 }
-
 .user-info {
   display: flex;
   align-items: center;
   padding-bottom: 20px;
   border-bottom: 1px solid #ddd;
 }
-
 .user-info img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   margin-right: 50px;
 }
-
 .user-info .info p {
   display: flex;
   align-items: center; 
@@ -318,13 +325,10 @@
   color: #666;
   padding: 5px 0;
 }
-
-
 .user-info .info i {
   font-size: 18px;
   margin-right: 10px;
 }
-
   
   
   
@@ -364,6 +368,3 @@
   }
   
   </style>
-  
-  
-  

@@ -35,6 +35,8 @@ export default createStore({
       },
     ],
     menu: [],
+    user:{},
+    userID:{}
   },
   mutations: {
     setUser(state, users) {
@@ -62,6 +64,10 @@ export default createStore({
     },
     setdata(state,data){
       state.data = data
+    },
+    setBookfuben(state,bookfuben)
+    {
+      state.bookfuben = bookfuben
     },
     
     // updateIsCollapse(state, payload) {
