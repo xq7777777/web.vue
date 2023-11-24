@@ -136,7 +136,12 @@ const routes = [
     path:'/adminB_index',
     name:'adminB_index',
     component:()=>import('../views/admin_B/adminB_index.vue')
-  }
+  },
+  {
+    path:'/adminA_peolpe',
+    name:'adminA_peolpe',
+    component:()=>import('../views/admin_A/admin_peolpe.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',

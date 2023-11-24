@@ -141,6 +141,7 @@
             if(response.status){
               console.log(response.data)
             } 
+            alert('借阅成功')
             router.push({
               name:"adminA_index",
             })

@@ -131,10 +131,11 @@
             
             try{
            
-            const response =await axios.patch('http://139.9.118.223:3000/api/books/school', formLabelAlign)
+            const response =await axios.put('http://139.9.118.223:3000/api/books/school', formLabelAlign)
             if(response.status){
               console.log(response.data)
             } 
+            alert("归还成功")
             router.push({
               name:"adminA_index",
             })

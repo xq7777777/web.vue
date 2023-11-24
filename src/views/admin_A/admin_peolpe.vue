@@ -20,10 +20,12 @@
           <el-menu-item @click="bookborrow">图书借阅</el-menu-item>
           <el-menu-item @click="bookreturn">图书归还</el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="1">
-        
-            <span @click="peolpe" >用户管理</span>
-          </el-menu-item>
+        <el-sub-menu index="2">
+          <template #title>
+            <span>用户管理</span>
+          </template>
+          <el-menu-item ></el-menu-item>
+        </el-sub-menu>
           <el-sub-menu  index="3">
           <template #title>
             <span >图书申请</span>
@@ -52,18 +54,41 @@
         </el-aside >
         <el-container>
           <el-header>
-            <el-input v-model="search" placeholder="请输入图书名称或书架编号" style="width: 240px"/>
-            <!-- <el-button @click="onSearch">搜索</el-button>  -->
-          </el-header>
+            <el-button type="info" @click="goback">返回</el-button>
+           </el-header>
           <el-main>
-            <el-table :data="tableData" style="width: 100%">
-                <el-table-column fixed prop="title" label="图书名称" width=auto />
-                <el-table-column prop="bookid" label="图书编号" width=auto />
-                <el-table-column prop="Tquantity" label="图书总量" width=auto />
-                <el-table-column prop="quantity" label="图书余量" width=auto />
-                <el-table-column prop="pressmark" label="书架编号" width=auto />
-            </el-table>
+          
+            <div style="margin: 20px" />
+            <el-form
+                label-width="100px"
+                :model="formLabelAlign"
+                style="max-width: 460px"
+            >
             
+                <el-form-item label="学号或工号">
+                <el-input v-model="formLabelAlign.userID" />
+                </el-form-item>
+                <el-form-item label="密码">
+                <el-input v-model="formLabelAlign.password" />
+                </el-form-item>
+                <el-form-item label="姓名">
+                <el-input v-model="formLabelAlign.username" />
+                </el-form-item>
+                <el-form-item label="身份">
+                <el-input v-model="formLabelAlign.identity" />
+                </el-form-item>
+                <el-form-item label="学校">
+                <el-input v-model="formLabelAlign.school" />
+                </el-form-item>
+                <el-form-item label="班级">
+                <el-input v-model="formLabelAlign.className" />
+                </el-form-item>
+                <el-form-item label="操作员">
+                <el-input v-model="formLabelAlign.adminID" />
+                </el-form-item>
+                <el-button type="success" round @click="addperson">确认注册</el-button>
+            </el-form>
+
           </el-main>
         </el-container>
       </el-container>
@@ -94,20 +119,17 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const search = ref('') 
-        const bookfuben =computed(() => store.state.bookfuben)
-        const originData= []  
-        for (let item of bookfuben.value) {
-  originData.push({
-    title: item.title,
-    bookid: item.bookid,
-    Tquantity: item.Tquantity,
-    quantity: item.quantity,
-    pressmark: item.pressmark,
-  });
-}
-
-
+       
+        const formLabelAlign = reactive({
+            userID:"",       //检查是否存在，不存在则创建，存在则修改
+            password:"",
+            username:"",
+            identity:"",           
+            school:"红星小学",               
+            className:"", 
+            adminID:"",
+        })
+   
        
         const bookborrow =()=>{
           router.push({
@@ -134,10 +156,28 @@
             name:'adminA_person'
           }) 
         }
-        const peolpe =()=>{
-          router.push({
-            name:'adminA_peolpe'
+        const goback =()=>{
+          router.back() 
+        }
+        const addperson =async()=>{
+            try{
+            const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/school`,formLabelAlign)
+            if(response.status){
+              console.log(response.data)
+              const{data}=response.data
+              const  Data = response.data.data
+              
+              store.commit('setdata', Data)
+              
+            } 
+            router.push({
+            name:'adminA_index'
           }) 
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+         
         }
         const checkrequire =async()=>{
           try{
@@ -165,9 +205,9 @@
         }
         const bookshelf =async()=>{
             try{
-                const School =computed(() => store.state.Work_unit)
-                const school = toRaw(School.value)
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,school)
+                const school =computed(() => store.state.Work_unit)
+                const rawschool = toRaw(school.value)
+            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,rawschool)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -186,26 +226,7 @@
          
         }
        
-        const tableData = ref(originData) 
-        const filterData = computed(() => {
-      if (!search.value) {
-        return originData
-      }
-
-      return originData.filter(item => {
-        return item.title.includes(search.value) || 
-           item.pressmark.includes(search.value) ||
-           item.bookid.includes(search.value)
-      })
-    })
-
-    watch(search, (newVal) => {
-      if (!newVal) {
-        tableData.value = originData
-      } else {
-        tableData.value = filterData.value
-      }
-    })
+       
         return{
             bookborrow,
             bookreturn,
@@ -213,12 +234,12 @@
             maintenance,
             adminperson,
             bookshelf,
-            peolpe,
             checkrequire,
-            search,
-            bookfuben,
-            originData,
-            tableData,
+            addperson,
+            goback,
+            formLabelAlign,
+         
+           
         }
       }
     })
