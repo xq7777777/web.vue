@@ -141,10 +141,15 @@
         }
         const checkrequire =async()=>{
           try{
-                const userid =computed(() => store.state.userid)
+                const userid =computed(() => store.state.userID)
+                console.log(userid.value)
                 const res_userID = toRaw(userid.value)
-
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,res_userID)
+                console.log(res_userID)
+                const Userid = reactive({
+                res_userID,
+               
+            })
+            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,Userid)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -167,7 +172,11 @@
             try{
                 const School =computed(() => store.state.Work_unit)
                 const school = toRaw(School.value)
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,school)
+                console.log(school)
+                const schoolname = reactive({
+                  school,
+                })
+            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
             if(response.status){
               console.log(response.data)
               const{data}=response.data

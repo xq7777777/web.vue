@@ -135,7 +135,7 @@
             }
 
             alert('确认借阅图书信息无误,再次点击确认')
-            try{
+            try{  
            
             const response =await axios.post('http://139.9.118.223:3000/api/books/school', formLabelAlign)
             if(response.status){
