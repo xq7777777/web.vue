@@ -65,13 +65,10 @@
             >
            
                 <el-form-item label="借阅工号/学号">
-                <el-input v-model="formLabelAlign.userId" />
+                <el-input v-model="formLabelAlign.userID" />
                 </el-form-item>
                 <el-form-item label="图书编号">
                 <el-input v-model="formLabelAlign.bookid" />
-                </el-form-item>
-                <el-form-item label="原书架编号">
-                <el-input v-model="formLabelAlign.pressmark" />
                 </el-form-item>
                 <el-form-item label="现书架编号">
                 <el-input v-model="formLabelAlign.newpressmark" />
@@ -80,7 +77,7 @@
                 
                 
                
-                <el-button type="info" @click="returnbook">确认借阅</el-button>
+                <el-button type="info" @click="returnbook">确认归还</el-button>
             </el-form>
             
           </el-main>
@@ -126,13 +123,12 @@
           router.back() 
         }
         const formLabelAlign = reactive({
-                userId:"",
-                bookid:"",
-                pressmark:"",  
+                userID:"",
+                bookid:"", 
                 newpressmark:"",
             })
         const returnbook =async()=>{
-            console.log(formLabelAlign)
+            
             try{
            
             const response =await axios.patch('http://139.9.118.223:3000/api/books/school', formLabelAlign)
@@ -140,7 +136,7 @@
               console.log(response.data)
             } 
             router.push({
-              name:"teacher_index",
+              name:"adminA_index",
             })
           }catch (error) {  
         // 请求错误处理

@@ -61,9 +61,8 @@
             <el-table :data="tableData" style="width: 100%">
                 <el-table-column fixed prop="title" label="图书名称" width=auto />
                 <el-table-column prop="bookid" label="图书编号" width=auto />
-                <el-table-column prop="Tquantity" label="图书总量" width=auto />
-                <el-table-column prop="quantity" label="图书余量" width=auto />
-                <el-table-column prop="pressmark" label="书架编号" width=auto />
+                <el-table-column prop="author" label="图书作者" width=auto />
+                <el-table-column prop="publisher" label="出版社" width=auto />
             </el-table>
             
           </el-main>
@@ -97,6 +96,16 @@
         const store = useStore();
         const router = useRouter()
         const search = ref('') 
+        const books =computed(() => store.state.books)
+        const originData= []  
+        for (let item of books.value) {
+  originData.push({
+    title: item.title,
+    bookid: item.bookid,
+    author: item.author,
+    publisher: item.publisher,
+  });
+}
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
@@ -167,36 +176,6 @@
       }
          
         }
-        const originData= [
-            {
-                title: '2016-05-03',
-                bookid: 'Amy',
-                Tquantity: 'California',
-                quantity: 'Los Angeles',
-                pressmark: 'No. 189, Grove St, Los Angeles',
-            },
-            {
-                title: '2016-10-02',
-                bookid: 'Tom',
-                Tquantity: 'California',
-                quantity: 'Los Angeles',
-                pressmark: 'No. 189, Grove St, Los Angeles',
-            },
-            {
-                title: '2017-05-04',
-                bookid: 'Tom',
-                Tquantity: 'California',
-                quantity: 'Los Angeles',
-                pressmark: 'No. 189, Grove St, Los Angeles',
-            },
-            {
-                title: '2016-08-01',
-                bookid: 'Linda',
-                Tquantity: 'California',
-                quantity: 'Los Angeles',
-                pressmark: 'No. 189, Grove St, Los Angeles',
-            },
-        ]
         const tableData = ref(originData) 
         const filterData = computed(() => {
       if (!search.value) {
@@ -205,7 +184,7 @@
 
       return originData.filter(item => {
         return item.title.includes(search.value) || 
-           item.pressmark.includes(search.value) ||
+           item.author.includes(search.value) ||
            item.bookid.includes(search.value)
       })
     })
@@ -228,6 +207,7 @@
             search,
             originData,
             tableData,
+            books,
         }
       }
     })

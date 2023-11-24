@@ -71,6 +71,10 @@ export default createStore({
     setBookfuben(state,bookfuben){
       state.bookfuben = bookfuben
     },
+    setBooks(state,books)
+    {
+      state.books = books
+    },
     
     // updateIsCollapse(state, payload) {
     //   // console.log(payload);

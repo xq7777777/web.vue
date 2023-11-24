@@ -119,6 +119,12 @@
                       });}
             else if(work_unit==="智慧图书")
             {
+              const {userID, username, work_unit, books} = response.data.data;
+
+              store.commit('setUser', username);
+              store.commit('setID', userID); 
+              store.commit('setWork_unit', work_unit);
+              store.commit('setBooks', books);
               router.push({
                         name: "adminB_index",
 

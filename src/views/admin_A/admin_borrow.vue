@@ -65,7 +65,7 @@
             >
            
                 <el-form-item label="借阅工号/学号">
-                <el-input v-model="formLabelAlign.userId" />
+                <el-input v-model="formLabelAlign.userID" />
                 </el-form-item>
                 <el-form-item label="图书编号">
                 <el-input v-model="formLabelAlign.bookid" />
@@ -123,13 +123,13 @@
           router.back() 
         }
         const formLabelAlign = reactive({
-                userId:"",
+                userID:"",
                 bookid:"",
                 pressmark:"",  
             })
         const borrow =async()=>{
             console.log(formLabelAlign)
-            if(!formLabelAlign.userId || !formLabelAlign.bookid || !formLabelAlign.pressmark){
+            if(!formLabelAlign.userID || !formLabelAlign.bookid || !formLabelAlign.pressmark){
               alert('请输入完整信息')
               return
             }
@@ -142,7 +142,7 @@
               console.log(response.data)
             } 
             router.push({
-              name:"teacher_index",
+              name:"adminA_index",
             })
           }catch (error) {  
         // 请求错误处理
