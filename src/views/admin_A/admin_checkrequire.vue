@@ -59,7 +59,15 @@
           </el-header>
           <el-main>
            
-            
+            <el-table :data="tableData" stripe style="width: 100%">
+              <el-table-column prop="title" label="图书名称" width=auto />
+              <el-table-column prop="author" label="图书作者" width=auto />
+              <el-table-column prop="publisher" label="出版社" width=auto />
+              <el-table-column prop="Tquantity" label="数量" width=auto  />
+              <el-table-column prop="req_userID" label="申请工号" width=auto />
+              <el-table-column prop="username" label="申请人" />
+              <el-table-column prop="message" label="状态" width=auto  />
+            </el-table>
           </el-main>
         </el-container>
       </el-container>
@@ -89,6 +97,7 @@
       setup() {
         const store = useStore();
         const router = useRouter()
+        const tableData =computed(() =>store.state.data.B_application)
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
@@ -102,39 +111,13 @@
         const goback =()=>{
           router.back() 
         }
-        const formLabelAlign = reactive({
-                userId:"",
-                bookid:"",
-                pressmark:"",  
-            })
-        const borrow =async()=>{
-            console.log(formLabelAlign)
-            if(!formLabelAlign.userId || !formLabelAlign.bookid || !formLabelAlign.pressmark){
-              alert('请输入完整信息')
-              return
-            }
-
-            alert('确认借阅图书信息无误,再次点击确认')
-            try{
-           
-            const response =await axios.post('http://139.9.118.223:3000/api/books/school', formLabelAlign)
-            if(response.status){
-              console.log(response.data)
-            } 
-            router.push({
-              name:"teacher_index",
-            })
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
-        }
+    
+      
         return{
             bookborrow,
             bookreturn,
             goback,
-            borrow,
-            formLabelAlign,
+            tableData,
         }
       }
     })

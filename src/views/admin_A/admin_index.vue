@@ -142,9 +142,7 @@
         const checkrequire =async()=>{
           try{
                 const userid =computed(() => store.state.userID)
-                console.log(userid.value)
                 const res_userID = toRaw(userid.value)
-                console.log(res_userID)
                 const Userid = reactive({
                 res_userID,
                
@@ -154,7 +152,6 @@
               console.log(response.data)
               const{data}=response.data
               const  Data = response.data.data
-              
               store.commit('setdata', Data)
               
             } 
