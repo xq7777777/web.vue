@@ -175,10 +175,9 @@
                 })
             const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
             if(response.status){
-              console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data.data
-              
+              console.log(response.data.bookshelfs)
+              const{data}=response.data.bookshelfs
+              const  Data = response.data.bookshelfs
               store.commit('setdata', Data)
               
             } 

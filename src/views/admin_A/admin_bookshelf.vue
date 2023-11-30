@@ -92,7 +92,7 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const Data = computed(() => store.state.data)
+        const tableData =computed(() =>store.state.data)
         
         const bookborrow =()=>{
           router.push({
@@ -113,7 +113,7 @@
             bookborrow,
             bookreturn,
             goback,
-           Data,
+            tableData,
 
            
         }
