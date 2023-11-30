@@ -13,7 +13,6 @@
           height="913px"
         > 
         <h3>学校端</h3>
-
         <el-sub-menu  index="0">
           <template #title>
             <span >图书管理</span>
@@ -21,37 +20,34 @@
           <el-menu-item @click="bookborrow">图书借阅</el-menu-item>
           <el-menu-item @click="bookreturn">图书归还</el-menu-item>
         </el-sub-menu>
-        <el-sub-menu index="2">
-          <template #title>
-            <span>用户管理</span>
-          </template>
-          <el-menu-item ></el-menu-item>
-        </el-sub-menu>
+        <el-menu-item index="1">
+        
+            <span @click="peolpe" >用户管理</span>
+          </el-menu-item>
           <el-sub-menu  index="3">
           <template #title>
             <span >图书申请</span>
           </template>
-          <el-menu-item >申请查看</el-menu-item>
-          <el-menu-item >提交申请</el-menu-item>
+          <el-menu-item @click="checkrequire">申请查看</el-menu-item>
+          <el-menu-item @click="requirement">提交申请</el-menu-item>
         </el-sub-menu>
         <el-sub-menu  index="4">
           <template #title>
             <span >书架管理</span>
           </template>
-          <el-menu-item >查看书架</el-menu-item>
-          <el-menu-item >书架申请</el-menu-item>
+          <el-menu-item @click="bookshelf">查看书架</el-menu-item>
+          <el-menu-item @click="shelfrequire">书架申请</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="7">
             <el-icon><setting /></el-icon>
-            <span >维修申请</span>
+            <span @click="maintenance" >维修申请</span>
           </el-menu-item>
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
-            <span >个人中心</span>
+            <span @click="adminperson" >个人中心</span>
           </el-menu-item>
         </el-menu>
       </el-col>
-
         </el-aside >
         <el-container>
           <el-header>
@@ -104,14 +100,90 @@
             name:'adminA_return'
           }) 
         }
-        const goback =()=>{
-          router.back() 
+        const requirement =()=>{
+          router.push({
+            name:'adminA_requirement'
+          }) 
         }
-        
-
+        const maintenance =()=>{
+          router.push({
+            name:'adminA_maintenance'
+          }) 
+        }
+        const adminperson =()=>{
+          router.push({
+            name:'adminA_person'
+          }) 
+        }
+        const peolpe =()=>{
+          router.push({
+            name:'adminA_peolpe'
+          }) 
+        }
+        const shelfrequire =()=>{
+          router.push({
+            name:'adminA_shelfrequire'
+          }) 
+        }
+        const checkrequire =async()=>{
+          try{
+                const userid =computed(() => store.state.userID)
+                const res_userID = toRaw(userid.value)
+                const Userid = reactive({
+                res_userID,
+               
+            })
+            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,Userid)
+            if(response.status){
+              console.log(response.data)
+              const{data}=response.data
+              const  Data = response.data.data
+              store.commit('setdata', Data)
+              
+            } 
+            router.push({
+            name:'adminA_checkrequire'
+          })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+        }
+        const bookshelf =async()=>{
+            try{
+                const School =computed(() => store.state.Work_unit)
+                const school = toRaw(School.value)
+                console.log(school)
+                const schoolname = reactive({
+                  school,
+                })
+            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
+            if(response.status){
+              console.log(response.data.bookshelfs)
+              const{data}=response.data.bookshelfs
+              const  Data = response.data.bookshelfs
+              store.commit('setdata', Data)
+              
+            } 
+            router.push({
+            name:'adminA_bookshelf'
+          }) 
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+         
+        }
         return{
             bookborrow,
             bookreturn,
+            requirement,
+            maintenance,
+            adminperson,
+            bookshelf,
+            peolpe,
+            checkrequire,
+            shelfrequire,
             goback,
             tableData,
 

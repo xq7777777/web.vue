@@ -48,23 +48,33 @@
           </el-menu-item>
         </el-menu>
       </el-col>
-
         </el-aside >
         <el-container>
           <el-header>
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
+            <el-form
+                label-width="100px"
+                :model="formLabelAlign"
+                style="max-width: 460px"
+            >
            
-            <el-table :data="tableData" stripe style="width: 100%">
-              <el-table-column prop="title" label="图书名称" width=auto />
-              <el-table-column prop="author" label="图书作者" width=auto />
-              <el-table-column prop="publisher" label="出版社" width=auto />
-              <el-table-column prop="Tquantity" label="数量" width=auto  />
-              <el-table-column prop="req_userID" label="申请工号" width=auto />
-              <el-table-column prop="username" label="申请人" />
-              <el-table-column prop="message" label="状态" width=auto  />
-            </el-table>
+                <el-form-item label="借阅工号/学号">
+                <el-input v-model="formLabelAlign.userID" />
+                </el-form-item>
+                <el-form-item label="图书编号">
+                <el-input v-model="formLabelAlign.bookid" />
+                </el-form-item>
+                <el-form-item label="书架编号">
+                <el-input v-model="formLabelAlign.pressmark" />
+                </el-form-item>
+               
+                
+                
+                <el-button type="success" round @click="borrow">确认借阅</el-button>
+             
+            </el-form>
           </el-main>
         </el-container>
       </el-container>
@@ -94,7 +104,7 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const tableData =computed(() =>store.state.data.B_application)
+        
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
@@ -179,8 +189,11 @@
       }
          
         }
-    
-      
+        const goback =()=>{
+          router.back() 
+        }
+        
+
         return{
             bookborrow,
             bookreturn,
@@ -192,7 +205,8 @@
             checkrequire,
             shelfrequire,
             goback,
-            tableData,
+
+           
         }
       }
     })

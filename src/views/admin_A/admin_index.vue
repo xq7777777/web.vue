@@ -36,7 +36,7 @@
             <span >书架管理</span>
           </template>
           <el-menu-item @click="bookshelf">查看书架</el-menu-item>
-          <el-menu-item >书架申请</el-menu-item>
+          <el-menu-item @click="shelfrequire">书架申请</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="7">
             <el-icon><setting /></el-icon>
@@ -98,27 +98,26 @@
         const bookfuben =computed(() => store.state.bookfuben)
         const originData= []  
         for (let item of bookfuben.value) {
-  originData.push({
-    title: item.title,
-    bookid: item.bookid,
-    Tquantity: item.Tquantity,
-    quantity: item.quantity,
-    pressmark: item.pressmark,
-  });
-}
+        originData.push({
+          title: item.title,
+          bookid: item.bookid,
+          Tquantity: item.Tquantity,
+          quantity: item.quantity,
+          pressmark: item.pressmark,
+        });
+      }
+        const data = reactive(originData)
 
-
-       
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
           }) 
-        }//bug，连接不上
+        }
         const bookreturn =()=>{
           router.push({
             name:'adminA_return'
           }) 
-        }//bug
+        }
         const requirement =()=>{
           router.push({
             name:'adminA_requirement'
@@ -137,6 +136,11 @@
         const peolpe =()=>{
           router.push({
             name:'adminA_peolpe'
+          }) 
+        }
+        const shelfrequire =()=>{
+          router.push({
+            name:'adminA_shelfrequire'
           }) 
         }
         const checkrequire =async()=>{
@@ -162,8 +166,6 @@
         // 请求错误处理
         console.log(error.message)
       }
-         
-        
         }
         const bookshelf =async()=>{
             try{
@@ -220,6 +222,7 @@
             bookshelf,
             peolpe,
             checkrequire,
+            shelfrequire,
             search,
             bookfuben,
             originData,

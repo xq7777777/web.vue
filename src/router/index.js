@@ -117,10 +117,11 @@ const routes = [
     name:'adminA_maintenance',
     component:()=>import('../views/admin_A/admin_maintenance.vue')
   },
+
   {
-    path:'/admin_person',
-    name:'adminA_person',
-    component:()=>import('../views/admin_A/admin_person.vue')
+    path:'/admin_shelfrequire',
+    name:'adminA_shelfrequire',
+    component:()=>import('../views/admin_A/admin_shelfrequire.vue')
   },
   {
     path:'/admin_bookshelf',
