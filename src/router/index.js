@@ -134,6 +134,11 @@ const routes = [
     component:()=>import('../views/admin_A/admin_checkrequire.vue')
   },
   {
+    path:'/admin_person',
+    name:'adminA_person',
+    component:()=>import('../views/admin_A/admin_person.vue')
+  },
+  {
     path:'/adminB_index',
     name:'adminB_index',
     component:()=>import('../views/admin_B/adminB_index.vue')

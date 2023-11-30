@@ -130,6 +130,9 @@
             name:'adminA_shelfrequire'
           }) 
         }
+        const goback =()=>{
+          router.back() 
+        }
         const checkrequire =async()=>{
           try{
                 const userid =computed(() => store.state.userID)
