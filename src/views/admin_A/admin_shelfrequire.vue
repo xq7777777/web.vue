@@ -60,11 +60,11 @@
                 style="max-width: 460px"
             >
            
-                <el-form-item label="借阅工号/学号">
-                <el-input v-model="formLabelAlign.userID" />
+                <el-form-item label="学校名称">
+                <el-input v-model="formLabelAlign.school" />
                 </el-form-item>
-                <el-form-item label="图书编号">
-                <el-input v-model="formLabelAlign.bookid" />
+                <el-form-item label="书架定位">
+                <el-input v-model="formLabelAlign.location" />
                 </el-form-item>
                 <el-form-item label="书架编号">
                 <el-input v-model="formLabelAlign.pressmark" />
@@ -72,7 +72,7 @@
                
                 
                 
-                <el-button type="success" round @click="borrow">确认借阅</el-button>
+                <el-button type="success" round @click="borrow">确认申请</el-button>
              
             </el-form>
           </el-main>
@@ -192,7 +192,34 @@
         const goback =()=>{
           router.back() 
         }
-        
+        const formLabelAlign = reactive({
+                school:"",
+                location:"",
+                pressmark:"",  
+            })
+        const borrow =async()=>{
+            console.log(formLabelAlign)
+            if(!formLabelAlign.school || !formLabelAlign.location || !formLabelAlign.pressmark){
+              alert('请输入完整信息')
+              return
+            }
+
+            alert('确认信息无误,再次点击确认')
+            try{  
+           
+            const response =await axios.post('http://139.9.118.223:3000/api/bookshelf/school/application', formLabelAlign)
+            if(response.status){
+              console.log(response.data)
+            } 
+            alert('申请成功')
+            router.push({
+              name:"adminA_index",
+            })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+        }
 
         return{
             bookborrow,
@@ -205,6 +232,8 @@
             checkrequire,
             shelfrequire,
             goback,
+            borrow,
+            formLabelAlign,
 
            
         }

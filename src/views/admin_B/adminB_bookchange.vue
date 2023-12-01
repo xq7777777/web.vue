@@ -58,7 +58,25 @@
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-            
+            <div style="margin: 20px" />
+            <el-form
+                label-width="100px"
+                :model="formLabelAlign"
+                style="max-width: 460px"
+            >
+                <el-form-item label="图书名称">{{ Title }}</el-form-item>
+                <el-form-item label="图书作者">{{ Author }}</el-form-item>
+                <el-form-item label="图书编号">
+                <el-input v-model="formLabelAlign.bookid" />
+                </el-form-item>
+                <el-form-item label="学校名称">
+                <el-input v-model="formLabelAlign.school" />
+                </el-form-item>
+                <el-form-item label="图书数量">
+                <el-input v-model="formLabelAlign.Tquantity" />
+                </el-form-item>
+            </el-form>
+            <el-button type="success" round @click="change">确认修改</el-button>
           </el-main>
         </el-container>
       </el-container>
@@ -90,9 +108,17 @@
         const store = useStore();
         const router = useRouter()
         const route = useRoute()
-        const { bookid,author } = route.query
-        
-       
+        const { bookid,author,title,school,Tquantity, } = route.query
+        const Author = author
+        const Title = title
+        const Bookid = bookid
+        const School = school
+        const tquantity = Tquantity
+        const formLabelAlign = reactive({
+            bookid: Bookid,
+            school: School,
+            Tquantity: tquantity,
+            })
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
@@ -111,11 +137,38 @@
         //     router.push({
         //     name:'adminB_bookofschool'
         //   }) 
-          
+        const change =async()=>{
+            console.log(formLabelAlign)
+            if(!formLabelAlign.school || !formLabelAlign.bookid || !formLabelAlign.Tquantity){
+              alert('请输入完整信息')
+              return
+            }
+
+            alert('确认借阅图书信息无误,再次点击确认')
+            try{  
+           
+            const response =await axios.put('http://139.9.118.223:3000/api/admin/bookid/school', formLabelAlign)
+            if(response.status){
+              console.log(response.data)
+            } 
+            alert('修改成功')
+            router.push({
+              name:"adminB_index",
+            })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+        }
+        
         return{
             bookborrow,
             bookreturn,
             goback,
+            formLabelAlign,
+            change,
+            Author,
+            Title,
         
      
         }

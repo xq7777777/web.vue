@@ -133,15 +133,17 @@
         }
         const checkrequire =async()=>{
           try{
-                const userid =computed(() => store.state.userid)
-                const rawUserid = toRaw(userid.value)
-
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/T`,rawUserid)
+                const userid =computed(() => store.state.userID)
+                const res_userID = toRaw(userid.value)
+                const Userid = reactive({
+                res_userID,
+               
+            })
+            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/A`,Userid)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
               const  Data = response.data.data
-              
               store.commit('setdata', Data)
               
             } 
@@ -152,8 +154,6 @@
         // 请求错误处理
         console.log(error.message)
       }
-         
-        
         }
         const bookshelf =async()=>{
             try{

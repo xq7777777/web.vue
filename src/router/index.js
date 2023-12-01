@@ -158,6 +158,11 @@ const routes = [
     name:'adminB_bookchange',
     component:()=>import('../views/admin_B/adminB_bookchange.vue')
   },
+  {
+    path:'/adminB_checkrequire',
+    name:'adminB_checkrequire',
+    component:()=>import('../views/admin_B/adminB_checkrequire.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',
