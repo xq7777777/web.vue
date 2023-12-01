@@ -148,6 +148,16 @@ const routes = [
     name:'adminA_peolpe',
     component:()=>import('../views/admin_A/admin_peolpe.vue')
   },
+  {
+    path:'/adminB_bookofschool',
+    name:'adminB_bookofschool',
+    component:()=>import('../views/admin_B/adminB_bookofschool.vue')
+  },
+  {
+    path:'/adminB_bookchange',
+    name:'adminB_bookchange',
+    component:()=>import('../views/admin_B/adminB_bookchange.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',

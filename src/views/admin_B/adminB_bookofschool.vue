@@ -13,12 +13,13 @@
           height="913px"
         > 
         <h3>企业端</h3>
+
         <el-sub-menu  index="0">
           <template #title>
             <span >图书管理</span>
           </template>
-          <el-menu-item @click="bookborrow">图书增减</el-menu-item>
-          <el-menu-item @click="bookreturn">图书申请</el-menu-item>
+          <el-menu-item @click="bookborrow">图书借阅</el-menu-item>
+          <el-menu-item @click="bookreturn">图书归还</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
@@ -27,26 +28,26 @@
           <el-menu-item ></el-menu-item>
         </el-sub-menu>
           <el-sub-menu  index="3">
-          <template #title >
-            <span >查看申请</span>
+          <template #title>
+            <span >图书申请</span>
           </template>
-          <el-menu-item @click="checkrequire">申请查看</el-menu-item>
-          <el-menu-item @click="requirement">提交申请</el-menu-item>
+          <el-menu-item >申请查看</el-menu-item>
+          <el-menu-item >提交申请</el-menu-item>
         </el-sub-menu>
         <el-sub-menu  index="4">
           <template #title>
             <span >书架管理</span>
           </template>
-          <el-menu-item @click="bookshelf">查看书架</el-menu-item>
+          <el-menu-item >查看书架</el-menu-item>
           <el-menu-item >书架申请</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="7">
             <el-icon><setting /></el-icon>
-            <span @click="maintenance" >维修申请</span>
+            <span >维修申请</span>
           </el-menu-item>
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
-            <span @click="adminperson" >个人中心</span>
+            <span >个人中心</span>
           </el-menu-item>
         </el-menu>
       </el-col>
@@ -54,17 +55,14 @@
         </el-aside >
         <el-container>
           <el-header>
-            <el-input v-model="search" placeholder="请输入图书名称或书架编号" style="width: 240px"/>
-            <!-- <el-button @click="onSearch">搜索</el-button>  -->
+            <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-            <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
-                <el-table-column fixed prop="title" label="图书名称" width=auto />
-                <el-table-column prop="bookid" label="图书编号" width=auto />
-                <el-table-column prop="author" label="图书作者" width=auto />
-                <el-table-column prop="publisher" label="出版社" width=auto />
-            </el-table>
-            
+            <el-table :data="tableData" style="width: 100%" @row-dblclick="handleRowDblClick" >
+            <el-table-column fixed prop="school" label="拥有学校" width=auto />
+            <el-table-column prop="Tquantity" label="拥有数量" width=auto />
+  
+  </el-table>
           </el-main>
         </el-container>
       </el-container>
@@ -75,8 +73,7 @@
       defineComponent,
       onMounted,
       ref,
-      reactive,
-      watch,
+      reactive
     } from "vue";
     import {
   Check,
@@ -87,7 +84,8 @@
   Star,
 } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
-    import { computed ,toRaw} from 'vue'
+    import { useRoute } from "vue-router";
+    import { computed } from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
   
@@ -95,17 +93,10 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const search = ref('') 
-        const books =computed(() => store.state.books)
-        const originData= []  
-        for (let item of books.value) {
-  originData.push({
-    title: item.title,
-    bookid: item.bookid,
-    author: item.author,
-    publisher: item.publisher,
-  });
-}
+        const route = useRoute()
+        const { bookid,author } = route.query
+        
+        const tableData = computed(()=> store.state.data)
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
@@ -116,75 +107,23 @@
             name:'adminA_return'
           }) 
         }
-        const requirement =()=>{
-          router.push({
-            name:'adminA_requirement'
-          }) 
+        const goback =()=>{
+          router.back() 
         }
-        const maintenance =()=>{
-          router.push({
-            name:'adminA_maintenance'
-          }) 
-        }
-        const adminperson =()=>{
-          router.push({
-            name:'adminA_person'
-          }) 
-        }
-        const checkrequire =async()=>{
-          try{
-                const userid =computed(() => store.state.userid)
-                const rawUserid = toRaw(userid.value)
 
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/T`,rawUserid)
-            if(response.status){
-              console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data.data
-              
-              store.commit('setdata', Data)
-              
-            } 
-            router.push({
-            name:'adminA_checkrequire'
-          })
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
-         
-        
-        }
-        const bookshelf =async()=>{
-            try{
-                const school =computed(() => store.state.Work_unit)
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,school)
-            if(response.status){
-              console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data.data
-              
-              store.commit('setdata', Data)
-              
-            } 
-            router.push({
-            name:'adminA_bookshelf'
-          }) 
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
-         
-        }
         const handleRowDblClick =async(row)=> {
-          
-          const bookid = row.bookid;
-          const Bookid =reactive({
-                  bookid,
+          console.log(row)
+          const title = row.title;
+           const school = row.school;
+           const Tquantity = row.Tquantity;
+           const Bookid =reactive({
+                  title,
+                  school,
+                  Tquantity,
                 })
                 console.log(Bookid)
           try{
-            const response =await axios.post(`http://139.9.118.223:3000/api/admin/bookid`,Bookid)
+            const response =await axios.post(`http://139.9.118.223:3000/api/admin/bookid/school`,Bookid)
             if(response.status){
               console.log(response.data.Books)
               const  Data = response.data.Books
@@ -193,51 +132,28 @@
               
             } 
             router.push({
-             path:"/adminB_bookofschool",
+             path:"/adminB_bookchange",
              query: {
               bookid:row.bookid,
               author:row.author,
                 }
            })
+        //     router.push({
+        //     name:'adminB_bookofschool'
+        //   }) 
           }catch (error) {  
         // 请求错误处理
         console.log(error.message)
       }
           
       }
-        const tableData = ref(originData) 
-        const filterData = computed(() => {
-      if (!search.value) {
-        return originData
-      }
-
-      return originData.filter(item => {
-        return item.title.includes(search.value) || 
-           item.author.includes(search.value) ||
-           item.bookid.includes(search.value)
-      })
-    })
-
-    watch(search, (newVal) => {
-      if (!newVal) {
-        tableData.value = originData
-      } else {
-        tableData.value = filterData.value
-      }
-    })
         return{
             bookborrow,
             bookreturn,
-            requirement,
-            maintenance,
-            adminperson,
-            bookshelf,
-            checkrequire,
+            goback,
             handleRowDblClick,
-            search,
-            originData,
             tableData,
-            books,
+     
         }
       }
     })
@@ -390,3 +306,4 @@
   
   
   
+
