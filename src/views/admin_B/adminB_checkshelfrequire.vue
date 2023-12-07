@@ -48,42 +48,18 @@
           </el-menu-item>
         </el-menu>
       </el-col>
+
         </el-aside >
         <el-container>
           <el-header>
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-            <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-            >
            
-                <el-form-item label="申请工号/学号">
-                <el-input v-model="formLabelAlign.req_userID" />
-                </el-form-item>
-                <el-form-item label="图书名称">
-                <el-input v-model="formLabelAlign.title" />
-                </el-form-item>
-                <el-form-item label="图书出版社">
-                <el-input v-model="formLabelAlign.publisher" />
-                </el-form-item>
-                <el-form-item label="图书作者">
-                <el-input v-model="formLabelAlign.author" />
-                </el-form-item>
-                <el-form-item label="图书数量">
-                <el-input v-model="formLabelAlign.Tquantity" />
-                </el-form-item>
-                <el-form-item label="申请人">
-                <el-input v-model="formLabelAlign.username" />
-                </el-form-item>
-                <el-form-item label="接收人">
-                <el-input v-model="formLabelAlign.res_userID" />
-                </el-form-item>
-                <el-button type="info" @click="requirement">确认申请</el-button>
-            </el-form>
-            
+            <el-table :data="tableData" stripe style="width: 100%" @row-dblclick="handleRowDblClick">
+              <el-table-column prop="school" label="学校" width=auto />
+              <el-table-column prop="Tquantity" label="数量" width=auto  />
+            </el-table>
           </el-main>
         </el-container>
       </el-container>
@@ -105,7 +81,7 @@
   Star,
 } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
-    import { computed,toRaw } from 'vue'
+    import { computed } from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
   
@@ -113,16 +89,8 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const formLabelAlign = reactive({
-            title:"",
-            publisher:"",
-            author:"",
-            Tquantity:"",
-            username:"",
-            req_userID:"",
-            res_userID:"",
-            })
-            const bookborrow =()=>{
+        const tableData =computed(() =>store.state.data)
+        const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
           }) 
@@ -132,24 +100,7 @@
             name:'adminA_return'
           }) 
         }
-        const requirement =async()=>{
-          try{
-               
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/A`,formLabelAlign)
-            if(response.status){
-              console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data.data
-              store.commit('setdata', Data)
-              
-            } 
-            router.push({
-            name:'adminA_index'
-          })
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
+        const requirement =()=>{
           router.push({
             name:'adminA_requirement'
           }) 
@@ -173,6 +124,9 @@
           router.push({
             name:'adminA_shelfrequire'
           }) 
+        }
+        const goback =()=>{
+          router.back() 
         }
         const checkrequire =async()=>{
           try{
@@ -223,11 +177,36 @@
       }
          
         }
-        const goback =()=>{
-          router.back() 
-        }
-       
-
+        
+        const handleRowDblClick =async(row)=> {
+          try{
+            const school = row.school;
+            const Tquantity = row.Tquantity;
+                const schoolname = reactive({
+                  school,
+                })
+            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
+            if(response.status){
+              console.log(response.data.data)
+              const{data}=response.data.bookshelfs
+              const  Data = response.data.bookshelfs
+              store.commit('setdata', Data)
+              
+            } 
+            router.push({
+             path:"/adminB_schoolshelves",
+             query: {
+              school,
+              Tquantity,
+              }
+           })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }   
+      }
+    
+      
         return{
             bookborrow,
             bookreturn,
@@ -239,7 +218,8 @@
             checkrequire,
             shelfrequire,
             goback,
-            formLabelAlign,
+            handleRowDblClick,
+            tableData,
         }
       }
     })

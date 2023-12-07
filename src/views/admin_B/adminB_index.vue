@@ -18,7 +18,7 @@
             <span >图书管理</span>
           </template>
           <el-menu-item @click="bookborrow">图书增减</el-menu-item>
-          <el-menu-item @click="bookreturn">图书申请</el-menu-item>
+          <el-menu-item @click="checkrequire">图书申请</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
@@ -30,15 +30,15 @@
           <template #title >
             <span >查看申请</span>
           </template>
-          <el-menu-item @click="checkrequire">申请查看</el-menu-item>
+          <el-menu-item @click="">申请查看</el-menu-item>
           <el-menu-item @click="requirement">提交申请</el-menu-item>
         </el-sub-menu>
         <el-sub-menu  index="4">
           <template #title>
             <span >书架管理</span>
           </template>
+          <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
           <el-menu-item @click="bookshelf">查看书架</el-menu-item>
-          <el-menu-item >书架申请</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="7">
             <el-icon><setting /></el-icon>
@@ -131,14 +131,18 @@
             name:'adminA_person'
           }) 
         }
+        const checkshelfrequire =async()=>{
+         
+        }
         const checkrequire =async()=>{
           try{
                 const userid =computed(() => store.state.userID)
-                const res_userID = toRaw(userid.value)
+                console.log(userid.value)
+                const res_userID = userid.value
                 const Userid = reactive({
                 res_userID,
-               
             })
+            console.log(Userid)
             const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/A`,Userid)
             if(response.status){
               console.log(response.data)
@@ -156,24 +160,23 @@
       }
         }
         const bookshelf =async()=>{
-            try{
-                const school =computed(() => store.state.Work_unit)
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,school)
-            if(response.status){
-              console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data.data
+          try{
               
-              store.commit('setdata', Data)
-              
-            } 
-            router.push({
-            name:'adminA_bookshelf'
-          }) 
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
+              const response =await axios.get(`http://139.9.118.223:3000/api/bookshelves`)
+              if(response.status){
+                console.log(response.data.bookshelves)
+                const{data}=response.data.bookshelves
+                const  Data = response.data.bookshelves
+                store.commit('setdata', Data)
+                
+              } 
+              router.push({
+              name:'adminB_checkshelfrequire'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
          
         }
         const handleRowDblClick =async(row)=> {
@@ -229,6 +232,7 @@
             bookborrow,
             bookreturn,
             requirement,
+            checkshelfrequire,
             maintenance,
             adminperson,
             bookshelf,
