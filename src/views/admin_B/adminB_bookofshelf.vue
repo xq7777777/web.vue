@@ -12,31 +12,33 @@
           width="200px"
           height="913px"
         > 
-        <h3>学校端</h3>
+        <h3>企业端</h3>
         <el-sub-menu  index="0">
           <template #title>
             <span >图书管理</span>
           </template>
-          <el-menu-item @click="bookborrow">图书借阅</el-menu-item>
-          <el-menu-item @click="bookreturn">图书归还</el-menu-item>
+          <el-menu-item @click="addbook">图书增减</el-menu-item>
+          <el-menu-item @click="checkrequire">图书申请</el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="1">
-        
-            <span @click="peolpe" >用户管理</span>
-          </el-menu-item>
-          <el-sub-menu  index="3">
+        <el-sub-menu index="2">
           <template #title>
-            <span >图书申请</span>
+            <span>用户管理</span>
           </template>
-          <el-menu-item @click="checkrequire">申请查看</el-menu-item>
+          <el-menu-item ></el-menu-item>
+        </el-sub-menu>
+          <el-sub-menu  index="3">
+          <template #title >
+            <span >查看申请</span>
+          </template>
+          <el-menu-item @click="">申请查看</el-menu-item>
           <el-menu-item @click="requirement">提交申请</el-menu-item>
         </el-sub-menu>
         <el-sub-menu  index="4">
           <template #title>
             <span >书架管理</span>
           </template>
+          <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
           <el-menu-item @click="bookshelf">查看书架</el-menu-item>
-          <el-menu-item @click="shelfrequire">书架申请</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="7">
             <el-icon><setting /></el-icon>
@@ -48,23 +50,23 @@
           </el-menu-item>
         </el-menu>
       </el-col>
-
+  
         </el-aside >
         <el-container>
           <el-header>
+            <el-input v-model="search" placeholder="请输入图书名称或书架编号" style="width: 240px"/>
             <el-button type="info" @click="goback">返回</el-button>
+            <!-- <el-button @click="onSearch">搜索</el-button>  -->
           </el-header>
           <el-main>
-           
-            <el-table :data="tableData" stripe style="width: 100%" @row-dblclick="handleRowDblClick">
-              <el-table-column prop="title" label="图书名称" width=auto />
-              <el-table-column prop="author" label="图书作者" width=auto />
-              <el-table-column prop="publisher" label="出版社" width=auto />
-              <el-table-column prop="Tquantity" label="数量" width=auto  />
-              <el-table-column prop="req_userID" label="申请工号" width=auto />
-              <el-table-column prop="username" label="申请人" />
-              <el-table-column prop="message" label="状态" width=auto  />
+            
+            <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
+                <el-table-column fixed prop="title" label="图书名称" width=auto />
+                <el-table-column prop="bookid" label="图书编号" width=auto />
+                <el-table-column prop="quantity" label="图书数量" width=auto />
+              
             </el-table>
+            
           </el-main>
         </el-container>
       </el-container>
@@ -75,7 +77,8 @@
       defineComponent,
       onMounted,
       ref,
-      reactive
+      reactive,
+      watch,
     } from "vue";
     import {
   Check,
@@ -84,9 +87,10 @@
   Message,
   Search,
   Star,
-} from '@element-plus/icons-vue';
+  } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
-    import { computed } from 'vue'
+    import {useRoute} from 'vue-router';
+    import { computed ,toRaw} from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
   
@@ -94,8 +98,18 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const tableData =computed(() =>store.state.data.B_application)
-        const bookborrow =()=>{
+        const route = useRoute()
+        const search = ref('') 
+        const {school} = route.query
+        const books =computed(() => store.state.data.books)
+        const originData= []  
+        for (let item of books.value) {
+  originData.push({
+    bookid: item.bookid,
+    title: item.title,
+  });
+  }
+        const addbook =()=>{
           router.push({
             name:'adminA_borrow'
           }) 
@@ -120,28 +134,38 @@
             name:'adminA_person'
           }) 
         }
-        const peolpe =()=>{
-          router.push({
-            name:'adminA_peolpe'
-          }) 
-        }
-        const shelfrequire =()=>{
-          router.push({
-            name:'adminA_shelfrequire'
-          }) 
-        }
         const goback =()=>{
-          router.back() 
+            router.back() 
+          }
+        const checkshelfrequire =async()=>{
+          try{
+                
+            const response =await axios.get(`http://139.9.118.223:3000/api/bookshelf/school/application_G`)
+            if(response.status){
+              console.log(response.data)
+              const{data}=response.data
+              const  Data = response.data.data
+              store.commit('setdata', Data)
+              
+            } 
+            router.push({
+            name:'adminB_shelfrequire'
+          })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
         }
         const checkrequire =async()=>{
           try{
                 const userid =computed(() => store.state.userID)
-                const res_userID = toRaw(userid.value)
+                console.log(userid.value)
+                const res_userID = userid.value
                 const Userid = reactive({
                 res_userID,
-               
             })
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,Userid)
+            console.log(Userid)
+            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/A`,Userid)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -158,67 +182,86 @@
       }
         }
         const bookshelf =async()=>{
-            try{
-                const School =computed(() => store.state.Work_unit)
-                const school = toRaw(School.value)
-                console.log(school)
-                const schoolname = reactive({
-                  school,
-                })
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
-            if(response.status){
-              console.log(response.data.bookshelfs)
-              const{data}=response.data.bookshelfs
-              const  Data = response.data.bookshelfs
-              store.commit('setdata', Data)
+          try{
               
-            } 
-            router.push({
-            name:'adminA_bookshelf'
-          }) 
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
+              const response =await axios.get(`http://139.9.118.223:3000/api/bookshelves`)
+              if(response.status){
+                console.log(response.data.bookshelves)
+                const{data}=response.data.bookshelves
+                const  Data = response.data.bookshelves
+                store.commit('setdata', Data)
+                
+              } 
+              router.push({
+              name:'adminB_checkshelfrequire'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
          
         }
         const handleRowDblClick =async(row)=> {
+          
+          const pressmark = row.pressmark;
+          const shelf =reactive({
+                  pressmark,
+                  school,
+                })
+                console.log(shelf)
           try{
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/:YN`)
+            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school/pressmark`,shelf)
             if(response.status){
-              console.log(response.data.Books)
-              const  Data = response.data.Books
+              console.log(response.data)
+              const  Data = response.data.books
               
               store.commit('setdata', Data)
               
             } 
             router.push({
              path:"/adminB_bookofschool",
-             query: {
-              bookid:row.bookid,
-              author:row.author,
-                }
+             
            })
           }catch (error) {  
         // 请求错误处理
         console.log(error.message)
       }
           
-      }//请求信息不完整！
-      
+      }
+        const tableData = ref(originData) 
+        const filterData = computed(() => {
+      if (!search.value) {
+        return originData
+      }
+  
+      return originData.filter(item => {
+        return item.bookid.includes(search.value) || 
+           item.title.includes(search.value) 
+      })
+    })
+  
+    watch(search, (newVal) => {
+      if (!newVal) {
+        tableData.value = originData
+      } else {
+        tableData.value = filterData.value
+      }
+    })
         return{
-            bookborrow,
+            addbook,
             bookreturn,
             requirement,
+            checkshelfrequire,
             maintenance,
             adminperson,
             bookshelf,
-            peolpe,
             checkrequire,
-            shelfrequire,
-            goback,
             handleRowDblClick,
+            goback,
+            search,
+            originData,
             tableData,
+            books,
         }
       }
     })
@@ -299,36 +342,36 @@
     .box-card {
   width: 500px;
   margin: 20px auto;
-}
-
-.user-info {
+  }
+  
+  .user-info {
   display: flex;
   align-items: center;
   padding-bottom: 20px;
   border-bottom: 1px solid #ddd;
-}
-
-.user-info img {
+  }
+  
+  .user-info img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   margin-right: 50px;
-}
-
-.user-info .info p {
+  }
+  
+  .user-info .info p {
   display: flex;
   align-items: center; 
   font-size: 14px;
   color: #666;
   padding: 5px 0;
-}
-
-
-.user-info .info i {
+  }
+  
+  
+  .user-info .info i {
   font-size: 18px;
   margin-right: 10px;
-}
-
+  }
+  
   
   
   

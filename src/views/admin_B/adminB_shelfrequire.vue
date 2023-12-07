@@ -55,14 +55,11 @@
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-           
+            
             <el-table :data="tableData" stripe style="width: 100%" @row-dblclick="handleRowDblClick">
-              <el-table-column prop="title" label="图书名称" width=auto />
-              <el-table-column prop="author" label="图书作者" width=auto />
-              <el-table-column prop="publisher" label="出版社" width=auto />
-              <el-table-column prop="Tquantity" label="数量" width=auto  />
-              <el-table-column prop="req_userID" label="申请工号" width=auto />
-              <el-table-column prop="username" label="申请人" />
+              <el-table-column prop="school" label="申请学校" width=auto />
+              <el-table-column prop="pressmark" label="书架编号" width=auto />
+              <el-table-column prop="location" label="书架位置" width=auto />
               <el-table-column prop="message" label="状态" width=auto  />
             </el-table>
           </el-main>
@@ -94,7 +91,7 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const tableData =computed(() =>store.state.data.B_application)
+        const tableData =computed(() =>store.state.data)
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'

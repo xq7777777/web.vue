@@ -145,7 +145,7 @@
               
             } 
             router.push({
-            name:'adminA_checkrequire'
+            name:'adminB_checkrequire'
           })
           }catch (error) {  
         // 请求错误处理
@@ -153,43 +153,22 @@
       }
         }
         const bookshelf =async()=>{
-            try{
-                const School =computed(() => store.state.Work_unit)
-                const school = toRaw(School.value)
-                console.log(school)
-                const schoolname = reactive({
-                  school,
-                })
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
-            if(response.status){
-              console.log(response.data.bookshelfs)
-              const{data}=response.data.bookshelfs
-              const  Data = response.data.bookshelfs
-              store.commit('setdata', Data)
-              
-            } 
-            router.push({
-            name:'adminA_bookshelf'
-          }) 
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
+           
          
         }
         
         const handleRowDblClick =async(row)=> {
           try{
             const school = row.school;
-            const Tquantity = row.Tquantity;
+            console.log(school)
                 const schoolname = reactive({
                   school,
                 })
             const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
             if(response.status){
-              console.log(response.data.data)
-              const{data}=response.data.bookshelfs
-              const  Data = response.data.bookshelfs
+              console.log(response.data)
+              const{data}=response.data
+              const  Data = response.data
               store.commit('setdata', Data)
               
             } 
@@ -197,7 +176,6 @@
              path:"/adminB_schoolshelves",
              query: {
               school,
-              Tquantity,
               }
            })
           }catch (error) {  

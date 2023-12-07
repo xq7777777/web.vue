@@ -17,7 +17,7 @@
           <template #title>
             <span >图书管理</span>
           </template>
-          <el-menu-item @click="bookborrow">图书增减</el-menu-item>
+          <el-menu-item @click="addbook">图书增减</el-menu-item>
           <el-menu-item @click="checkrequire">图书申请</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
@@ -106,7 +106,7 @@
     publisher: item.publisher,
   });
 }
-        const bookborrow =()=>{
+        const addbook =()=>{
           router.push({
             name:'adminA_borrow'
           }) 
@@ -132,7 +132,23 @@
           }) 
         }
         const checkshelfrequire =async()=>{
-         
+          try{
+                
+            const response =await axios.get(`http://139.9.118.223:3000/api/bookshelf/school/application_G`)
+            if(response.status){
+              console.log(response.data)
+              const{data}=response.data
+              const  Data = response.data.data
+              store.commit('setdata', Data)
+              
+            } 
+            router.push({
+            name:'adminB_shelfrequire'
+          })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
         }
         const checkrequire =async()=>{
           try{
@@ -229,7 +245,7 @@
       }
     })
         return{
-            bookborrow,
+            addbook,
             bookreturn,
             requirement,
             checkshelfrequire,

@@ -173,6 +173,16 @@ const routes = [
     name:'adminB_schoolshelves',
     component:()=>import('../views/admin_B/adminB_schoolshelves.vue')
   },
+  {
+    path:'/adminB_shelfrequire',
+    name:'adminB_shelfrequire',
+    component:()=>import('../views/admin_B/adminB_shelfrequire.vue')
+  },
+  {
+    path:'/adminB_bookofshelf',
+    name:'adminB_bookofshelf',
+    component:()=>import('../views/admin_B/adminB_bookofshelf.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',
