@@ -42,7 +42,7 @@
         </el-sub-menu>
           <el-menu-item index="7">
             <el-icon><setting /></el-icon>
-            <span @click="maintenance" >维修申请</span>
+            <span @click="maintenancerequire" >维修申请</span>
           </el-menu-item>
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
@@ -122,10 +122,27 @@
             name:'adminA_requirement'
           }) 
         }
-        const maintenance =()=>{
-          router.push({
-            name:'adminA_maintenance'
-          }) 
+        const maintenancerequire =async()=>{
+          try{
+              
+              const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+              if(response.status){
+                console.log(response.data)
+                const  maintenance = response.data
+                store.commit('setmaintenance', maintenance)
+                
+              } 
+              router.push({
+              name:'adminB_maintenance'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
+         
+          // router.push({
+          //   name:'adminA_maintenance'
+          // }) 
         }
         const adminperson =()=>{
           router.push({
@@ -252,7 +269,7 @@
             bookreturn,
             requirement,
             checkshelfrequire,
-            maintenance,
+            maintenancerequire,
             adminperson,
             bookshelf,
             checkrequire,

@@ -59,9 +59,9 @@
             <el-table :data="tableData" stripe style="width: 100%" >
               <el-table-column prop="school" label="申请学校" width=auto />
               <el-table-column prop="pressmark" label="书架编号" width=auto />
-              <el-table-column prop="location" label="书架位置" width=auto />
+              
               <el-table-column prop="_id" label="申请编号" width=auto />
-              <el-table-column prop="message" label="状态" width=auto  />
+              <el-table-column prop="state" label="状态" width=auto  />
               <el-table-column fixed="right" label="操作" width="120">
                   <template #default="scope">
                     <el-button  link type="primary" size="small" @click="agree(scope.row)" 
@@ -100,7 +100,7 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const tableData =computed(() =>store.state.data)
+        const tableData =computed(() =>store.state.maintenance)
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
@@ -196,7 +196,7 @@
                   _id,
                 })
                 console.log(schoolname)
-            const response =await axios.put(`http://139.9.118.223:3000/api/bookshelf/school/application/Y`,schoolname)
+            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school/application/Y`,schoolname)
             if(response.status){
               console.log(response.data)
               // const{bookshelfs}=response.data.bookshelfs
@@ -205,7 +205,7 @@
               
             } 
           //   router.push({
-          //    path:"/adminB_schoolshelf",
+          //    path:"/adminB_schoolshelves",
           //    query: {
           //     school,
           //     }

@@ -87,6 +87,10 @@ export default createStore({
     {
       state.empty = empty
     },
+    setmaintenance(state,maintenance)
+    {
+      state.maintenance = maintenance
+    },
     // updateIsCollapse(state, payload) {
     //   // console.log(payload);
     //   state.isCollapse = !state.isCollapse
