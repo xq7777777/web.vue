@@ -59,6 +59,14 @@
             <el-table :data="tableData" stripe style="width: 100%" @row-dblclick="handleRowDblClick">
               <el-table-column prop="school" label="学校" width=auto />
               <el-table-column prop="Tquantity" label="数量" width=auto  />
+              <el-table-column fixed="right" label="Operations" width="120">
+                  <template #default="scope">
+                    <el-button  link type="primary" size="small" @click="Clickempty(scope.row)" 
+                      >查看空位</el-button
+                    >
+                    <el-button link type="primary" size="small" @click="Clickbook(scope.row)">查看图书</el-button>
+                  </template>
+                </el-table-column>
             </el-table>
           </el-main>
         </el-container>
@@ -89,7 +97,7 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const tableData =computed(() =>store.state.data)
+        const tableData =computed(() =>store.state.bookshelves)
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
@@ -157,7 +165,7 @@
          
         }
         
-        const handleRowDblClick =async(row)=> {
+        const Clickbook =async(row)=> {
           try{
             const school = row.school;
             console.log(school)
@@ -166,14 +174,40 @@
                 })
             const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
             if(response.status){
-              console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data
-              store.commit('setdata', Data)
+              console.log(response.data.bookshelfs)
+              // const{bookshelfs}=response.data.bookshelfs
+              const  bookshelfs = response.data.bookshelfs
+              store.commit('setbookshelfs', bookshelfs)
               
             } 
             router.push({
              path:"/adminB_schoolshelves",
+             query: {
+              school,
+              }
+           })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }   
+      }
+      const Clickempty =async(row)=> {
+          try{
+            const school = row.school;
+            console.log(school)
+                const schoolname = reactive({
+                  school,
+                })
+            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school/space`,schoolname)
+            if(response.status){
+              console.log(response.data)
+              // const{bookshelfs}=response.data.bookshelfs
+              const  empty = response.data
+              store.commit('setempty', empty)
+              
+            } 
+            router.push({
+             path:"/adminB_emptyshelf",
              query: {
               school,
               }
@@ -196,7 +230,8 @@
             checkrequire,
             shelfrequire,
             goback,
-            handleRowDblClick,
+            Clickempty,
+            Clickbook,
             tableData,
         }
       }

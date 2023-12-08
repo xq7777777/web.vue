@@ -183,6 +183,11 @@ const routes = [
     name:'adminB_bookofshelf',
     component:()=>import('../views/admin_B/adminB_bookofshelf.vue')
   },
+  {
+    path:'/adminB_emptyshelf',
+    name:'adminB_emptyshelf',
+    component:()=>import('../views/admin_B/adminB_emptyshelf.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',

@@ -63,6 +63,7 @@
                 <el-table-column prop="bookid" label="图书编号" width=auto />
                 <el-table-column prop="author" label="图书作者" width=auto />
                 <el-table-column prop="publisher" label="出版社" width=auto />
+                
             </el-table>
             
           </el-main>
@@ -131,6 +132,7 @@
             name:'adminA_person'
           }) 
         }
+      
         const checkshelfrequire =async()=>{
           try{
                 
@@ -182,8 +184,8 @@
               if(response.status){
                 console.log(response.data.bookshelves)
                 const{data}=response.data.bookshelves
-                const  Data = response.data.bookshelves
-                store.commit('setdata', Data)
+                const  bookshelves = response.data.bookshelves
+                store.commit('setbookshelves', bookshelves)
                 
               } 
               router.push({
@@ -225,6 +227,7 @@
           
       }
         const tableData = ref(originData) 
+      
         const filterData = computed(() => {
       if (!search.value) {
         return originData

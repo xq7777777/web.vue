@@ -75,7 +75,18 @@ export default createStore({
     {
       state.books = books
     },
-    
+    setbookshelfs(state,bookshelfs)
+    {
+      state.bookshelfs = bookshelfs
+    },
+    setbookshelves(state,bookshelves)
+    {
+      state.bookshelves = bookshelves
+    },
+    setempty(state,empty)
+    {
+      state.empty = empty
+    },
     // updateIsCollapse(state, payload) {
     //   // console.log(payload);
     //   state.isCollapse = !state.isCollapse

@@ -62,6 +62,7 @@
           <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
               <el-table-column fixed prop="pressmark" label="书架编号" width=auto />
               <el-table-column prop="location" label="书架位置" width=auto />
+              <el-table-column prop="emptySpaces" label="空余位置" width=auto />
             
           </el-table>
           
@@ -99,13 +100,15 @@ Star,
       const route = useRoute()
       const search = ref('') 
       const {school} = route.query
-      const books =computed(() => store.state.bookshelfs)
+      const books =computed(() => store.state.empty)
       const originData= []  
       for (let item of books.value) {
 originData.push({
+
   pressmark: item.pressmark,
   location: item.location,
   school : item.school,
+  emptySpaces: item.emptySpaces
 });
 }
       const addbook =()=>{
