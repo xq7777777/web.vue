@@ -55,7 +55,7 @@ export default createStore({
     setstudent(state,student){
       state.student = student
     },
-    setUser(state,userName)
+    setUserName(state,userName)
     {
       state.username = userName
     },

@@ -106,7 +106,7 @@
             const userName =response.data.data.username
             const Work_unit =response.data.data.work_unit
             const Bookfuben =response.data.data.bookfuben
-            store.commit('setUser', userName)
+            store.commit('setUserName', userName)
             store.commit('setID', userID)
             store.commit('setWork_unit', Work_unit)
             store.commit('setBookfuben', Bookfuben)

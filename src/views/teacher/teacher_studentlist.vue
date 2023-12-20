@@ -106,9 +106,9 @@
             const school = users.value.school
             console.log(className)
             console.log(school)
-           
+           const checklist = {school,className,}
        
-            const response =await axios.get(`http://139.9.118.223:3000/api/class?className=${className}&school=${school}`)
+            const response =await axios.post(`http://139.9.118.223:3000/api/class`,checklist)
             if(response.status){
               console.log(response.data)
               const { students} = response.data;
@@ -150,7 +150,13 @@
             const username = row.username
             const userID = row.userID
             const userclass = row.className
-            const response = await axios.get(`http://139.9.118.223:3000/api/books/borrowRecords/userID?username=${username}&userID=${userID}`)
+            const checkdetails = {
+              userID,
+              // username,
+              // userclass
+            }
+            console.log(checkdetails)
+            const response = await axios.post(`http://139.9.118.223:3000/api/books/borrowRecords/userID`,checkdetails)
             if(response.status){
               console.log(response.data)
             } 

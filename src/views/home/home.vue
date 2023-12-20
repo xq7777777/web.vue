@@ -134,7 +134,7 @@
       });
       
       const store = useStore();
-       const users = ref()
+       const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const records = computed(() => store.state.records)
        const router = useRouter();
