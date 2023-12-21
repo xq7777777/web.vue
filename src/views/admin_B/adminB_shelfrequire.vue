@@ -12,7 +12,7 @@
           width="200px"
           height="913px"
         > 
-        <h3>学校端</h3>
+        <h3>企业端</h3>
         <el-sub-menu  index="0">
           <template #title>
             <span >图书管理</span>
