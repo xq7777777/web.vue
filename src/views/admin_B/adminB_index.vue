@@ -140,13 +140,10 @@
           console.log(error.message)
         }
          
-          // router.push({
-          //   name:'adminA_maintenance'
-          // }) 
         }
         const adminperson =()=>{
           router.push({
-            name:'adminA_person'
+            name:'adminB_person'
           }) 
         }
       
@@ -187,7 +184,7 @@
               
             } 
             router.push({
-            name:'adminA_checkrequire'
+            name:'adminB_checkrequire'
           })
           }catch (error) {  
         // 请求错误处理

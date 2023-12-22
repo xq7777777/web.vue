@@ -17,30 +17,32 @@
           <template #title>
             <span >图书管理</span>
           </template>
-          <el-menu-item @click="bookborrow">图书借阅</el-menu-item>
-          <el-menu-item @click="bookreturn">图书归还</el-menu-item>
+          <el-menu-item @click="addbook">图书增减</el-menu-item>
+          <el-menu-item @click="checkrequire">图书申请</el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="1">
-        
-            <span @click="peolpe" >用户管理</span>
-          </el-menu-item>
-          <el-sub-menu  index="3">
+        <el-sub-menu index="2">
           <template #title>
-            <span >图书申请</span>
+            <span>用户管理</span>
           </template>
-          <el-menu-item @click="checkrequire">申请查看</el-menu-item>
+          <el-menu-item ></el-menu-item>
+        </el-sub-menu>
+          <el-sub-menu  index="3">
+          <template #title >
+            <span >查看申请</span>
+          </template>
+          <el-menu-item @click="">申请查看</el-menu-item>
           <el-menu-item @click="requirement">提交申请</el-menu-item>
         </el-sub-menu>
         <el-sub-menu  index="4">
           <template #title>
             <span >书架管理</span>
           </template>
+          <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
           <el-menu-item @click="bookshelf">查看书架</el-menu-item>
-          <el-menu-item @click="shelfrequire">书架申请</el-menu-item>
         </el-sub-menu>
           <el-menu-item index="7">
             <el-icon><setting /></el-icon>
-            <span @click="maintenance" >维修申请</span>
+            <span @click="maintenancerequire" >维修申请</span>
           </el-menu-item>
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
@@ -48,7 +50,6 @@
           </el-menu-item>
         </el-menu>
       </el-col>
-
         </el-aside >
         <el-container>
           <el-header>

@@ -121,7 +121,7 @@
             {
               const {userID, username, work_unit, books} = response.data.data;
 
-              store.commit('setUser', username);
+              store.commit('setUserName', username);
               store.commit('setID', userID); 
               store.commit('setWork_unit', work_unit);
               store.commit('setBooks', books);

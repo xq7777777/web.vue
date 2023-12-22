@@ -13,44 +13,43 @@
         height="913px"
       > 
       <h3>企业端</h3>
-      <el-sub-menu  index="0">
-        <template #title>
-          <span >图书管理</span>
-        </template>
-        <el-menu-item @click="addbook">图书增减</el-menu-item>
-        <el-menu-item @click="checkrequire">图书申请</el-menu-item>
-      </el-sub-menu>
-      <el-sub-menu index="2">
-        <template #title>
-          <span>用户管理</span>
-        </template>
-        <el-menu-item ></el-menu-item>
-      </el-sub-menu>
-        <el-sub-menu  index="3">
-        <template #title >
-          <span >查看申请</span>
-        </template>
-        <el-menu-item @click="">申请查看</el-menu-item>
-        <el-menu-item @click="requirement">提交申请</el-menu-item>
-      </el-sub-menu>
-      <el-sub-menu  index="4">
-        <template #title>
-          <span >书架管理</span>
-        </template>
-        <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
-        <el-menu-item @click="bookshelf">查看书架</el-menu-item>
-      </el-sub-menu>
-        <el-menu-item index="7">
-          <el-icon><setting /></el-icon>
-          <span @click="maintenance" >维修申请</span>
-        </el-menu-item>
-        <el-menu-item index="8">
-          <el-icon><setting /></el-icon>
-          <span @click="adminperson" >个人中心</span>
-        </el-menu-item>
-      </el-menu>
-    </el-col>
-
+        <el-sub-menu  index="0">
+          <template #title>
+            <span >图书管理</span>
+          </template>
+          <el-menu-item @click="addbook">图书增减</el-menu-item>
+          <el-menu-item @click="checkrequire">图书申请</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="2">
+          <template #title>
+            <span>用户管理</span>
+          </template>
+          <el-menu-item ></el-menu-item>
+        </el-sub-menu>
+          <el-sub-menu  index="3">
+          <template #title >
+            <span >查看申请</span>
+          </template>
+          <el-menu-item @click="">申请查看</el-menu-item>
+          <el-menu-item @click="requirement">提交申请</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu  index="4">
+          <template #title>
+            <span >书架管理</span>
+          </template>
+          <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
+          <el-menu-item @click="bookshelf">查看书架</el-menu-item>
+        </el-sub-menu>
+          <el-menu-item index="7">
+            <el-icon><setting /></el-icon>
+            <span @click="maintenancerequire" >维修申请</span>
+          </el-menu-item>
+          <el-menu-item index="8">
+            <el-icon><setting /></el-icon>
+            <span @click="adminperson" >个人中心</span>
+          </el-menu-item>
+        </el-menu>
+      </el-col>
       </el-aside >
       <el-container>
         <el-header>
@@ -62,8 +61,8 @@
           
           <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
               <el-table-column fixed prop="title" label="图书名称" width=auto />
-              <el-table-column prop="school" label="拥有学校" width=auto />
-              <el-table-column prop="Tquantity" label="图书数量" width=auto />
+              <el-table-column prop="bookid" label="图书编号" width=auto />
+              <el-table-column prop="quantity" label="图书数量" width=auto />
             
           </el-table>
           
@@ -106,9 +105,9 @@ Star,
       const originData= []  
       for (let item of books.value) {
 originData.push({
-  school: item.school,
   title: item.title,
-  Tquantity: item.Tquantity,
+  bookid: item.bookid,
+  quantity: item.quantity,
 });
 }
       const addbook =()=>{
