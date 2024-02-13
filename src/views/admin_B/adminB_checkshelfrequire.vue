@@ -63,10 +63,8 @@
               <el-table-column prop="Tquantity" label="数量" width=auto  />
               <el-table-column fixed="right" label="Operations" width="120">
                   <template #default="scope">
-                    <el-button  link type="primary" size="small" @click="Clickempty(scope.row)" 
-                      >查看空位</el-button
-                    >
-                    <el-button link type="primary" size="small" @click="Clickbook(scope.row)">查看图书</el-button>
+                    <el-button  link type="primary" size="small" @click="Clickempty(scope.row)" >查看空位</el-button>
+                    <el-button  link type="primary" size="small" @click="Clickbook(scope.row)"  >查看图书</el-button>
                   </template>
                 </el-table-column>
             </el-table>

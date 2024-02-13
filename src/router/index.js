@@ -203,6 +203,26 @@ const routes = [
     name:'adminB_addbook',
     component:()=>import('../views/admin_B/adminB_addbook.vue')
   },
+  {
+    path:'/adminB_people_s',
+    name:'adminB_people_s',
+    component:()=>import('../views/admin_B/adminB_people_s.vue')
+  },
+  {
+    path:'/adminB_people_a',
+    name:'adminB_people_a',
+    component:()=>import('../views/admin_B/adminB_people_a.vue')
+  },
+  {
+    path:'/adminB_people_e',
+    name:'adminB_people_e',
+    component:()=>import('../views/admin_B/adminB_people_e.vue')
+  },
+  {
+    path:'/adminB_checkschool',
+    name:'adminB_checkschool',
+    component:()=>import('../views/admin_B/adminB_checkschool.vue')
+  },
   
   // {
   //   path: '/login',

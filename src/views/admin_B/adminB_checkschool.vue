@@ -18,14 +18,15 @@
             <span >图书管理</span>
           </template>
           <el-menu-item @click="addbook">图书增减</el-menu-item>
-          <el-menu-item @click="">图书修改</el-menu-item>
+          <el-menu-item @click="bookchange">图书修改</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span>用户管理</span>
+            <span>用户查看</span>
           </template>
-          <el-menu-item >用户查看</el-menu-item>
-          <el-menu-item >用户增减</el-menu-item>
+          <el-menu-item @click="checkpeople_s" >学校</el-menu-item>
+          <el-menu-item @click="checkpeople_a">企业</el-menu-item>
+          <el-menu-item @click="checkpeople_e" >教育局</el-menu-item>
         </el-sub-menu>
           <el-sub-menu  index="3">
           <template #title >
@@ -50,48 +51,30 @@
           </el-menu-item>
         </el-menu>
       </el-col>
-
+  
         </el-aside >
         <el-container>
           <el-header>
-            <el-button type="info" @click="goback">返回</el-button>
+            <el-input v-model="search" placeholder="请输入学校名称" style="width: 240px"/>
             <!-- <el-button @click="onSearch">搜索</el-button>  -->
           </el-header>
           <el-main>
-            <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-            >
-
-           
-                <el-form-item label="图书编号">
-                <el-input v-model="formLabelAlign.bookid" />
-                </el-form-item>
-                <el-form-item label="图书名称">
-                <el-input v-model="formLabelAlign.title" />
-                </el-form-item>
-                <el-form-item label="所属学校">
-                <el-input v-model="formLabelAlign.school" />
-                </el-form-item>
-                <el-form-item label="所属书架号">
-                <el-input v-model="formLabelAlign.pressmark" />
-                </el-form-item>
-                <el-form-item label="图书余量">
-                <el-input v-model="formLabelAlign.quantity" />
-                </el-form-item>
-                <el-form-item label="图书总量">
-                <el-input v-model="formLabelAlign.Tquantity" />
-                </el-form-item>
-                <el-form-item label="图书位置">
-                <el-input v-model="formLabelAlign.locationID" />
-                </el-form-item>
-               
-                
-                
-                <el-button type="success" round @click="submitbook">确认添加</el-button>
-             
-            </el-form>
+            <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+                <el-tab-pane label="User" name="first">User</el-tab-pane>
+                <el-tab-pane label="Config" name="second">Config</el-tab-pane>
+                <el-tab-pane label="Role" name="third">Role</el-tab-pane>
+                <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+            </el-tabs>
+            <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
+                <el-table-column fixed prop="school" label="学校名称" width=auto />
+                <el-table-column prop="peoplequantity" label="使用人数" width=auto />
+                <el-table-column fixed="right" label="操作" width="120">
+                    <template #default="scope">
+                      <el-button  link type="primary" size="small" @click="Delete(scope.row)" 
+                        >删除学校</el-button>
+                    </template>
+                  </el-table-column>
+            </el-table>
             
           </el-main>
         </el-container>
@@ -113,9 +96,9 @@
   Message,
   Search,
   Star,
-} from '@element-plus/icons-vue';
+  } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
-    import { computed ,toRaw, } from 'vue'
+    import { computed ,toRaw} from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
   
@@ -124,21 +107,28 @@
         const store = useStore();
         const router = useRouter()
         const search = ref('') 
-        const formLabelAlign = reactive({
-            bookid:"",               
-            title:"", 
-            school:"",           
-            pressmark:"",         
-            quantity:"",           
-            Tquantity:"",  
-            locationID:"",    
-            })
-    
+        const books =computed(() => store.state.books)
+        const originData= []  
+        for (let item of books.value) {
+  originData.push({
+    title: item.title,
+    bookid: item.bookid,
+    author: item.author,
+    publisher: item.publisher,
+  });
+  }
         const addbook =()=>{
           router.push({
             name:'adminB_addbook'
           }) 
         }
+  
+        const bookchange =()=>{
+          router.push({
+            name:'adminB_bookchange'
+          }) 
+        }
+  
         const bookreturn =()=>{
           router.push({
             name:'adminA_return'
@@ -148,6 +138,29 @@
           router.push({
             name:'adminA_requirement'
           }) 
+        }
+        const Delete =()=>{
+          router.push({
+            name:'adminB_person'
+          }) 
+        }
+        const checkpeople_s =async()=>{
+          try{
+              
+              const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+              if(response.status){
+                console.log(response.data)
+                const  maintenance = response.data
+                store.commit('setmaintenance', maintenance)
+                
+              } 
+              router.push({
+              name:'adminB_people_s'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
         }
         const maintenancerequire =async()=>{
           try{
@@ -173,11 +186,7 @@
             name:'adminB_person'
           }) 
         }
-      
-        const goback =()=>{
-          router.back() 
-        }
-
+        //查看书架申请
         const checkshelfrequire =async()=>{
           try{
                 
@@ -242,24 +251,56 @@
         }
          
         }
-        const submitbook =async()=>{
+        const handleRowDblClick =async(row)=> {
+          
+          const bookid = row.bookid;
+          const Bookid =reactive({
+                  bookid,
+                })
+                console.log(Bookid)
           try{
-              console.log(formLabelAlign)
-              const response =await axios.post(`http://139.9.118.223:3000/api/bookfuben`,formLabelAlign)
-              if(response.status){
-                console.log(response.data)
-                
-              } 
-              router.push({
-            //   name:'adminB_maintenance'
-            })
-            }catch (error) {  
-          // 请求错误处理
-          console.log( error);
-        }
-         
-        }
-       
+            const response =await axios.post(`http://139.9.118.223:3000/api/admin/bookid`,Bookid)
+            if(response.status){
+              console.log(response.data.Books)
+              const  Data = response.data.Books
+              
+              store.commit('setdata', Data)
+              
+            } 
+            router.push({
+             path:"/adminB_checkschool",
+             query: {
+              bookid:row.bookid,
+              author:row.author,
+                }
+           })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+          
+      }
+        const tableData = ref(originData) 
+      
+        const filterData = computed(() => {
+      if (!search.value) {
+        return originData
+      }
+  
+      return originData.filter(item => {
+        return item.title.includes(search.value) || 
+           item.author.includes(search.value) ||
+           item.bookid.includes(search.value)
+      })
+    })
+  
+    watch(search, (newVal) => {
+      if (!newVal) {
+        tableData.value = originData
+      } else {
+        tableData.value = filterData.value
+      }
+    })
         return{
             addbook,
             bookreturn,
@@ -267,12 +308,19 @@
             checkshelfrequire,
             maintenancerequire,
             adminperson,
+            checkpeople_s,
+            checkpeople_a,
+            checkpeople_e,
             bookshelf,
             checkrequire,
-            goback,
-            submitbook,
-            formLabelAlign,
-           
+            bookchange,
+            handleRowDblClick,
+            Delete,
+  
+            search,
+            originData,
+            tableData,
+            books,
         }
       }
     })
@@ -353,36 +401,36 @@
     .box-card {
   width: 500px;
   margin: 20px auto;
-}
-
-.user-info {
+  }
+  
+  .user-info {
   display: flex;
   align-items: center;
   padding-bottom: 20px;
   border-bottom: 1px solid #ddd;
-}
-
-.user-info img {
+  }
+  
+  .user-info img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   margin-right: 50px;
-}
-
-.user-info .info p {
+  }
+  
+  .user-info .info p {
   display: flex;
   align-items: center; 
   font-size: 14px;
   color: #666;
   padding: 5px 0;
-}
-
-
-.user-info .info i {
+  }
+  
+  
+  .user-info .info i {
   font-size: 18px;
   margin-right: 10px;
-}
-
+  }
+  
   
   
   

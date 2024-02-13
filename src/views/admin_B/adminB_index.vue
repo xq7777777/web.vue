@@ -22,10 +22,11 @@
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span>用户管理</span>
+            <span>用户查看</span>
           </template>
-          <el-menu-item >用户查看</el-menu-item>
-          <el-menu-item >用户增减</el-menu-item>
+          <el-menu-item @click="checkpeople_s" >学校</el-menu-item>
+          <el-menu-item @click="checkpeople_a">企业</el-menu-item>
+          <el-menu-item @click="checkpeople_e" >教育局</el-menu-item>
         </el-sub-menu>
           <el-sub-menu  index="3">
           <template #title >
@@ -129,6 +130,61 @@
             name:'adminA_requirement'
           }) 
         }
+
+        const checkpeople_s =async()=>{
+          try{
+              
+              const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+              if(response.status){
+                console.log(response.data)
+                const  maintenance = response.data
+                store.commit('setmaintenance', maintenance)
+                
+              } 
+              router.push({
+              name:'adminB_people_s'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
+        }
+        const checkpeople_a =async()=>{
+          try{
+              
+              const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+              if(response.status){
+                console.log(response.data)
+                const  maintenance = response.data
+                store.commit('setmaintenance', maintenance)
+                
+              } 
+              router.push({
+              name:'adminB_people_s'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
+        }
+        const checkpeople_e =async()=>{
+          try{
+              
+              const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+              if(response.status){
+                console.log(response.data)
+                const  maintenance = response.data
+                store.commit('setmaintenance', maintenance)
+                
+              } 
+              router.push({
+              name:'adminB_people_s'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
+        }
         const maintenancerequire =async()=>{
           try{
               
@@ -153,7 +209,7 @@
             name:'adminB_person'
           }) 
         }
-      
+        //查看书架申请
         const checkshelfrequire =async()=>{
           try{
                 
@@ -164,13 +220,12 @@
               const  Data = response.data.data
               store.commit('setdata', Data)
               
-            } 
+            }
             router.push({
             name:'adminB_shelfrequire'
           })
           }catch (error) {  
         // 请求错误处理
-        console.log(error.message)
       }
         }
         const checkrequire =async()=>{
@@ -190,6 +245,7 @@
               store.commit('setdata', Data)
               
             } 
+          
             router.push({
             name:'adminB_checkrequire'
           })
@@ -209,6 +265,7 @@
                 store.commit('setbookshelves', bookshelves)
                 
               } 
+              
               router.push({
               name:'adminB_checkshelfrequire'
             })
@@ -275,6 +332,9 @@
             checkshelfrequire,
             maintenancerequire,
             adminperson,
+            checkpeople_s,
+            checkpeople_a,
+            checkpeople_e,
             bookshelf,
             checkrequire,
             bookchange,

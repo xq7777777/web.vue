@@ -18,63 +18,58 @@
             <span >图书管理</span>
           </template>
           <el-menu-item @click="addbook">图书增减</el-menu-item>
-          <el-menu-item @click="checkrequire">图书申请</el-menu-item>
+          <el-menu-item @click="bookchange">图书修改</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span>用户管理</span>
+            <span>用户查看</span>
           </template>
-          <el-menu-item ></el-menu-item>
+          <el-menu-item @click="checkpeople_s" >学校</el-menu-item>
+          <el-menu-item @click="checkpeople_a">企业</el-menu-item>
+          <el-menu-item @click="checkpeople_e" >教育局</el-menu-item>
         </el-sub-menu>
           <el-sub-menu  index="3">
           <template #title >
             <span >查看申请</span>
           </template>
-          <el-menu-item @click="">申请查看</el-menu-item>
-          <el-menu-item @click="requirement">提交申请</el-menu-item>
+          <el-menu-item @click="checkrequire">图书申请</el-menu-item>
+          <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
+          <el-menu-item @click="maintenancerequire" >维修申请</el-menu-item>
+          
         </el-sub-menu>
         <el-sub-menu  index="4">
           <template #title>
             <span >书架管理</span>
           </template>
-          <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
           <el-menu-item @click="bookshelf">查看书架</el-menu-item>
+          <el-menu-item @click="addbookshelf">书架增添</el-menu-item>
         </el-sub-menu>
-          <el-menu-item index="7">
-            <el-icon><setting /></el-icon>
-            <span @click="maintenancerequire" >维修申请</span>
-          </el-menu-item>
+         
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
             <span @click="adminperson" >个人中心</span>
           </el-menu-item>
         </el-menu>
       </el-col>
-
+  
         </el-aside >
         <el-container>
           <el-header>
-            <el-button type="info" @click="goback">返回</el-button>
+            <el-input v-model="search" placeholder="请输入用户名称或用户ID" style="width: 240px"/>
+            <!-- <el-button @click="onSearch">搜索</el-button>  -->
           </el-header>
           <el-main>
-           
-            <el-table :data="tableData" stripe style="width: 100%" @row-dblclick="handleRowDblClick">
-              <el-table-column prop="title" label="图书名称" width=auto />
-              <el-table-column prop="author" label="图书作者" width=auto />
-              <el-table-column prop="publisher" label="出版社" width=auto />
-              <el-table-column prop="Tquantity" label="数量" width=auto  />
-              <el-table-column prop="req_userID" label="申请工号" width=auto />
-              <el-table-column prop="username" label="申请人" />
-              <el-table-column prop="message" label="状态" width=auto  />
-              <el-table-column fixed="right" label="操作" width="120">
-                  <template #default="scope">
-                    <el-button  link type="primary" size="small" @click="agree(scope.row)" 
-                      >通过申请</el-button>
-                    <el-button  link type="primary" size="small" @click="disagree(scope.row)" 
-                      >拒绝申请</el-button>
-                  </template>
-                </el-table-column>
+            <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
+                <el-table-column fixed prop="username" label="用户名称" width=auto />
+                <el-table-column prop="userid" label="用户ID" width=auto />
+                <el-table-column fixed="right" label="操作" width="120">
+                    <template #default="scope">
+                      <el-button  link type="primary" size="small" @click="Delete(scope.row)" 
+                        >删除</el-button>
+                    </template>
+                  </el-table-column>
             </el-table>
+            
           </el-main>
         </el-container>
       </el-container>
@@ -85,7 +80,8 @@
       defineComponent,
       onMounted,
       ref,
-      reactive
+      reactive,
+      watch,
     } from "vue";
     import {
   Check,
@@ -94,9 +90,9 @@
   Message,
   Search,
   Star,
-} from '@element-plus/icons-vue';
+  } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
-    import { computed } from 'vue'
+    import { computed ,toRaw} from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
   
@@ -104,12 +100,29 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const tableData =computed(() =>store.state.data.B_application)
-        const bookborrow =()=>{
+        const search = ref('') 
+        const books =computed(() => store.state.books)
+        const originData= []  
+        for (let item of books.value) {
+  originData.push({
+    title: item.title,
+    bookid: item.bookid,
+    author: item.author,
+    publisher: item.publisher,
+  });
+  }
+        const addbook =()=>{
           router.push({
-            name:'adminA_borrow'
+            name:'adminB_addbook'
           }) 
         }
+  
+        const bookchange =()=>{
+          router.push({
+            name:'adminB_bookchange'
+          }) 
+        }
+  
         const bookreturn =()=>{
           router.push({
             name:'adminA_return'
@@ -120,38 +133,58 @@
             name:'adminA_requirement'
           }) 
         }
-        const maintenance =()=>{
+        const Delete =()=>{
           router.push({
-            name:'adminA_maintenance'
+            name:'adminB_person'
           }) 
+        }
+        const checkpeople_s =async()=>{
+          try{
+              
+              const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+              if(response.status){
+                console.log(response.data)
+                const  maintenance = response.data
+                store.commit('setmaintenance', maintenance)
+                
+              } 
+              router.push({
+              name:'adminB_people_s'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
+        }
+        const maintenancerequire =async()=>{
+          try{
+              
+              const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+              if(response.status){
+                console.log(response.data)
+                const  maintenance = response.data
+                store.commit('setmaintenance', maintenance)
+                
+              } 
+              router.push({
+              name:'adminB_maintenance'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
+         
         }
         const adminperson =()=>{
           router.push({
-            name:'adminA_person'
+            name:'adminB_person'
           }) 
         }
-        const peolpe =()=>{
-          router.push({
-            name:'adminA_peolpe'
-          }) 
-        }
-        const shelfrequire =()=>{
-          router.push({
-            name:'adminA_shelfrequire'
-          }) 
-        }
-        const goback =()=>{
-          router.back() 
-        }
-        const checkrequire =async()=>{
+        //查看书架申请
+        const checkshelfrequire =async()=>{
           try{
-                const userid =computed(() => store.state.userID)
-                const res_userID = toRaw(userid.value)
-                const Userid = reactive({
-                res_userID,
-               
-            })
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,Userid)
+                
+            const response =await axios.get(`http://139.9.118.223:3000/api/bookshelf/school/application_G`)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -160,7 +193,32 @@
               
             } 
             router.push({
-            name:'adminA_checkrequire'
+            name:'adminB_shelfrequire'
+          })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+        }
+        const checkrequire =async()=>{
+          try{
+                const userid =computed(() => store.state.userID)
+                console.log(userid.value)
+                const res_userID = userid.value
+                const Userid = reactive({
+                res_userID,
+            })
+            console.log(Userid)
+            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/A`,Userid)
+            if(response.status){
+              console.log(response.data)
+              const{data}=response.data
+              const  Data = response.data.data
+              store.commit('setdata', Data)
+              
+            } 
+            router.push({
+            name:'adminB_checkrequire'
           })
           }catch (error) {  
         // 请求错误处理
@@ -168,33 +226,34 @@
       }
         }
         const bookshelf =async()=>{
-            try{
-                const School =computed(() => store.state.Work_unit)
-                const school = toRaw(School.value)
-                console.log(school)
-                const schoolname = reactive({
-                  school,
-                })
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
-            if(response.status){
-              console.log(response.data.bookshelfs)
-              const{data}=response.data.bookshelfs
-              const  Data = response.data.bookshelfs
-              store.commit('setdata', Data)
+          try{
               
-            } 
-            router.push({
-            name:'adminA_bookshelf'
-          }) 
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
+              const response =await axios.get(`http://139.9.118.223:3000/api/bookshelves`)
+              if(response.status){
+                console.log(response.data.bookshelves)
+                const{data}=response.data.bookshelves
+                const  bookshelves = response.data.bookshelves
+                store.commit('setbookshelves', bookshelves)
+                
+              } 
+              router.push({
+              name:'adminB_checkshelfrequire'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
          
         }
         const handleRowDblClick =async(row)=> {
+          
+          const bookid = row.bookid;
+          const Bookid =reactive({
+                  bookid,
+                })
+                console.log(Bookid)
           try{
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/:YN`)
+            const response =await axios.post(`http://139.9.118.223:3000/api/admin/bookid`,Bookid)
             if(response.status){
               console.log(response.data.Books)
               const  Data = response.data.Books
@@ -214,68 +273,48 @@
         console.log(error.message)
       }
           
-      }//请求信息不完整！
-      const agree =async(row)=> {
-          try{
-            const _id = row._id;
-                const schoolname = reactive({
-                  _id,
-                })
-                console.log(schoolname)
-            const response =await axios.put(`http://139.9.118.223:3000/api/B_application/:Y`,schoolname)
-            if(response.status){
-              console.log(response.data)
-            } 
-          //   router.push({
-          //    path:"/adminB_schoolshelves",
-          //    query: {
-          //     school,
-          //     }
-          //  })
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }   
       }
-      const disagree =async(row)=> {
-          try{
-            const _id = row._id;
-                const schoolname = reactive({
-                  _id,
-                })
-                console.log(schoolname)
-            const response =await axios.put(`http://139.9.118.223:3000/api/B_application/:N`,schoolname)
-            if(response.status){
-              console.log(response.data)
-              
-              
-            } 
-          //   router.push({
-          //    path:"/adminB_schoolshelves",
-          //    query: {
-          //     school,
-          //     }
-          //  })
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }   
+        const tableData = ref(originData) 
+      
+        const filterData = computed(() => {
+      if (!search.value) {
+        return originData
       }
+  
+      return originData.filter(item => {
+        return item.title.includes(search.value) || 
+           item.author.includes(search.value) ||
+           item.bookid.includes(search.value)
+      })
+    })
+  
+    watch(search, (newVal) => {
+      if (!newVal) {
+        tableData.value = originData
+      } else {
+        tableData.value = filterData.value
+      }
+    })
         return{
-            bookborrow,
+            addbook,
             bookreturn,
             requirement,
-            maintenance,
+            checkshelfrequire,
+            maintenancerequire,
             adminperson,
+            checkpeople_s,
+            checkpeople_a,
+            checkpeople_e,
             bookshelf,
-            peolpe,
             checkrequire,
-            shelfrequire,
-            goback,
+            bookchange,
             handleRowDblClick,
-            agree,
-            disagree,
+            Delete,
+  
+            search,
+            originData,
             tableData,
+            books,
         }
       }
     })
@@ -356,36 +395,36 @@
     .box-card {
   width: 500px;
   margin: 20px auto;
-}
-
-.user-info {
+  }
+  
+  .user-info {
   display: flex;
   align-items: center;
   padding-bottom: 20px;
   border-bottom: 1px solid #ddd;
-}
-
-.user-info img {
+  }
+  
+  .user-info img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   margin-right: 50px;
-}
-
-.user-info .info p {
+  }
+  
+  .user-info .info p {
   display: flex;
   align-items: center; 
   font-size: 14px;
   color: #666;
   padding: 5px 0;
-}
-
-
-.user-info .info i {
+  }
+  
+  
+  .user-info .info i {
   font-size: 18px;
   margin-right: 10px;
-}
-
+  }
+  
   
   
   

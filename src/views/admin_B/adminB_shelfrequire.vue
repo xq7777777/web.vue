@@ -67,7 +67,7 @@
                   <template #default="scope">
                     <el-button  link type="primary" size="small" @click="agree(scope.row)" 
                       >通过申请</el-button>
-                    <el-button  link type="primary" size="small" @click="(scope.row)" 
+                    <el-button  link type="primary" size="small" @click="disagree(scope.row)" 
                       >拒绝申请</el-button>
                   </template>
                 </el-table-column>
@@ -200,13 +200,33 @@
             const response =await axios.put(`http://139.9.118.223:3000/api/bookshelf/school/application/Y`,schoolname)
             if(response.status){
               console.log(response.data)
-              // const{bookshelfs}=response.data.bookshelfs
-              // const  bookshelfs = response.data.bookshelfs
-              // store.commit('setbookshelfs', bookshelfs)
+            } 
+          //   router.push({
+          //    path:"/adminB_schoolshelves",
+          //    query: {
+          //     school,
+          //     }
+          //  })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }   
+      }
+      const disagree =async(row)=> {
+          try{
+            const _id = row._id;
+                const schoolname = reactive({
+                  _id,
+                })
+                console.log(schoolname)
+            const response =await axios.put(`http://139.9.118.223:3000/api/bookshelf/school/application/N`,schoolname)
+            if(response.status){
+              console.log(response.data)
+              
               
             } 
           //   router.push({
-          //    path:"/adminB_schoolshelf",
+          //    path:"/adminB_schoolshelves",
           //    query: {
           //     school,
           //     }
@@ -252,7 +272,7 @@
             shelfrequire,
             goback,
             agree,
-        
+            disagree,
             tableData,
         }
       }

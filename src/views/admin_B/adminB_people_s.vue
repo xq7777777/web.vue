@@ -13,57 +13,61 @@
         height="913px"
       > 
       <h3>企业端</h3>
-        <el-sub-menu  index="0">
-          <template #title>
-            <span >图书管理</span>
-          </template>
-          <el-menu-item @click="addbook">图书增减</el-menu-item>
-          <el-menu-item @click="checkrequire">图书申请</el-menu-item>
-        </el-sub-menu>
-        <el-sub-menu index="2">
-          <template #title>
-            <span>用户管理</span>
-          </template>
-          <el-menu-item ></el-menu-item>
-        </el-sub-menu>
-          <el-sub-menu  index="3">
-          <template #title >
-            <span >查看申请</span>
-          </template>
-          <el-menu-item @click="">申请查看</el-menu-item>
-          <el-menu-item @click="requirement">提交申请</el-menu-item>
-        </el-sub-menu>
-        <el-sub-menu  index="4">
-          <template #title>
-            <span >书架管理</span>
-          </template>
-          <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
-          <el-menu-item @click="bookshelf">查看书架</el-menu-item>
-        </el-sub-menu>
-          <el-menu-item index="7">
-            <el-icon><setting /></el-icon>
-            <span @click="maintenancerequire" >维修申请</span>
-          </el-menu-item>
-          <el-menu-item index="8">
-            <el-icon><setting /></el-icon>
-            <span @click="adminperson" >个人中心</span>
-          </el-menu-item>
-        </el-menu>
-      </el-col>
+      <el-sub-menu  index="0">
+        <template #title>
+          <span >图书管理</span>
+        </template>
+        <el-menu-item @click="addbook">图书增减</el-menu-item>
+        <el-menu-item @click="bookchange">图书修改</el-menu-item>
+      </el-sub-menu>
+      <el-sub-menu index="2">
+        <template #title>
+          <span>用户查看</span>
+        </template>
+        <el-menu-item @click="checkpeople_s" >学校</el-menu-item>
+        <el-menu-item @click="checkpeople_a">企业</el-menu-item>
+        <el-menu-item @click="checkpeople_e" >教育局</el-menu-item>
+      </el-sub-menu>
+        <el-sub-menu  index="3">
+        <template #title >
+          <span >查看申请</span>
+        </template>
+        <el-menu-item @click="checkrequire">图书申请</el-menu-item>
+        <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
+        <el-menu-item @click="maintenancerequire" >维修申请</el-menu-item>
+        
+      </el-sub-menu>
+      <el-sub-menu  index="4">
+        <template #title>
+          <span >书架管理</span>
+        </template>
+        <el-menu-item @click="bookshelf">查看书架</el-menu-item>
+        <el-menu-item @click="addbookshelf">书架增添</el-menu-item>
+      </el-sub-menu>
+       
+        <el-menu-item index="8">
+          <el-icon><setting /></el-icon>
+          <span @click="adminperson" >个人中心</span>
+        </el-menu-item>
+      </el-menu>
+    </el-col>
+
       </el-aside >
       <el-container>
         <el-header>
-          <el-input v-model="search" placeholder="请输入图书名称或书架编号" style="width: 240px"/>
-          <el-button type="info" @click="goback">返回</el-button>
+          <el-input v-model="search" placeholder="请输入学校名称" style="width: 240px"/>
           <!-- <el-button @click="onSearch">搜索</el-button>  -->
         </el-header>
         <el-main>
-          
-          <el-table :data="tableData" style="width: 100%"  >
-              <el-table-column fixed prop="bookid" label="图书编号" width=auto />
-              <el-table-column prop="title" label="图书名称" width=auto />
-              <el-table-column prop="quantity" label="图书数量" width=auto />
-            
+          <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
+              <el-table-column fixed prop="school" label="学校名称" width=auto />
+              <el-table-column prop="peoplequantity" label="使用人数" width=auto />
+              <el-table-column fixed="right" label="操作" width="120">
+                  <template #default="scope">
+                    <el-button  link type="primary" size="small" @click="Delete(scope.row)" 
+                      >删除学校</el-button>
+                  </template>
+                </el-table-column>
           </el-table>
           
         </el-main>
@@ -88,7 +92,6 @@ Search,
 Star,
 } from '@element-plus/icons-vue';
   import { useRouter } from "vue-router";
-  import {useRoute} from 'vue-router';
   import { computed ,toRaw} from 'vue'
   import { useStore } from 'vuex'
   import axios from 'axios'
@@ -97,24 +100,29 @@ Star,
     setup() {
       const store = useStore();
       const router = useRouter()
-      const route = useRoute()
       const search = ref('') 
-      const {school} = route.query
-      const books =computed(() => store.state.data)
-      console.log(books.value)
+      const books =computed(() => store.state.books)
       const originData= []  
       for (let item of books.value) {
 originData.push({
-  bookid: item.bookid,
   title: item.title,
-  quantity: item.quantity,
+  bookid: item.bookid,
+  author: item.author,
+  publisher: item.publisher,
 });
 }
       const addbook =()=>{
         router.push({
-          name:'adminA_borrow'
+          name:'adminB_addbook'
         }) 
       }
+
+      const bookchange =()=>{
+        router.push({
+          name:'adminB_bookchange'
+        }) 
+      }
+
       const bookreturn =()=>{
         router.push({
           name:'adminA_return'
@@ -125,19 +133,54 @@ originData.push({
           name:'adminA_requirement'
         }) 
       }
-      const maintenance =()=>{
+      const Delete =()=>{
         router.push({
-          name:'adminA_maintenance'
+          name:'adminB_person'
         }) 
+      }
+      const checkpeople_s =async()=>{
+        try{
+            
+            const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+            if(response.status){
+              console.log(response.data)
+              const  maintenance = response.data
+              store.commit('setmaintenance', maintenance)
+              
+            } 
+            router.push({
+            name:'adminB_people_s'
+          })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+      }
+      const maintenancerequire =async()=>{
+        try{
+            
+            const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+            if(response.status){
+              console.log(response.data)
+              const  maintenance = response.data
+              store.commit('setmaintenance', maintenance)
+              
+            } 
+            router.push({
+            name:'adminB_maintenance'
+          })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+       
       }
       const adminperson =()=>{
         router.push({
-          name:'adminA_person'
+          name:'adminB_person'
         }) 
       }
-      const goback =()=>{
-          router.back() 
-        }
+      //查看书架申请
       const checkshelfrequire =async()=>{
         try{
               
@@ -175,7 +218,7 @@ originData.push({
             
           } 
           router.push({
-          name:'adminA_checkrequire'
+          name:'adminB_checkrequire'
         })
         }catch (error) {  
       // 请求错误处理
@@ -189,8 +232,8 @@ originData.push({
             if(response.status){
               console.log(response.data.bookshelves)
               const{data}=response.data.bookshelves
-              const  Data = response.data.bookshelves
-              store.commit('setdata', Data)
+              const  bookshelves = response.data.bookshelves
+              store.commit('setbookshelves', bookshelves)
               
             } 
             router.push({
@@ -204,24 +247,26 @@ originData.push({
       }
       const handleRowDblClick =async(row)=> {
         
-        const pressmark = row.pressmark;
-        const shelf =reactive({
-                pressmark,
-                school,
+        const bookid = row.bookid;
+        const Bookid =reactive({
+                bookid,
               })
-              console.log(shelf)
+              console.log(Bookid)
         try{
-          const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school/pressmark`,shelf)
+          const response =await axios.post(`http://139.9.118.223:3000/api/admin/bookid`,Bookid)
           if(response.status){
-            console.log(response.data)
-            const  Data = response.data.books
+            console.log(response.data.Books)
+            const  Data = response.data.Books
             
             store.commit('setdata', Data)
             
           } 
           router.push({
-           path:"/adminB_bookofschool",
-           
+           path:"/adminB_checkschool",
+           query: {
+            bookid:row.bookid,
+            author:row.author,
+              }
          })
         }catch (error) {  
       // 请求错误处理
@@ -230,14 +275,16 @@ originData.push({
         
     }
       const tableData = ref(originData) 
+    
       const filterData = computed(() => {
     if (!search.value) {
       return originData
     }
 
     return originData.filter(item => {
-      return item.bookid.includes(search.value) || 
-         item.title.includes(search.value) 
+      return item.title.includes(search.value) || 
+         item.author.includes(search.value) ||
+         item.bookid.includes(search.value)
     })
   })
 
@@ -253,12 +300,17 @@ originData.push({
           bookreturn,
           requirement,
           checkshelfrequire,
-          maintenance,
+          maintenancerequire,
           adminperson,
+          checkpeople_s,
+          checkpeople_a,
+          checkpeople_e,
           bookshelf,
           checkrequire,
+          bookchange,
           handleRowDblClick,
-          goback,
+          Delete,
+
           search,
           originData,
           tableData,
