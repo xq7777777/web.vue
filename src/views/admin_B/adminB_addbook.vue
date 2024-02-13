@@ -58,14 +58,14 @@
             <!-- <el-button @click="onSearch">搜索</el-button>  -->
           </el-header>
           <el-main>
-            <div style="margin: 20px" />
             <el-form
                 label-width="100px"
                 :model="formLabelAlign"
                 style="max-width: 460px"
             >
 
-            <el-form-item label="图书编号">
+           
+                <el-form-item label="图书编号">
                 <el-input v-model="formLabelAlign.bookid" />
                 </el-form-item>
                 <el-form-item label="图书名称">
@@ -83,8 +83,13 @@
                 <el-form-item label="图书总量">
                 <el-input v-model="formLabelAlign.Tquantity" />
                 </el-form-item>
+               
+                
+                
+                <el-button type="success" round @click="submitbook">确认添加</el-button>
+             
             </el-form>
-            <el-button type="success" round @click="change">确认修改</el-button>
+            
           </el-main>
         </el-container>
       </el-container>
@@ -95,7 +100,8 @@
       defineComponent,
       onMounted,
       ref,
-      reactive
+      reactive,
+      watch,
     } from "vue";
     import {
   Check,
@@ -106,8 +112,7 @@
   Star,
 } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
-    import { useRoute } from "vue-router";
-    import { computed } from 'vue'
+    import { computed ,toRaw, } from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
   
@@ -115,22 +120,19 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-        const route = useRoute()
-        const _ID =computed(() => store.state.books)
-        console.log(_ID.value)
-        
+        const search = ref('') 
         const formLabelAlign = reactive({
-            _id:"",
-            bookid: "",
-            title:"",
-            school: "",
-            pressmark:"",
-            quantity:"",
-            Tquantity: "",
+            bookid:"",               
+            title:"", 
+            school:"",           
+            pressmark:"",         
+            quantity:"",           
+            Tquantity:"",      
             })
-        const bookborrow =()=>{
+    
+        const addbook =()=>{
           router.push({
-            name:'adminA_borrow'
+            name:'adminB_addbook'
           }) 
         }
         const bookreturn =()=>{
@@ -138,68 +140,135 @@
             name:'adminA_return'
           }) 
         }
+        const requirement =()=>{
+          router.push({
+            name:'adminA_requirement'
+          }) 
+        }
+        const maintenancerequire =async()=>{
+          try{
+              
+              const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+              if(response.status){
+                console.log(response.data)
+                const  maintenance = response.data
+                store.commit('setmaintenance', maintenance)
+                
+              } 
+              router.push({
+              name:'adminB_maintenance'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
+         
+        }
+        const adminperson =()=>{
+          router.push({
+            name:'adminB_person'
+          }) 
+        }
+      
         const goback =()=>{
           router.back() 
         }
-        
-        
-        //     router.push({
-        //     name:'adminB_bookofschool'
-        //   }) 
-        const change =async()=>{
-         
-            
-            if (!formLabelAlign.bookid) {
-        alert('请输入图书编号');
-        return;
-    }
 
-    // 在 _ID 中查找对应图书的 _id
-    const foundBook = _ID.value.find(book => book.bookid === formLabelAlign.bookid);
-
-    // 如果找到对应的图书
-    if (foundBook) {
-        // 将找到的 _id 赋值给 formLabelAlign._id
-        formLabelAlign._id = foundBook._id;
-        alert('图书信息匹配成功，可以继续修改');
-        console.log(formLabelAlign._id)
-        console.log(formLabelAlign)
-    } else {
-        // 如果未找到对应的图书
-        alert('未找到对应的图书，请确认图书编号是否正确');
-    }
-
-            if(!formLabelAlign.school || !formLabelAlign.bookid || !formLabelAlign.Tquantity){
-              alert('请输入完整信息')
-              return
-            }
-
-            alert('确认图书信息无误,再次点击确认')
-            try{  
-           
-            const response =await axios.put('http://139.9.118.223:3000/api/bookfuben/recorrect', formLabelAlign)
+        const checkshelfrequire =async()=>{
+          try{
+                
+            const response =await axios.get(`http://139.9.118.223:3000/api/bookshelf/school/application_G`)
             if(response.status){
               console.log(response.data)
+              const{data}=response.data
+              const  Data = response.data.data
+              store.commit('setdata', Data)
+              
             } 
-            alert('修改成功')
             router.push({
-              name:"adminB_index",
-            })
+            name:'adminB_shelfrequire'
+          })
           }catch (error) {  
         // 请求错误处理
         console.log(error.message)
       }
         }
-        
+        const checkrequire =async()=>{
+          try{
+                const userid =computed(() => store.state.userID)
+                console.log(userid.value)
+                const res_userID = userid.value
+                const Userid = reactive({
+                res_userID,
+            })
+            console.log(Userid)
+            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/A`,Userid)
+            if(response.status){
+              console.log(response.data)
+              const{data}=response.data
+              const  Data = response.data.data
+              store.commit('setdata', Data)
+              
+            } 
+            router.push({
+            name:'adminB_checkrequire'
+          })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+        }
+        const bookshelf =async()=>{
+          try{
+              
+              const response =await axios.get(`http://139.9.118.223:3000/api/bookshelves`)
+              if(response.status){
+                console.log(response.data.bookshelves)
+                const{data}=response.data.bookshelves
+                const  bookshelves = response.data.bookshelves
+                store.commit('setbookshelves', bookshelves)
+                
+              } 
+              router.push({
+              name:'adminB_checkshelfrequire'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
+         
+        }
+        const submitbook =async()=>{
+          try{
+              
+              const response =await axios.post(`http://139.9.118.223:3000/api/bookfuben`,formLabelAlign)
+              if(response.status){
+                console.log(response.data)
+                
+              } 
+              router.push({
+            //   name:'adminB_maintenance'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
+         
+        }
+       
         return{
-            bookborrow,
+            addbook,
             bookreturn,
+            requirement,
+            checkshelfrequire,
+            maintenancerequire,
+            adminperson,
+            bookshelf,
+            checkrequire,
             goback,
+            submitbook,
             formLabelAlign,
-            change,
-
-        
-     
+           
         }
       }
     })
@@ -352,4 +421,3 @@
   
   
   
-

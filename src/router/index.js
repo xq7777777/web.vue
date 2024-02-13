@@ -198,6 +198,12 @@ const routes = [
     name:'adminB_person',
     component:()=>import('../views/admin_B/adminB_person.vue')
   },
+  {
+    path:'/adminB_addbook',
+    name:'adminB_addbook',
+    component:()=>import('../views/admin_B/adminB_addbook.vue')
+  },
+  
   // {
   //   path: '/login',
   //   name: 'login',

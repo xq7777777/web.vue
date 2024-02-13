@@ -59,10 +59,10 @@
         </el-header>
         <el-main>
           
-          <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
+          <el-table :data="tableData" style="width: 100%"  >
               <el-table-column fixed prop="title" label="图书名称" width=auto />
-              <el-table-column prop="bookid" label="图书编号" width=auto />
-              <el-table-column prop="quantity" label="图书数量" width=auto />
+              <el-table-column prop="school" label="所属学校" width=auto />
+              <el-table-column prop="Tquantity" label="图书数量" width=auto />
             
           </el-table>
           
@@ -106,8 +106,8 @@ Star,
       for (let item of books.value) {
 originData.push({
   title: item.title,
-  bookid: item.bookid,
-  quantity: item.quantity,
+  school: item.school,
+  Tquantity: item.Tquantity,
 });
 }
       const addbook =()=>{

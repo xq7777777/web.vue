@@ -18,32 +18,32 @@
             <span >图书管理</span>
           </template>
           <el-menu-item @click="addbook">图书增减</el-menu-item>
-          <el-menu-item @click="checkrequire">图书申请</el-menu-item>
+          <el-menu-item @click="bookchange">图书修改</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
             <span>用户管理</span>
           </template>
-          <el-menu-item ></el-menu-item>
+          <el-menu-item >用户查看</el-menu-item>
+          <el-menu-item >用户增减</el-menu-item>
         </el-sub-menu>
           <el-sub-menu  index="3">
           <template #title >
             <span >查看申请</span>
           </template>
-          <el-menu-item @click="">申请查看</el-menu-item>
-          <el-menu-item @click="requirement">提交申请</el-menu-item>
+          <el-menu-item @click="checkrequire">图书申请</el-menu-item>
+          <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
+          <el-menu-item @click="maintenancerequire" >维修申请</el-menu-item>
+          
         </el-sub-menu>
         <el-sub-menu  index="4">
           <template #title>
             <span >书架管理</span>
           </template>
-          <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
           <el-menu-item @click="bookshelf">查看书架</el-menu-item>
+          <el-menu-item @click="addbookshelf">书架增添</el-menu-item>
         </el-sub-menu>
-          <el-menu-item index="7">
-            <el-icon><setting /></el-icon>
-            <span @click="maintenancerequire" >维修申请</span>
-          </el-menu-item>
+         
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
             <span @click="adminperson" >个人中心</span>
@@ -109,9 +109,16 @@
 }
         const addbook =()=>{
           router.push({
-            name:'adminA_borrow'
+            name:'adminB_addbook'
           }) 
         }
+
+        const bookchange =()=>{
+          router.push({
+            name:'adminB_bookchange'
+          }) 
+        }
+
         const bookreturn =()=>{
           router.push({
             name:'adminA_return'
@@ -270,6 +277,7 @@
             adminperson,
             bookshelf,
             checkrequire,
+            bookchange,
             handleRowDblClick,
             search,
             originData,
