@@ -42,6 +42,7 @@
             <span >书架管理</span>
           </template>
           <el-menu-item @click="bookshelf">查看书架</el-menu-item>
+          <el-menu-item @click="addbookshelf">书架增添</el-menu-item>
         </el-sub-menu>
          
           <el-menu-item index="8">
@@ -50,22 +51,122 @@
           </el-menu-item>
         </el-menu>
       </el-col>
-
+  
         </el-aside >
         <el-container>
           <el-header>
-            <el-input v-model="search" placeholder="请输入图书名称或书架编号" style="width: 240px"/>
+            <el-input v-model="search" placeholder="请输入账户、姓名或id" style="width: 240px"/>
+            <el-button type="info" @click="goback">返回</el-button>
             <!-- <el-button @click="onSearch">搜索</el-button>  -->
           </el-header>
           <el-main>
+            <el-button
+        key="primary"
+        type="primary"
+        text
+        bg
+        @click=" showModal = true "
+         >{{ "添加用户" }}</el-button
+      >
+          <br><br>
             <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
-                <el-table-column fixed prop="title" label="图书名称" width=auto />
-                <el-table-column prop="bookid" label="图书编号" width=auto />
-                <el-table-column prop="author" label="图书作者" width=auto />
-                <el-table-column prop="publisher" label="出版社" width=auto />
-                
+                <el-table-column fixed prop="userID" label="管理员账户" width=auto />
+                <el-table-column prop="username" label="管理员姓名" width=auto />
+                <el-table-column prop="_id" label="管理员id" width=auto />
+                <el-table-column fixed="right" label="操作" width="120">
+                    <template #default="scope">
+                      <el-button  link type="primary" size="small" @click=" showmodal = true " 
+                        >修改密码</el-button>
+                      <el-button  link type="primary" size="small" @click="Delete(scope.row)" 
+                        >删除用户</el-button>
+                    </template>
+                  </el-table-column>
             </el-table>
-            
+           
+            <teleport to="body">
+                <el-dialog v-if="showModal" :model-value="showModal" title="修改密码"
+                  font-size="32px">
+                <el-form v-model="addForm" label-width="80px">
+              <el-form-item label="用户账户">
+                <el-input v-model="addForm.userID"></el-input>
+              </el-form-item>
+              <el-form-item label="用户密码">
+                <el-input v-model="addForm.password"></el-input>
+              </el-form-item>
+              <el-form-item label="用户姓名">
+                <el-input v-model="addForm.username"></el-input>
+              </el-form-item>
+              <el-form-item label="用户身份">
+                <el-select
+                  v-model="addForm.identity"
+                  class="m-2"
+                  placeholder="Select"
+                  style="width: 240px"
+                >
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="工作单位">
+                <el-input v-model="addForm.work_unit"></el-input>
+              </el-form-item>
+              <el-form-item label="管理账户">
+                <el-input v-model="addForm.adminID"></el-input>
+              </el-form-item>
+              <el-form-item label="管理密码">
+                <el-input v-model="addForm.company_password"></el-input>
+              </el-form-item>
+              <el-button type="primary" @click="adduser">确定修改</el-button>
+            </el-form>
+            <el-button @click="showModal = false">关闭</el-button>
+              </el-dialog>
+        </teleport>         
+            <teleport to="body">
+                <el-dialog v-if="showmodal" :model-value="showmodal" title="修改密码"
+                  font-size="32px">
+                <el-form v-model="changeForm" label-width="80px">
+              <el-form-item label="用户账户">
+                <el-input v-model="changeForm.userID"></el-input>
+              </el-form-item>
+              <el-form-item label="用户密码">
+                <el-input v-model="changeForm.password"></el-input>
+              </el-form-item>
+              <el-form-item label="用户姓名">
+                <el-input v-model="changeForm.username"></el-input>
+              </el-form-item>
+              <el-form-item label="用户身份">
+                <el-select
+                  v-model="changeForm.identity"
+                  class="m-2"
+                  placeholder="Select"
+                  style="width: 240px"
+                >
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="工作单位">
+                <el-input v-model="changeForm.work_unit"></el-input>
+              </el-form-item>
+              <el-form-item label="管理账户">
+                <el-input v-model="changeForm.adminID"></el-input>
+              </el-form-item>
+              <el-form-item label="管理密码">
+                <el-input v-model="changeForm.company_password"></el-input>
+              </el-form-item>
+              <el-button type="primary" @click="changepass">确定修改</el-button>
+            </el-form>
+            <el-button @click="showmodal = false">关闭</el-button>
+              </el-dialog>
+        </teleport>
           </el-main>
         </el-container>
       </el-container>
@@ -79,14 +180,8 @@
       reactive,
       watch,
     } from "vue";
-    import {
-  Check,
-  Delete,
-  Edit,
-  Message,
-  Search,
-  Star,
-} from '@element-plus/icons-vue';
+  
+  import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
     import { useRouter } from "vue-router";
     import { computed ,toRaw} from 'vue'
     import { useStore } from 'vuex'
@@ -94,33 +189,69 @@
   
     export default defineComponent({
       setup() {
+  
+  
         const store = useStore();
         const router = useRouter()
         const search = ref('') 
-        const books =computed(() => store.state.books)
-        const originData= []  
-        for (let item of books.value) {
+        const originData= []
+        const showModal = ref(false);
+        const showmodal = ref(false);
+        const addForm = ref({
+          userID: "",       //检查是否存在，不存在则创建，存在则修改
+          password: "",
+          username:"",
+          identity:"",           
+          work_unit:"",               //此处非智慧图书时，company_password均可为空或者任意
+          adminID:"",
+          company_password:""
+            })
+      const changeForm = ref({
+          userID: "",       //检查是否存在，不存在则创建，存在则修改
+          password: "",
+          username:"",
+          identity:"",           
+          work_unit:"",               //此处非智慧图书时，company_password均可为空或者任意
+          adminID:"",
+          company_password:""
+            })
+      const options = [
+    {
+      value: 'A',
+      label: '管理员',
+    },
+    {
+      value: 'T',
+      label: '老师',
+    },
+    {
+      value: 'S',
+      label: '学生',
+    },
+  ]
+        const admins = computed(() => store.state.company_admins)  
+        for (let item of admins.value) {
   originData.push({
-    title: item.title,
-    bookid: item.bookid,
-    author: item.author,
-    publisher: item.publisher,
+    userID: item.userID,
+    username: item.username,
+    _id:item._id,
   });
-}
-        
-
+  }
+        const goback =()=>{
+            router.back() 
+        }
         const addbook =()=>{
           router.push({
             name:'adminB_addbook'
           }) 
         }
-
+  
         const bookchange =()=>{
           router.push({
             name:'adminB_bookchange'
           }) 
         }
-
+  
         const bookreturn =()=>{
           router.push({
             name:'adminA_return'
@@ -131,57 +262,38 @@
             name:'adminA_requirement'
           }) 
         }
-        //查看学校人员
-        const checkpeople_s =async()=>{
+        const Delete =()=>{
+          router.push({
+            name:'adminB_person'
+          }) 
+        }
+        const adduser =async()=>{
           try{
-            const userid =computed(() => store.state.userID)
-                console.log(userid.value)
-                const userID = userid.value
-                const Userid = reactive({
-                userID,
-            })
-            console.log(Userid)
-              const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/company/look`,Userid)
+              const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/company`,addForm.value)
               if(response.status){
-                console.log(response.data.school_admins)
-                const  school_admins = response.data.school_admins
-                store.commit('setschooladmins', school_admins)
+                console.log(response.data)
                
-
-                
               } 
-              router.push({
-              name:'adminB_people_s'
-            })
+  
             }catch (error) {  
           // 请求错误处理
           console.log(error)
         }
         }
-        const checkpeople_a =async()=>{
+        const changepass =async()=>{
           try{
-            const userid =computed(() => store.state.userID)
-                console.log(userid.value)
-                const userID = userid.value
-                const Userid = reactive({
-                userID,
-            })
-            console.log(Userid)
-              const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/company/look`,Userid)
+              const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/company`,changeForm.value)
               if(response.status){
-                console.log(response.data.company_admins)
-                const  company_admins = response.data.company_admins
-                store.commit('setcompanyadmins', company_admins)
+                console.log(response.data)
+               
               } 
-              router.push({
-              name:'adminB_people_a'
-            })
+  
             }catch (error) {  
           // 请求错误处理
           console.log(error)
         }
         }
-        const checkpeople_e =async()=>{
+        const checkpeople_s =async()=>{
           try{
               
               const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
@@ -234,15 +346,15 @@
               const  Data = response.data.data
               store.commit('setdata', Data)
               
-            }
+            } 
             router.push({
             name:'adminB_shelfrequire'
           })
           }catch (error) {  
         // 请求错误处理
+        console.log(error.message)
       }
         }
-        
         const checkrequire =async()=>{
           try{
                 const userid =computed(() => store.state.userID)
@@ -260,7 +372,6 @@
               store.commit('setdata', Data)
               
             } 
-          
             router.push({
             name:'adminB_checkrequire'
           })
@@ -280,7 +391,6 @@
                 store.commit('setbookshelves', bookshelves)
                 
               } 
-              
               router.push({
               name:'adminB_checkshelfrequire'
             })
@@ -307,7 +417,7 @@
               
             } 
             router.push({
-             path:"/adminB_bookofschool",
+             path:"/adminB_checkschool",
              query: {
               bookid:row.bookid,
               author:row.author,
@@ -325,14 +435,14 @@
       if (!search.value) {
         return originData
       }
-
+  
       return originData.filter(item => {
-        return item.title.includes(search.value) || 
-           item.author.includes(search.value) ||
-           item.bookid.includes(search.value)
+        return item.userID.includes(search.value) || 
+           item.username.includes(search.value) ||
+           item._id.includes(search.value)
       })
     })
-
+  
     watch(search, (newVal) => {
       if (!newVal) {
         tableData.value = originData
@@ -348,17 +458,23 @@
             maintenancerequire,
             adminperson,
             checkpeople_s,
-            checkpeople_a,
-            checkpeople_e,
+            goback,
             bookshelf,
             checkrequire,
             bookchange,
-            // changebookshelf,
             handleRowDblClick,
+            Delete,
+            adduser,
+            changepass,
+            showModal,
+            showmodal,
+            addForm,
+            changeForm,
+            options,
             search,
             originData,
             tableData,
-            books,
+            admins,
         }
       }
     })
@@ -439,36 +555,36 @@
     .box-card {
   width: 500px;
   margin: 20px auto;
-}
-
-.user-info {
+  }
+  
+  .user-info {
   display: flex;
   align-items: center;
   padding-bottom: 20px;
   border-bottom: 1px solid #ddd;
-}
-
-.user-info img {
+  }
+  
+  .user-info img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   margin-right: 50px;
-}
-
-.user-info .info p {
+  }
+  
+  .user-info .info p {
   display: flex;
   align-items: center; 
   font-size: 14px;
   color: #666;
   padding: 5px 0;
-}
-
-
-.user-info .info i {
+  }
+  
+  
+  .user-info .info i {
   font-size: 18px;
   margin-right: 10px;
-}
-
+  }
+  
   
   
   

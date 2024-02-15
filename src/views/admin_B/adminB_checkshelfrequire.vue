@@ -54,7 +54,7 @@
         </el-aside >
         <el-container>
           <el-header>
-            <el-button type="info" @click="goback">返回</el-button>
+            <el-button type="info" @click="addshelf">创建书架</el-button>
           </el-header>
           <el-main>
            
@@ -64,7 +64,7 @@
               <el-table-column fixed="right" label="Operations" width="120">
                   <template #default="scope">
                     <el-button  link type="primary" size="small" @click="Clickempty(scope.row)" >查看空位</el-button>
-                    <el-button  link type="primary" size="small" @click="Clickbook(scope.row)"  >查看图书</el-button>
+                    <el-button  link type="primary" size="small" @click="Clickbook(scope.row)"  >查看书架</el-button>
                   </template>
                 </el-table-column>
             </el-table>
@@ -160,6 +160,25 @@
         console.log(error.message)
       }
         }
+        const addshelf =async()=>{
+          try{
+              
+            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelves`)
+            if(response.status){
+              console.log(response.data)
+              const{data}=response.data
+              const  Data = response.data.data
+              store.commit('setdata', Data)
+              
+            } 
+            router.push({
+            name:'adminB_checkrequire'
+          })
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+        }
         const bookshelf =async()=>{
            
          
@@ -232,6 +251,7 @@
             goback,
             Clickempty,
             Clickbook,
+            addshelf,
             tableData,
         }
       }

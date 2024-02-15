@@ -133,10 +133,30 @@
             name:'adminA_person'
           }) 
         }
-        const peolpe =()=>{
-          router.push({
+        const peolpe =async()=>{
+          try{
+                const userid =computed(() => store.state.userID)
+                const userID = toRaw(userid.value)
+                const Userid = reactive({
+                userID,
+               
+            })
+            const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/school/look`,Userid)
+            if(response.status){
+              console.log(response.data)
+              // const{data}=response.data
+              // const  Data = response.data.data
+              // store.commit('setdata', Data)
+              
+            } 
+            router.push({
             name:'adminA_peolpe'
           }) 
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+          
         }
         const shelfrequire =()=>{
           router.push({

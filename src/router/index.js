@@ -223,6 +223,11 @@ const routes = [
     name:'adminB_checkschool',
     component:()=>import('../views/admin_B/adminB_checkschool.vue')
   },
+  {
+    path:'/adminB_schooladmins',
+    name:'adminB_schooladmins',
+    component:()=>import('../views/admin_B/adminB_schooladmins.vue')
+  },
   
   // {
   //   path: '/login',

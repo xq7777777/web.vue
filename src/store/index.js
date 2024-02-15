@@ -91,6 +91,14 @@ export default createStore({
     {
       state.maintenance = maintenance
     },
+    setschooladmins(state,school_admins)
+    {
+      state.school_admins = school_admins
+    },
+    setcompanyadmins(state,company_admins)
+    {
+      state.company_admins = company_admins
+    },
     // updateIsCollapse(state, payload) {
     //   // console.log(payload);
     //   state.isCollapse = !state.isCollapse

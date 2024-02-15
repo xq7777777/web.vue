@@ -226,12 +226,7 @@
               
               
             } 
-          //   router.push({
-          //    path:"/adminB_schoolshelves",
-          //    query: {
-          //     school,
-          //     }
-          //  })
+          
           }catch (error) {  
         // 请求错误处理
         console.log(error.message)

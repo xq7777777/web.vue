@@ -62,7 +62,11 @@
           <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
               <el-table-column fixed prop="pressmark" label="书架编号" width=auto />
               <el-table-column prop="location" label="书架位置" width=auto />
-            
+              <el-table-column fixed="right" label="Operations" width="120">
+                  <template #default="scope">
+                    <el-button  link type="primary" size="small" @click="Deleteshelf(scope.row)" >删除书架</el-button>
+                  </template>
+                </el-table-column>
           </el-table>
           
         </el-main>
@@ -200,6 +204,27 @@ originData.push({
       }
        
       }
+      const Deleteshelf =async(row)=> {
+          try{
+            // const {school} = route.query
+            const pressmark = row.pressmark;
+            const location = row.location;
+                const schoolname = reactive({
+                  pressmark,             //书架编号
+                  school,              //书架所在学校
+                  location   
+                })
+              console.log(schoolname)
+            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelves/delete`,schoolname)
+            if(response.status){
+              console.log(response.data)
+              alert('删除成功')
+            } 
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }   
+      }
       const handleRowDblClick =async(row)=> {
         
         const pressmark = row.pressmark;
@@ -257,6 +282,7 @@ originData.push({
           checkrequire,
           handleRowDblClick,
           goback,
+          Deleteshelf,
           search,
           originData,
           tableData,

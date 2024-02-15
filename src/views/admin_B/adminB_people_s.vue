@@ -56,12 +56,13 @@
       <el-container>
         <el-header>
           <el-input v-model="search" placeholder="请输入学校名称" style="width: 240px"/>
+          <el-button type="info" @click="goback">返回</el-button>
           <!-- <el-button @click="onSearch">搜索</el-button>  -->
         </el-header>
         <el-main>
           <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
               <el-table-column fixed prop="school" label="学校名称" width=auto />
-              <el-table-column prop="peoplequantity" label="使用人数" width=auto />
+              <el-table-column prop="count" label="管理员人数" width=auto />
               <el-table-column fixed="right" label="操作" width="120">
                   <template #default="scope">
                     <el-button  link type="primary" size="small" @click="Delete(scope.row)" 
@@ -92,6 +93,7 @@ Search,
 Star,
 } from '@element-plus/icons-vue';
   import { useRouter } from "vue-router";
+  import { useRoute } from "vue-router";
   import { computed ,toRaw} from 'vue'
   import { useStore } from 'vuex'
   import axios from 'axios'
@@ -100,17 +102,21 @@ Star,
     setup() {
       const store = useStore();
       const router = useRouter()
+      const route = useRoute()
       const search = ref('') 
-      const books =computed(() => store.state.books)
-      const originData= []  
-      for (let item of books.value) {
+      const originData= []
+      const schooladmins = computed(() => store.state.school_admins)  
+      for (let item of schooladmins.value) {
 originData.push({
-  title: item.title,
-  bookid: item.bookid,
-  author: item.author,
-  publisher: item.publisher,
+  school: item.school,
+  count: item.count,
+  admins:item.admins,
 });
 }
+
+      const goback =()=>{
+          router.back() 
+      }
       const addbook =()=>{
         router.push({
           name:'adminB_addbook'
@@ -245,37 +251,20 @@ originData.push({
       }
        
       }
-      const handleRowDblClick =async(row)=> {
-        
-        const bookid = row.bookid;
-        const Bookid =reactive({
-                bookid,
-              })
-              console.log(Bookid)
-        try{
-          const response =await axios.post(`http://139.9.118.223:3000/api/admin/bookid`,Bookid)
-          if(response.status){
-            console.log(response.data.Books)
-            const  Data = response.data.Books
-            
-            store.commit('setdata', Data)
-            
-          } 
-          router.push({
-           path:"/adminB_checkschool",
-           query: {
-            bookid:row.bookid,
-            author:row.author,
-              }
-         })
-        }catch (error) {  
-      // 请求错误处理
-      console.log(error.message)
-    }
-        
-    }
+   // 点击行事件
+const handleRowDblClick = async (row) => {
+
+// 从scope中获取当前行所有数据
+const admins = row.admins;
+//跳转并传递admins参数
+route.push({
+  name: "adminB_schooladmins",
+  query: {
+    admins:admins 
+  }
+})
+}
       const tableData = ref(originData) 
-    
       const filterData = computed(() => {
     if (!search.value) {
       return originData
@@ -303,8 +292,7 @@ originData.push({
           maintenancerequire,
           adminperson,
           checkpeople_s,
-          checkpeople_a,
-          checkpeople_e,
+          goback,
           bookshelf,
           checkrequire,
           bookchange,
@@ -314,7 +302,7 @@ originData.push({
           search,
           originData,
           tableData,
-          books,
+          schooladmins,
       }
     }
   })
