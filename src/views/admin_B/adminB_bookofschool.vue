@@ -60,9 +60,9 @@
         <el-main>
           
           <el-table :data="tableData" style="width: 100%"  >
-              <el-table-column fixed prop="bookid" label="图书编号" width=auto />
+              <el-table-column fixed prop="school" label="所属学校" width=auto />
               <el-table-column prop="title" label="图书名称" width=auto />
-              <el-table-column prop="quantity" label="图书数量" width=auto />
+              <el-table-column prop="Tquantity" label="图书数量" width=auto />
             
           </el-table>
           
@@ -105,9 +105,9 @@ Star,
       const originData= []  
       for (let item of books.value) {
 originData.push({
-  bookid: item.bookid,
+  school: item.school,
   title: item.title,
-  quantity: item.quantity,
+  Tquantity: item.Tquantity,
 });
 }
       const addbook =()=>{
@@ -236,7 +236,7 @@ originData.push({
     }
 
     return originData.filter(item => {
-      return item.bookid.includes(search.value) || 
+      return item.school.includes(search.value) || 
          item.title.includes(search.value) 
     })
   })

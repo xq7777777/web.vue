@@ -54,7 +54,8 @@
         </el-aside >
         <el-container>
           <el-header>
-            <el-button type="info" @click="addshelf">创建书架</el-button>
+            <el-button type="info"  @click=" showModal = true " >创建书架</el-button>
+            <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
            
@@ -68,6 +69,22 @@
                   </template>
                 </el-table-column>
             </el-table>
+            
+          <teleport to="body">
+              <el-dialog v-if="showModal" :model-value="showModal" title="创建书架"
+                font-size="32px">
+              <el-form v-model="addForm" label-width="80px">
+            <el-form-item label="所属学校">
+              <el-input v-model="addForm.school"></el-input>
+            </el-form-item>
+            <el-form-item label="书架位置">
+              <el-input v-model="addForm.location"></el-input>
+            </el-form-item>
+            <el-button type="primary" @click="addshelf">确定创建</el-button>
+          </el-form>
+          <el-button @click="showModal = false">关闭</el-button>
+            </el-dialog>
+      </teleport>         
           </el-main>
         </el-container>
       </el-container>
@@ -98,6 +115,11 @@
         const store = useStore();
         const router = useRouter()
         const tableData =computed(() =>store.state.bookshelves)
+        const showModal = ref(false)
+        const addForm = ref({
+        school: "",       //检查是否存在，不存在则创建，存在则修改
+        location: "",
+          })
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
@@ -163,20 +185,18 @@
         const addshelf =async()=>{
           try{
               
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelves`)
+            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelves`,addForm)
             if(response.status){
               console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data.data
-              store.commit('setdata', Data)
+              alert("添加成功")
               
             } 
             router.push({
-            name:'adminB_checkrequire'
+            name:'adminB_index'
           })
           }catch (error) {  
         // 请求错误处理
-        console.log(error.message)
+        console.log(error)
       }
         }
         const bookshelf =async()=>{
@@ -252,6 +272,8 @@
             Clickempty,
             Clickbook,
             addshelf,
+            showModal,
+            addForm,
             tableData,
         }
       }

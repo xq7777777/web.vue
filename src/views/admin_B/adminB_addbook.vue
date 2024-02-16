@@ -77,12 +77,6 @@
                 <el-form-item label="所属书架号">
                 <el-input v-model="formLabelAlign.pressmark" />
                 </el-form-item>
-                <el-form-item label="图书余量">
-                <el-input v-model="formLabelAlign.quantity" />
-                </el-form-item>
-                <el-form-item label="图书总量">
-                <el-input v-model="formLabelAlign.Tquantity" />
-                </el-form-item>
                 <el-form-item label="图书位置">
                 <el-input v-model="formLabelAlign.locationID" />
                 </el-form-item>
@@ -127,11 +121,10 @@
         const formLabelAlign = reactive({
             bookid:"",               
             title:"", 
-            school:"",           
-            pressmark:"",         
-            quantity:"",           
-            Tquantity:"",  
-            locationID:"",    
+            school:"", 
+            locationID:"",          
+            pressmark:"",          
+                
             })
     
         const addbook =()=>{
@@ -248,11 +241,9 @@
               const response =await axios.post(`http://139.9.118.223:3000/api/bookfuben`,formLabelAlign)
               if(response.status){
                 console.log(response.data)
-                
+                alert('添加成功')
               } 
-              router.push({
-            //   name:'adminB_maintenance'
-            })
+             
             }catch (error) {  
           // 请求错误处理
           console.log( error);

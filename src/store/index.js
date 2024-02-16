@@ -99,6 +99,22 @@ export default createStore({
     {
       state.company_admins = company_admins
     },
+    setNewarr(state,Newarr)
+    {
+      state.Newarr = Newarr
+    },
+    setadmins(state,admins)
+    {
+      state.admins = admins
+    },
+    setteachers(state,teachers)
+    {
+      state.teachers = teachers
+    },
+    setstudents(state,students)
+    {
+      state.students = students
+    },
     // updateIsCollapse(state, payload) {
     //   // console.log(payload);
     //   state.isCollapse = !state.isCollapse

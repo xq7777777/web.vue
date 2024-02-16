@@ -55,38 +55,38 @@
             <el-button type="info" @click="goback">返回</el-button>
            </el-header>
           <el-main>
-          
-            <div style="margin: 20px" />
-            <el-form
-                label-width="100px"
-                :model="formLabelAlign"
-                style="max-width: 460px"
-            >
-            
-                <el-form-item label="学号或工号">
-                <el-input v-model="formLabelAlign.userID" />
-                </el-form-item>
-                <el-form-item label="密码">
-                <el-input v-model="formLabelAlign.password" />
-                </el-form-item>
-                <el-form-item label="姓名">
-                <el-input v-model="formLabelAlign.username" />
-                </el-form-item>
-                <el-form-item label="身份">
-                <el-input v-model="formLabelAlign.identity" />
-                </el-form-item>
-                <el-form-item label="学校">
-                <el-input v-model="formLabelAlign.school" />
-                </el-form-item>
-                <el-form-item label="班级">
-                <el-input v-model="formLabelAlign.className" />
-                </el-form-item>
-                <el-form-item label="操作员">
-                <el-input v-model="formLabelAlign.adminID" />
-                </el-form-item>
-                <el-button type="success" round @click="addperson">确认注册</el-button>
-            </el-form>
+              <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
+              
+                <el-tab-pane label="管理员" name="admins">
+                  <el-table :data="Admins" style="width: 100%">
+                <el-table-column fixed prop="userID" label="管理员账户" width=auto />
+                <el-table-column prop="username" label="管理员姓名" width=auto />
+                <el-table-column prop="_id" label="管理员编号" width=auto />
 
+            </el-table>
+                </el-tab-pane>
+                <el-tab-pane label="老师" name="teachers">
+                  <el-table :data="Teachers" style="width: 100%">
+                <el-table-column fixed prop="userID" label="老师账户" width=auto />
+                <el-table-column prop="username" label="老师姓名" width=auto />
+                <el-table-column prop="className" label="管理班级" width=auto />
+                <el-table-column prop="_id" label="老师编号" width=auto />
+
+            </el-table>
+                </el-tab-pane>
+                <el-tab-pane label="学生" name="students">
+                  <el-table :data="Students" style="width: 100%">
+                <el-table-column fixed prop="userID" label="学生账户" width=auto />
+                <el-table-column prop="username" label="学生姓名" width=auto />
+                <el-table-column prop="className" label="所属班级" width=auto />
+                <el-table-column prop="_id" label="学生编号" width=auto />
+
+            </el-table>
+                </el-tab-pane>
+              </el-tabs>
+
+            
+           
           </el-main>
         </el-container>
       </el-container>
@@ -117,7 +117,9 @@
       setup() {
         const store = useStore();
         const router = useRouter()
-       
+        const admins = computed(() => store.state.admins);
+        const teachers = computed(() => store.state.teachers);
+        const students = computed(() => store.state.students);
         const formLabelAlign = reactive({
             userID:"",       //检查是否存在，不存在则创建，存在则修改
             password:"",
@@ -127,7 +129,9 @@
             className:"", 
             adminID:"",
         })
-   
+        const Admins = admins.value
+        const Teachers = teachers.value
+        const Students = students.value
        
         const bookborrow =()=>{
           router.push({
@@ -236,7 +240,9 @@
       }
          
         }
-        
+        const handleClick=(tab)=> {
+      
+      }
         return{
             bookborrow,
             bookreturn,
@@ -249,8 +255,12 @@
             shelfrequire,
             addperson,
             goback,
+            handleClick,
             formLabelAlign,
-         
+            activeName: 'second',
+            Admins,
+            Teachers,
+            Students,
            
         }
       }

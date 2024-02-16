@@ -21,8 +21,9 @@
           <el-menu-item @click="bookreturn">图书归还</el-menu-item>
         </el-sub-menu>
         <el-menu-item index="1">
-        
+          <template #title>
             <span @click="peolpe" >用户管理</span>
+          </template>
           </el-menu-item>
           <el-sub-menu  index="3">
           <template #title>
@@ -144,9 +145,33 @@
             const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/school/look`,Userid)
             if(response.status){
               console.log(response.data)
-              // const{data}=response.data
-              // const  Data = response.data.data
-              // store.commit('setdata', Data)
+              const{admins,teachers,students}=response.data
+              const Newadmins = admins.map(item => {
+                return {
+                  username: item.username,
+                  userID: item.userID,
+                  _id: item._id,
+                }
+              });
+              const Newteachers = teachers.map(item => {
+                return {
+                  username: item.username,
+                  userID: item.userID,
+                  _id: item._id,
+                  className:item.className,
+                }
+              });
+              const Newstudents = students.map(item => {
+                return {
+                  username: item.username,
+                  userID: item.userID,
+                  _id: item._id,
+                  className:item.className,
+                }
+              });
+              store.commit('setadmins', Newadmins)
+              store.commit('setteachers', Newteachers)
+              store.commit('setstudents', Newstudents)
               
             } 
             router.push({

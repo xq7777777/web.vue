@@ -106,6 +106,7 @@ Star,
       const search = ref('') 
       const originData= []
       const schooladmins = computed(() => store.state.school_admins)  
+      console.log(schooladmins.value)
       for (let item of schooladmins.value) {
 originData.push({
   school: item.school,
@@ -256,13 +257,19 @@ const handleRowDblClick = async (row) => {
 
 // 从scope中获取当前行所有数据
 const admins = row.admins;
-//跳转并传递admins参数
-route.push({
-  name: "adminB_schooladmins",
-  query: {
-    admins:admins 
+
+const Newarr = admins.map(item => {
+  return {
+    username: item.username,
+    userID: item.userID
   }
-})
+});
+console.log(Newarr);
+store.commit('setNewarr', Newarr)
+    router.push({
+          path:'/adminB_schooladmins',
+          
+         })
 }
       const tableData = ref(originData) 
       const filterData = computed(() => {

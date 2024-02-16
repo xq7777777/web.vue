@@ -72,7 +72,6 @@
             <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
                 <el-table-column fixed prop="userID" label="管理员账户" width=auto />
                 <el-table-column prop="username" label="管理员姓名" width=auto />
-                <el-table-column prop="_id" label="管理员id" width=auto />
                 <el-table-column fixed="right" label="操作" width="120">
                     <template #default="scope">
                       <el-button  link type="primary" size="small" @click=" showmodal = true " 
@@ -183,6 +182,7 @@
   
   import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
     import { useRouter } from "vue-router";
+    import { useRoute } from "vue-router";
     import { computed ,toRaw} from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
@@ -193,10 +193,14 @@
   
         const store = useStore();
         const router = useRouter()
+        const route = useRoute()
         const search = ref('') 
-        const originData= []
+        const admins = computed(() => store.state.Newarr);
+        console.log(admins)
+        const originData = []
         const showModal = ref(false);
         const showmodal = ref(false);
+      
         const addForm = ref({
           userID: "",       //检查是否存在，不存在则创建，存在则修改
           password: "",
@@ -229,12 +233,10 @@
       label: '学生',
     },
   ]
-        const admins = computed(() => store.state.company_admins)  
         for (let item of admins.value) {
   originData.push({
     userID: item.userID,
     username: item.username,
-    _id:item._id,
   });
   }
         const goback =()=>{
@@ -438,8 +440,8 @@
   
       return originData.filter(item => {
         return item.userID.includes(search.value) || 
-           item.username.includes(search.value) ||
-           item._id.includes(search.value)
+           item.username.includes(search.value) 
+        
       })
     })
   
