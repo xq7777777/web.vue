@@ -95,21 +95,6 @@
               <el-form-item label="用户姓名">
                 <el-input v-model="addForm.username"></el-input>
               </el-form-item>
-              <el-form-item label="用户身份">
-                <el-select
-                  v-model="addForm.identity"
-                  class="m-2"
-                  placeholder="Select"
-                  style="width: 240px"
-                >
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
               <el-form-item label="工作单位">
                 <el-input v-model="addForm.work_unit"></el-input>
               </el-form-item>
@@ -136,21 +121,6 @@
               </el-form-item>
               <el-form-item label="用户姓名">
                 <el-input v-model="changeForm.username"></el-input>
-              </el-form-item>
-              <el-form-item label="用户身份">
-                <el-select
-                  v-model="changeForm.identity"
-                  class="m-2"
-                  placeholder="Select"
-                  style="width: 240px"
-                >
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
               </el-form-item>
               <el-form-item label="工作单位">
                 <el-input v-model="changeForm.work_unit"></el-input>
@@ -205,7 +175,7 @@
           userID: "",       //检查是否存在，不存在则创建，存在则修改
           password: "",
           username:"",
-          identity:"",           
+          identity:"A",           
           work_unit:"",               //此处非智慧图书时，company_password均可为空或者任意
           adminID:"",
           company_password:""
@@ -214,25 +184,12 @@
           userID: "",       //检查是否存在，不存在则创建，存在则修改
           password: "",
           username:"",
-          identity:"",           
+          identity:"A",           
           work_unit:"",               //此处非智慧图书时，company_password均可为空或者任意
           adminID:"",
           company_password:""
             })
-      const options = [
-    {
-      value: 'A',
-      label: '管理员',
-    },
-    {
-      value: 'T',
-      label: '老师',
-    },
-    {
-      value: 'S',
-      label: '学生',
-    },
-  ]
+
         for (let item of admins.value) {
   originData.push({
     userID: item.userID,
@@ -472,7 +429,6 @@
             showmodal,
             addForm,
             changeForm,
-            options,
             search,
             originData,
             tableData,

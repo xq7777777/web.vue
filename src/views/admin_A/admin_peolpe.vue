@@ -55,6 +55,15 @@
             <el-button type="info" @click="goback">返回</el-button>
            </el-header>
           <el-main>
+            <el-button
+        key="primary"
+        type="primary"
+        text
+        bg
+        @click=" showModal = true "
+         >{{ "添加用户" }}</el-button
+      >
+          <br><br>
               <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
               
                 <el-tab-pane label="管理员" name="admins">
@@ -85,6 +94,45 @@
                 </el-tab-pane>
               </el-tabs>
 
+              <teleport to="body">
+                <el-dialog v-if="showModal" :model-value="showModal" title="修改密码"
+                  font-size="32px">
+                <el-form v-model="addForm" label-width="80px">
+              <el-form-item label="用户账户">
+                <el-input v-model="addForm.userID"></el-input>
+              </el-form-item>
+              <el-form-item label="用户密码">
+                <el-input v-model="addForm.password"></el-input>
+              </el-form-item>
+              <el-form-item label="用户姓名">
+                <el-input v-model="addForm.username"></el-input>
+              </el-form-item>
+              <el-form-item label="用户身份">
+                <el-select
+                  v-model="addForm.identity"
+                  class="m-2"
+                  placeholder="Select"
+                  style="width: 240px"
+                >
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="工作班级">
+                <el-input v-model="addForm.className"></el-input>
+              </el-form-item>
+              <el-form-item label="管理账户">
+                <el-input v-model="addForm.adminID"></el-input>
+              </el-form-item>
+              <el-button type="primary" @click="adduser">确定修改</el-button>
+            </el-form>
+            <el-button @click="showModal = false">关闭</el-button>
+              </el-dialog>
+        </teleport>         
             
            
           </el-main>
@@ -120,7 +168,19 @@
         const admins = computed(() => store.state.admins);
         const teachers = computed(() => store.state.teachers);
         const students = computed(() => store.state.students);
-        const formLabelAlign = reactive({
+        const showModal = ref(false);
+        const options = [
+
+    {
+      value: 'T',
+      label: '老师',
+    },
+    {
+      value: 'S',
+      label: '学生',
+    },
+  ]
+        const addForm = reactive({
             userID:"",       //检查是否存在，不存在则创建，存在则修改
             password:"",
             username:"",
@@ -220,25 +280,18 @@
         const goback =()=>{
           router.back() 
         }
-        const addperson =async()=>{
-            try{
-            const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/school`,formLabelAlign)
-            if(response.status){
-              console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data.data
-              
-              store.commit('setdata', Data)
-              
-            } 
-            router.push({
-            name:'adminA_index'
-          }) 
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
-         
+        const adduser =async()=>{
+          try{
+              const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/school`,addForm.value)
+              if(response.status){
+                console.log(response.data)
+               
+              } 
+  
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error)
+        }
         }
         const handleClick=(tab)=> {
       
@@ -253,10 +306,12 @@
             peolpe,
             checkrequire,
             shelfrequire,
-            addperson,
+            adduser,
             goback,
             handleClick,
-            formLabelAlign,
+            addForm ,
+            showModal,
+            options,
             activeName: 'second',
             Admins,
             Teachers,
