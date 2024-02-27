@@ -115,6 +115,7 @@ export default createStore({
     {
       state.students = students
     },
+
     // updateIsCollapse(state, payload) {
     //   // console.log(payload);
     //   state.isCollapse = !state.isCollapse

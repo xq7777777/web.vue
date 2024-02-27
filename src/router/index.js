@@ -228,7 +228,26 @@ const routes = [
     name:'adminB_schooladmins',
     component:()=>import('../views/admin_B/adminB_schooladmins.vue')
   },
-  
+  {
+    path:'/adminC_index',
+    name:'adminC_index',
+    component:()=>import('../views/admin_C/adminC_index.vue')
+  },
+  {
+    path:'/adminC_booktypepn',
+    name:'adminC_booktypepn',
+    component:()=>import('../views/admin_C/adminC_booktypepn.vue')
+  },
+  {
+    path:'/adminC_prefertype',
+    name:'adminC_prefertype',
+    component:()=>import('../views/admin_C/adminC_prefertype.vue')
+  },
+  {
+    path:'/adminC_readtime',
+    name:'adminC_readtime',
+    component:()=>import('../views/admin_C/adminC_readtime.vue')
+  },
   // {
   //   path: '/login',
   //   name: 'login',
