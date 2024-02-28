@@ -1,36 +1,41 @@
 <template>
-    <div class="common-layout">
-      <el-container>
-        <el-aside width="200px" >
-        <el-col :span="12" width="200px" height="913px">
-        <el-menu
-          active-text-color="#ffd04b"
-          background-color="#545c64"
-          class="el-menu-vertical-demo"
-          default-active="2"
-          text-color="#fff"
-          width="200px"
-          height="913px"
-        > 
-        <h3>教育局端</h3>
-        <el-sub-menu  index="0">
-          <template #title>
-            <span @click="bookshelf">图书</span>
-          </template>
-        </el-sub-menu>
-        <el-sub-menu index="2">
-          <template #title>
-            <span>学校</span>
-          </template>
-        </el-sub-menu>
-          <el-menu-item index="8">
-            <el-icon><setting /></el-icon>
-            <span @click="adminperson" >个人中心</span>
-          </el-menu-item>
-        </el-menu>
-      </el-col>
+  <div class="common-layout">
+    <el-container>
+      <el-aside width="200px" >
+      <el-col :span="12" width="200px" height="913px">
+      <el-menu
+        active-text-color="#ffd04b"
+        background-color="#545c64"
+        class="el-menu-vertical-demo"
+        default-active="2"
+        text-color="#fff"
+        width="200px"
+        height="913px"
+      > 
+      <h3>教育局端</h3>
+      <el-sub-menu  index="0">
+        <template #title>
+          <span @click="bookshelf">图书类型</span>
+        </template>
+      </el-sub-menu>
+      <el-sub-menu index="2">
+        <template #title>
+          <span @click="prefer">阅读偏好</span>
+        </template>
+      </el-sub-menu>
+      <el-sub-menu index="3">
+        <template #title>
+          <span @click="readtime">阅读时长统计</span>
+        </template>
+      </el-sub-menu>
+        <el-menu-item index="8">
+          <el-icon><setting /></el-icon>
+          <span @click="adminperson" >个人中心</span>
+        </el-menu-item>
+      </el-menu>
+    </el-col>
 
-        </el-aside >
+      </el-aside >
         <el-container>
           <el-header>
             <el-button type="info" @click="goback">返回</el-button>
