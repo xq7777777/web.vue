@@ -27,14 +27,16 @@
           </template>
           <el-menu-item v-for="cls in className" @click = clickread(cls)>{{ cls }}</el-menu-item>
         </el-sub-menu>
-          <el-menu-item index="6">
-            <el-icon><setting /></el-icon>
-            <span @click = clickteacherperson>图书申请</span>
-          </el-menu-item>
-          <el-menu-item index="7">
+        
+        <el-menu-item index="6">
             <el-icon><setting /></el-icon>
             <span @click = clickbookborrow>图书借阅</span>
           </el-menu-item>
+          <el-menu-item index="7">
+            <el-icon><setting /></el-icon>
+            <span @click = clickteacherperson>图书申请</span>
+          </el-menu-item>
+          
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
             <span @click = person>个人中心</span>
@@ -167,19 +169,13 @@
         }
 
         const handlechange =async(row)=>{
-          try{
-       
-            const response =await axios.get(`http://139.9.118.223:3000/api/class/tasks/recorrect`,)
-            if(response.status){
-              console.log(response.data)
-            } 
-            router.push({
-              name:"teacher_index",
-            })
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }}
+           router.push({
+             path:"/teacher_changetask",
+             query: {
+                task: JSON.stringify(row) 
+                }
+           })
+      }
       
 
         const handledelete = async(row)=>{

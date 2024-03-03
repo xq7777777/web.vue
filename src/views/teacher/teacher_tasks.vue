@@ -60,15 +60,42 @@
             </el-form-item>
             <br>
             <el-form-item label="布置时间">
-              <el-input v-model="taskForm.startedAt"></el-input>
+              <el-col :span="11">
+                <el-date-picker
+                  v-model="taskForm.startedAt"
+                  type="date"
+                  placeholder="Pick a date"
+                  style="width: 100%"
+                />
+              </el-col>
+              <el-col :span="2" class="text-center">
+                <span class="text-gray-500">-</span>
+              </el-col>
             </el-form-item>
-            <br>
             <el-form-item label="截止时间">
-              <el-input v-model="taskForm.endedAt"></el-input>
+              <el-col :span="11">
+                <el-date-picker
+                  v-model="taskForm.endedAt"
+                  type="date"
+                  placeholder="Pick a date"
+                  style="width: 100%"
+                />
+              </el-col>
             </el-form-item>
-            <br>
             <el-form-item label="选择班级">
-              <el-input v-model="taskForm.className"></el-input>
+              <el-select
+                v-model="taskForm.className"
+                multiple
+                placeholder="Select"
+                style="width: 240px"
+              >
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
             </el-form-item>
             <br>
             <el-form-item label="作业描述">
@@ -116,6 +143,9 @@
         const router = useRouter()
         const showModal = ref(false)
         const cls = ref('')
+        const options = Object.values(classname.value)
+          .slice(0, 2)
+          .map((label, index) => ({ value: index, label }));
         const clicktask =async(className)=>{
           try{
             cls.value = className
@@ -125,7 +155,6 @@
               className,
               school
             }
-            console.log(a)
             const response =await axios.get('http://139.9.118.223:3000/api/class', JSON.stringify(a))
             if(response.status){
               console.log(response.data)
@@ -157,8 +186,6 @@
           try{
             cls.value = className
             const school = users.value.school
-            console.log(className)
-            console.log(school)
            const checklist = {school,className,}
        
             const response =await axios.post(`http://139.9.118.223:3000/api/class`,checklist)
@@ -227,6 +254,7 @@
           goback,
           classname,
           cls,
+          options,
           clickbookborrow,
           person,
         };
