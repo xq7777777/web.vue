@@ -111,13 +111,8 @@
             store.commit('setWork_unit', Work_unit)
             store.commit('setBookfuben', Bookfuben)
             
-            if(work_unit==="红星小学")
             
-           {router.push({
-                        name: "adminA_index",
-                      
-                      });}
-            else if(work_unit==="智慧图书")
+            if(work_unit==="智慧图书")
             {
               const {userID, username, work_unit, books} = response.data.data;
 
@@ -143,6 +138,12 @@
 
                       });
             }
+            else 
+            
+            {router.push({
+                         name: "adminA_index",
+                       
+                       });}
           }
           
         }

@@ -219,7 +219,7 @@
             })
           }catch (error) {  
         // 请求错误处理
-        console.log(error.message)
+        console.log(error)
       }
         }
         return{
