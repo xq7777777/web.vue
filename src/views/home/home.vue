@@ -77,8 +77,8 @@
 
 
     <teleport to="body">
-        <el-dialog v-if="showModal" :model-value="showModal" title="任务详情"
-        font-size="32px">
+
+        <el-dialog v-if="showModal" v-model="showModal" title="任务详情" font-size="32px">
     <!-- 弹窗内容 -->
     <el-descriptions
     :column="2"
@@ -93,13 +93,8 @@
       <el-tag >{{currentRow.endedAt }}</el-tag>
     </el-descriptions-item>
     <br>
-    <el-descriptions-item label="任务详情"
-      >暂无详情
-    </el-descriptions-item>
+    <el-descriptions-item label="任务详情">暂无详情</el-descriptions-item>
   </el-descriptions>
-  <br><br><br>
-          <el-button @click="showModal = false,
-          currentRow= null">关闭</el-button>
         </el-dialog>
       </teleport>
         </el-main>
@@ -283,10 +278,6 @@ header {
     
    }
 
-// .bread /deep/ span {
-//   color: #fff !important;
-//   cursor: pointer !important;
-// }
 
 html,body {
       margin: 0;
