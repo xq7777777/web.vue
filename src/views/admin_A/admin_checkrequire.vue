@@ -56,17 +56,27 @@
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-           
-            <el-table :data="tableData" stripe style="width: 100%">
-              <el-table-column prop="title" label="图书名称" width=auto />
-              <el-table-column prop="author" label="图书作者" width=auto />
-              <el-table-column prop="publisher" label="出版社" width=auto />
-              <el-table-column prop="Tquantity" label="数量" width=auto  />
-              <el-table-column prop="req_userID" label="申请工号" width=auto />
-              <el-table-column prop="username" label="申请人" />
-              <el-table-column prop="message" label="状态" width=auto  />
-            </el-table>
-          </el-main>
+        <el-table :data="currentPageData" stripe style="width: 100%">
+          <el-table-column prop="title" label="图书名称" width="auto" />
+          <el-table-column prop="author" label="图书作者" width="auto" />
+          <el-table-column prop="publisher" label="出版社" width="auto" />
+          <el-table-column prop="Tquantity" label="数量" width="auto" />
+          <el-table-column prop="req_userID" label="申请工号" width="auto" />
+          <el-table-column prop="username" label="申请人" />
+          <el-table-column prop="message" label="状态" width="auto" />
+        </el-table>
+
+        <!-- 分页组件 -->
+        <el-pagination
+          v-if="tableData.length > pageSize"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="10"
+          :page-size="pageSize"
+          :total="tableData.length"
+        />
+        
+      </el-main>
         </el-container>
       </el-container>
     </div>
@@ -87,7 +97,7 @@
   Star,
 } from '@element-plus/icons-vue';
     import { useRouter } from "vue-router";
-    import { computed } from 'vue'
+    import { computed ,toRaw} from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
   
@@ -96,6 +106,17 @@
         const store = useStore();
         const router = useRouter()
         const tableData =computed(() =>store.state.data.B_application)
+        const currentPage = ref(1);
+        const pageSize = ref(10);
+        const currentPageData = computed(() => {
+      const start = (currentPage.value - 1) * pageSize.value;
+      const end = start + pageSize.value;
+      return toRaw(tableData.value).slice(start, end);
+    });
+
+    const handleCurrentChange = (val) => {
+      currentPage.value = val;
+    };
         const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
@@ -197,6 +218,10 @@
             shelfrequire,
             goback,
             tableData,
+            currentPageData,
+            pageSize,
+            currentPage,
+      handleCurrentChange,
         }
       }
     })
@@ -228,6 +253,7 @@
             font-size: 15px;
           }
         }
+        
       }
       .num {
         display: flex;
@@ -261,6 +287,7 @@
           }
         }
       }
+      
       .graph {
         margin-top: 20px;
         display: flex;
@@ -343,6 +370,7 @@
   html,body {
         margin: 0;
         height: 100%;
+        
   }
   
   </style>

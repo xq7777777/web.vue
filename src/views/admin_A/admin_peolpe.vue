@@ -104,42 +104,42 @@
               </el-tabs>
 
               <teleport to="body">
-  <el-dialog v-if="showModal" v-model="showModal" title="修改密码" font-size="32px">
-    <el-form :model="addForm" label-width="80px">
-      <el-form-item label="用户账户">
-        <el-input v-model="addForm.userID"></el-input>
-      </el-form-item>
-      <el-form-item label="用户密码">
-        <el-input v-model="addForm.password"></el-input>
-      </el-form-item>
-      <el-form-item label="用户姓名">
-        <el-input v-model="addForm.username"></el-input>
-      </el-form-item>
-      <el-form-item label="用户身份">
-        <el-select
-          v-model="addForm.identity"
-          class="m-2"
-          placeholder="Select"
-          style="width: 240px"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="工作班级">
-        <el-input v-model="addForm.className"></el-input>
-      </el-form-item>
-      <el-form-item label="管理账户">
-        <el-input v-model="addForm.adminID"></el-input>
-      </el-form-item>
-      <el-button type="primary" @click="adduser">确定修改</el-button>
-    </el-form>
-  </el-dialog>
-</teleport>
+                <el-dialog v-if="showModal" v-model="showModal" title="修改密码" font-size="32px">
+                  <el-form :model="addForm" label-width="80px">
+                    <el-form-item label="用户账户">
+                      <el-input v-model="addForm.userID"></el-input>
+                    </el-form-item>
+                    <el-form-item label="用户密码">
+                      <el-input v-model="addForm.password"></el-input>
+                    </el-form-item>
+                    <el-form-item label="用户姓名">
+                      <el-input v-model="addForm.username"></el-input>
+                    </el-form-item>
+                    <el-form-item label="用户身份">
+                      <el-select
+                        v-model="addForm.identity"
+                        class="m-2"
+                        placeholder="Select"
+                        style="width: 240px"
+                      >
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="工作班级">
+                      <el-input v-model="addForm.className"></el-input>
+                    </el-form-item>
+                    <el-form-item label="管理账户">
+                      <el-input v-model="addForm.adminID"></el-input>
+                    </el-form-item>
+                    <el-button type="primary" @click="adduser">确定修改</el-button>
+                  </el-form>
+                </el-dialog>
+              </teleport>
       
         
         <teleport to="body">
@@ -327,7 +327,7 @@
         }
         }
         const handleClick=(tab)=> {
-      
+          
       }
         return{
             bookborrow,
@@ -346,7 +346,7 @@
             showModal,
             showmodal,
             options,
-            activeName: 'second',
+            activeName: 'admins',
             Admins,
             Teachers,
             Students,
