@@ -54,11 +54,26 @@
         </el-aside >
         <el-container>
           <el-header>
-            <el-button type="info"  @click=" showModal = true " >创建书架</el-button>
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
           <el-main>
-           
+            <el-button
+      key="primary"
+      type="primary"
+      text
+      bg
+      @click=" showModal = true "
+       >{{ "创建书架" }}</el-button
+    >
+    <el-button
+        key="primary"
+        type="primary"
+        text
+        bg
+        @click=" ShowModal = true "
+         >{{ "上传文件" }}</el-button
+      >
+      <br><br>
             <el-table :data="tableData" stripe style="width: 100%" @row-dblclick="handleRowDblClick">
               <el-table-column prop="school" label="学校" width=auto />
               <el-table-column prop="Tquantity" label="数量" width=auto  />
@@ -71,7 +86,7 @@
             </el-table>
             
           <teleport to="body">
-              <el-dialog v-if="showModal" :model-value="showModal" title="创建书架"
+              <el-dialog v-if="showModal" v-model="showModal" title="创建书架"
                 font-size="32px">
               <el-form v-model="addForm" label-width="80px">
             <el-form-item label="所属学校">
@@ -82,9 +97,30 @@
             </el-form-item>
             <el-button type="primary" @click="addshelf">确定创建</el-button>
           </el-form>
-          <el-button @click="showModal = false">关闭</el-button>
             </el-dialog>
-      </teleport>         
+      </teleport>       
+      
+      <teleport to="body">
+          <el-dialog v-if="ShowModal" v-model="ShowModal" title="上传文件" font-size="32px">
+            <el-upload
+              class="upload-demo"
+              drag
+              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" 
+              multiple
+              accept=".xlsx,.xls"
+            >
+              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <div class="el-upload__text">
+                Drop file here or <em>click to upload</em>
+              </div>
+              <template #tip>
+                <div class="el-upload__tip">
+                  <!-- jpg/png files with a size less than 500kb -->
+                </div>
+              </template>
+            </el-upload>
+          </el-dialog>
+        </teleport>
           </el-main>
         </el-container>
       </el-container>
@@ -116,6 +152,7 @@
         const router = useRouter()
         const tableData =computed(() =>store.state.bookshelves)
         const showModal = ref(false)
+        const ShowModal = ref(false)
         const addForm = ref({
         school: "",       //检查是否存在，不存在则创建，存在则修改
         location: "",
@@ -243,14 +280,19 @@
               // const{bookshelfs}=response.data.bookshelfs
               const  empty = response.data
               store.commit('setempty', empty)
-              
-            } 
-            router.push({
+              if(response.data.message=="该学校的所有书架已满")
+              alert("该学校所有书架已满")
+            else{
+              router.push({
              path:"/adminB_emptyshelf",
              query: {
               school,
               }
            })
+            }
+          
+            } 
+            
           }catch (error) {  
         // 请求错误处理
         console.log(error.message)
@@ -273,6 +315,7 @@
             Clickbook,
             addshelf,
             showModal,
+            ShowModal,
             addForm,
             tableData,
         }

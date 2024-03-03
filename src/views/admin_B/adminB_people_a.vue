@@ -91,7 +91,7 @@
           </el-table>
          
           <teleport to="body">
-  <el-dialog v-if="showModal" v-model="showModal" title="修改密码" font-size="32px">
+  <el-dialog v-if="showModal" v-model="showModal" title="添加用户" font-size="32px">
     <el-form :model="addForm" label-width="80px">
       <el-form-item label="用户账户">
         <el-input v-model="addForm.userID"></el-input>
@@ -131,7 +131,7 @@
   </el-dialog>
 </teleport>
           <teleport to="body">
-              <el-dialog v-if="showmodal" :model-value="showmodal" title="修改密码"
+              <el-dialog v-if="showmodal" v-model="showmodal" title="修改密码"
                 font-size="32px">
               <el-form v-model="changeForm" label-width="80px">
             <el-form-item label="用户账户">
@@ -169,7 +169,6 @@
             </el-form-item>
             <el-button type="primary" @click="changepass">确定修改</el-button>
           </el-form>
-          <el-button @click="showmodal = false">关闭</el-button>
             </el-dialog>
       </teleport>
 

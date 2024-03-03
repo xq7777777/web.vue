@@ -79,7 +79,7 @@
 
 </el-card>
 <teleport to="body">
-        <el-dialog v-if="showModal" :model-value="showModal" title="修改密码"
+        <el-dialog v-if="showModal" v-model="showModal" title="修改密码"
         font-size="32px">
         <el-form v-model="passwordForm" label-width="80px">
     <el-form-item label="旧密码">
@@ -93,7 +93,6 @@
     </el-form-item>
     <el-button type="primary" @click="change">确定修改</el-button>
   </el-form>
-  <el-button @click="showModal = false">关闭</el-button>
       </el-dialog>
 </teleport>
 
