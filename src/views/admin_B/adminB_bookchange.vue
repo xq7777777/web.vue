@@ -18,14 +18,15 @@
             <span >图书管理</span>
           </template>
           <el-menu-item @click="addbook">图书增减</el-menu-item>
-          <el-menu-item @click="">图书修改</el-menu-item>
+          <el-menu-item @click="bookchange">图书修改</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span>用户管理</span>
+            <span>用户查看</span>
           </template>
-          <el-menu-item >用户查看</el-menu-item>
-          <el-menu-item >用户增减</el-menu-item>
+          <el-menu-item @click="checkpeople_s" >学校</el-menu-item>
+          <el-menu-item @click="checkpeople_a">企业</el-menu-item>
+          <el-menu-item @click="checkpeople_e" >教育局</el-menu-item>
         </el-sub-menu>
           <el-sub-menu  index="3">
           <template #title >
@@ -41,7 +42,6 @@
             <span >书架管理</span>
           </template>
           <el-menu-item @click="bookshelf">查看书架</el-menu-item>
-          <el-menu-item @click="addbookshelf">书架增添</el-menu-item>
         </el-sub-menu>
          
           <el-menu-item index="8">

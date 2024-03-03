@@ -2,57 +2,56 @@
   <div class="common-layout">
     <el-container>
       <el-aside width="200px" >
-      <el-col :span="12" width="200px" height="913px">
-      <el-menu
-        active-text-color="#ffd04b"
-        background-color="#545c64"
-        class="el-menu-vertical-demo"
-        default-active="2"
-        text-color="#fff"
-        width="200px"
-        height="913px"
-      > 
-      <h3>企业端</h3>
-      <el-sub-menu  index="0">
-        <template #title>
-          <span >图书管理</span>
-        </template>
-        <el-menu-item @click="addbook">图书增减</el-menu-item>
-        <el-menu-item @click="bookchange">图书修改</el-menu-item>
-      </el-sub-menu>
-      <el-sub-menu index="2">
-        <template #title>
-          <span>用户查看</span>
-        </template>
-        <el-menu-item @click="checkpeople_s" >学校</el-menu-item>
-        <el-menu-item @click="checkpeople_a">企业</el-menu-item>
-        <el-menu-item @click="checkpeople_e" >教育局</el-menu-item>
-      </el-sub-menu>
-        <el-sub-menu  index="3">
-        <template #title >
-          <span >查看申请</span>
-        </template>
-        <el-menu-item @click="checkrequire">图书申请</el-menu-item>
-        <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
-        <el-menu-item @click="maintenancerequire" >维修申请</el-menu-item>
-        
-      </el-sub-menu>
-      <el-sub-menu  index="4">
-        <template #title>
-          <span >书架管理</span>
-        </template>
-        <el-menu-item @click="bookshelf">查看书架</el-menu-item>
-        <el-menu-item @click="addbookshelf">书架增添</el-menu-item>
-      </el-sub-menu>
-       
-        <el-menu-item index="8">
-          <el-icon><setting /></el-icon>
-          <span @click="adminperson" >个人中心</span>
-        </el-menu-item>
-      </el-menu>
-    </el-col>
+        <el-col :span="12" width="200px" height="913px">
+        <el-menu
+          active-text-color="#ffd04b"
+          background-color="#545c64"
+          class="el-menu-vertical-demo"
+          default-active="2"
+          text-color="#fff"
+          width="200px"
+          height="913px"
+        > 
+        <h3>企业端</h3>
+        <el-sub-menu  index="0">
+          <template #title>
+            <span >图书管理</span>
+          </template>
+          <el-menu-item @click="addbook">图书增减</el-menu-item>
+          <el-menu-item @click="bookchange">图书修改</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="2">
+          <template #title>
+            <span>用户查看</span>
+          </template>
+          <el-menu-item @click="checkpeople_s" >学校</el-menu-item>
+          <el-menu-item @click="checkpeople_a">企业</el-menu-item>
+          <el-menu-item @click="checkpeople_e" >教育局</el-menu-item>
+        </el-sub-menu>
+          <el-sub-menu  index="3">
+          <template #title >
+            <span >查看申请</span>
+          </template>
+          <el-menu-item @click="checkrequire">图书申请</el-menu-item>
+          <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
+          <el-menu-item @click="maintenancerequire" >维修申请</el-menu-item>
+          
+        </el-sub-menu>
+        <el-sub-menu  index="4">
+          <template #title>
+            <span >书架管理</span>
+          </template>
+          <el-menu-item @click="bookshelf">查看书架</el-menu-item>
+        </el-sub-menu>
+         
+          <el-menu-item index="8">
+            <el-icon><setting /></el-icon>
+            <span @click="adminperson" >个人中心</span>
+          </el-menu-item>
+        </el-menu>
+      </el-col>
 
-      </el-aside >
+        </el-aside >
       <el-container>
         <el-header>
           <el-input v-model="search" placeholder="请输入账户、姓名或id" style="width: 240px"/>
@@ -68,6 +67,14 @@
       @click=" showModal = true "
        >{{ "添加用户" }}</el-button
     >
+    <el-button
+        key="primary"
+        type="primary"
+        text
+        bg
+        @click=" ShowModal = true "
+         >{{ "上传文件" }}</el-button
+      >
         <br><br>
           <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
               <el-table-column fixed prop="userID" label="管理员账户" width=auto />
@@ -84,47 +91,45 @@
           </el-table>
          
           <teleport to="body">
-              <el-dialog v-if="showModal" :model-value="showModal" title="修改密码"
-                font-size="32px">
-              <el-form v-model="addForm" label-width="80px">
-            <el-form-item label="用户账户">
-              <el-input v-model="addForm.userID"></el-input>
-            </el-form-item>
-            <el-form-item label="用户密码">
-              <el-input v-model="addForm.password"></el-input>
-            </el-form-item>
-            <el-form-item label="用户姓名">
-              <el-input v-model="addForm.username"></el-input>
-            </el-form-item>
-            <el-form-item label="用户身份">
-              <el-select
-                v-model="addForm.identity"
-                class="m-2"
-                placeholder="Select"
-                style="width: 240px"
-              >
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="工作单位">
-              <el-input v-model="addForm.work_unit"></el-input>
-            </el-form-item>
-            <el-form-item label="管理账户">
-              <el-input v-model="addForm.adminID"></el-input>
-            </el-form-item>
-            <el-form-item label="管理密码">
-              <el-input v-model="addForm.company_password"></el-input>
-            </el-form-item>
-            <el-button type="primary" @click="adduser">确定修改</el-button>
-          </el-form>
-          <el-button @click="showModal = false">关闭</el-button>
-            </el-dialog>
-      </teleport>         
+  <el-dialog v-if="showModal" v-model="showModal" title="修改密码" font-size="32px">
+    <el-form :model="addForm" label-width="80px">
+      <el-form-item label="用户账户">
+        <el-input v-model="addForm.userID"></el-input>
+      </el-form-item>
+      <el-form-item label="用户密码">
+        <el-input v-model="addForm.password"></el-input>
+      </el-form-item>
+      <el-form-item label="用户姓名">
+        <el-input v-model="addForm.username"></el-input>
+      </el-form-item>
+      <el-form-item label="用户身份">
+        <el-select
+          v-model="addForm.identity"
+          class="m-2"
+          placeholder="Select"
+          style="width: 240px"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="工作单位">
+        <el-input v-model="addForm.work_unit"></el-input>
+      </el-form-item>
+      <el-form-item label="管理账户">
+        <el-input v-model="addForm.adminID"></el-input>
+      </el-form-item>
+      <el-form-item label="管理密码">
+        <el-input v-model="addForm.company_password"></el-input>
+      </el-form-item>
+      <el-button type="primary" @click="adduser">确定修改</el-button>
+    </el-form>
+  </el-dialog>
+</teleport>
           <teleport to="body">
               <el-dialog v-if="showmodal" :model-value="showmodal" title="修改密码"
                 font-size="32px">
@@ -167,6 +172,28 @@
           <el-button @click="showmodal = false">关闭</el-button>
             </el-dialog>
       </teleport>
+
+      <teleport to="body">
+          <el-dialog v-if="ShowModal" v-model="ShowModal" title="上传文件" font-size="32px">
+            <el-upload
+              class="upload-demo"
+              drag
+              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" 
+              multiple
+              accept=".xlsx,.xls"
+            >
+              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <div class="el-upload__text">
+                Drop file here or <em>click to upload</em>
+              </div>
+              <template #tip>
+                <div class="el-upload__tip">
+                  <!-- jpg/png files with a size less than 500kb -->
+                </div>
+              </template>
+            </el-upload>
+          </el-dialog>
+        </teleport>
         </el-main>
       </el-container>
     </el-container>
@@ -197,6 +224,7 @@ import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
       const originData= []
       const showModal = ref(false);
       const showmodal = ref(false);
+      const ShowModal = ref(false);
       const addForm = ref({
         userID: "",       //检查是否存在，不存在则创建，存在则修改
         password: "",
@@ -468,6 +496,7 @@ originData.push({
           changepass,
           showModal,
           showmodal,
+          ShowModal,
           addForm,
           changeForm,
           options,

@@ -21,8 +21,9 @@
           <el-menu-item @click="bookreturn">图书归还</el-menu-item>
         </el-sub-menu>
         <el-menu-item index="1">
-        
+          <template #title>
             <span @click="peolpe" >用户管理</span>
+          </template>
           </el-menu-item>
           <el-sub-menu  index="3">
           <template #title>
@@ -63,6 +64,14 @@
         @click=" showModal = true "
          >{{ "添加用户" }}</el-button
       >
+      <el-button
+        key="primary"
+        type="primary"
+        text
+        bg
+        @click=" showmodal = true "
+         >{{ "上传文件" }}</el-button
+      >
           <br><br>
               <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
               
@@ -95,44 +104,67 @@
               </el-tabs>
 
               <teleport to="body">
-                <el-dialog v-if="showModal" :model-value="showModal" title="修改密码"
-                  font-size="32px">
-                <el-form v-model="addForm" label-width="80px">
-              <el-form-item label="用户账户">
-                <el-input v-model="addForm.userID"></el-input>
-              </el-form-item>
-              <el-form-item label="用户密码">
-                <el-input v-model="addForm.password"></el-input>
-              </el-form-item>
-              <el-form-item label="用户姓名">
-                <el-input v-model="addForm.username"></el-input>
-              </el-form-item>
-              <el-form-item label="用户身份">
-                <el-select
-                  v-model="addForm.identity"
-                  class="m-2"
-                  placeholder="Select"
-                  style="width: 240px"
-                >
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="工作班级">
-                <el-input v-model="addForm.className"></el-input>
-              </el-form-item>
-              <el-form-item label="管理账户">
-                <el-input v-model="addForm.adminID"></el-input>
-              </el-form-item>
-              <el-button type="primary" @click="adduser">确定修改</el-button>
-            </el-form>
-            <el-button @click="showModal = false">关闭</el-button>
-              </el-dialog>
-        </teleport>         
+  <el-dialog v-if="showModal" v-model="showModal" title="修改密码" font-size="32px">
+    <el-form :model="addForm" label-width="80px">
+      <el-form-item label="用户账户">
+        <el-input v-model="addForm.userID"></el-input>
+      </el-form-item>
+      <el-form-item label="用户密码">
+        <el-input v-model="addForm.password"></el-input>
+      </el-form-item>
+      <el-form-item label="用户姓名">
+        <el-input v-model="addForm.username"></el-input>
+      </el-form-item>
+      <el-form-item label="用户身份">
+        <el-select
+          v-model="addForm.identity"
+          class="m-2"
+          placeholder="Select"
+          style="width: 240px"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="工作班级">
+        <el-input v-model="addForm.className"></el-input>
+      </el-form-item>
+      <el-form-item label="管理账户">
+        <el-input v-model="addForm.adminID"></el-input>
+      </el-form-item>
+      <el-button type="primary" @click="adduser">确定修改</el-button>
+    </el-form>
+  </el-dialog>
+</teleport>
+      
+        
+        <teleport to="body">
+          <el-dialog v-if="showmodal" v-model="showmodal" title="上传文件" font-size="32px">
+            <el-upload
+              class="upload-demo"
+              drag
+              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" 
+              multiple
+              accept=".xlsx,.xls"
+            >
+              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <div class="el-upload__text">
+                Drop file here or <em>click to upload</em>
+              </div>
+              <template #tip>
+                <div class="el-upload__tip">
+                  <!-- jpg/png files with a size less than 500kb -->
+                </div>
+              </template>
+            </el-upload>
+          </el-dialog>
+        </teleport>
+      
+       
             
            
           </el-main>
@@ -160,7 +192,7 @@
     import { computed ,toRaw} from 'vue'
     import { useStore } from 'vuex'
     import axios from 'axios'
-  
+    import { UploadFilled } from '@element-plus/icons-vue'
     export default defineComponent({
       setup() {
         const store = useStore();
@@ -169,6 +201,7 @@
         const teachers = computed(() => store.state.teachers);
         const students = computed(() => store.state.students);
         const showModal = ref(false);
+        const showmodal = ref(false);
         const options = [
 
     {
@@ -311,6 +344,7 @@
             handleClick,
             addForm ,
             showModal,
+            showmodal,
             options,
             activeName: 'second',
             Admins,

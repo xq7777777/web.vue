@@ -2,57 +2,56 @@
   <div class="common-layout">
     <el-container>
       <el-aside width="200px" >
-      <el-col :span="12" width="200px" height="913px">
-      <el-menu
-        active-text-color="#ffd04b"
-        background-color="#545c64"
-        class="el-menu-vertical-demo"
-        default-active="2"
-        text-color="#fff"
-        width="200px"
-        height="913px"
-      > 
-      <h3>企业端</h3>
-      <el-sub-menu  index="0">
-        <template #title>
-          <span >图书管理</span>
-        </template>
-        <el-menu-item @click="addbook">图书增减</el-menu-item>
-        <el-menu-item @click="bookchange">图书修改</el-menu-item>
-      </el-sub-menu>
-      <el-sub-menu index="2">
-        <template #title>
-          <span>用户查看</span>
-        </template>
-        <el-menu-item @click="checkpeople_s" >学校</el-menu-item>
-        <el-menu-item @click="checkpeople_a">企业</el-menu-item>
-        <el-menu-item @click="checkpeople_e" >教育局</el-menu-item>
-      </el-sub-menu>
-        <el-sub-menu  index="3">
-        <template #title >
-          <span >查看申请</span>
-        </template>
-        <el-menu-item @click="checkrequire">图书申请</el-menu-item>
-        <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
-        <el-menu-item @click="maintenancerequire" >维修申请</el-menu-item>
-        
-      </el-sub-menu>
-      <el-sub-menu  index="4">
-        <template #title>
-          <span >书架管理</span>
-        </template>
-        <el-menu-item @click="bookshelf">查看书架</el-menu-item>
-        <el-menu-item @click="addbookshelf">书架增添</el-menu-item>
-      </el-sub-menu>
-       
-        <el-menu-item index="8">
-          <el-icon><setting /></el-icon>
-          <span @click="adminperson" >个人中心</span>
-        </el-menu-item>
-      </el-menu>
-    </el-col>
+        <el-col :span="12" width="200px" height="913px">
+        <el-menu
+          active-text-color="#ffd04b"
+          background-color="#545c64"
+          class="el-menu-vertical-demo"
+          default-active="2"
+          text-color="#fff"
+          width="200px"
+          height="913px"
+        > 
+        <h3>企业端</h3>
+        <el-sub-menu  index="0">
+          <template #title>
+            <span >图书管理</span>
+          </template>
+          <el-menu-item @click="addbook">图书增减</el-menu-item>
+          <el-menu-item @click="bookchange">图书修改</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="2">
+          <template #title>
+            <span>用户查看</span>
+          </template>
+          <el-menu-item @click="checkpeople_s" >学校</el-menu-item>
+          <el-menu-item @click="checkpeople_a">企业</el-menu-item>
+          <el-menu-item @click="checkpeople_e" >教育局</el-menu-item>
+        </el-sub-menu>
+          <el-sub-menu  index="3">
+          <template #title >
+            <span >查看申请</span>
+          </template>
+          <el-menu-item @click="checkrequire">图书申请</el-menu-item>
+          <el-menu-item @click="checkshelfrequire">书架申请</el-menu-item>
+          <el-menu-item @click="maintenancerequire" >维修申请</el-menu-item>
+          
+        </el-sub-menu>
+        <el-sub-menu  index="4">
+          <template #title>
+            <span >书架管理</span>
+          </template>
+          <el-menu-item @click="bookshelf">查看书架</el-menu-item>
+        </el-sub-menu>
+         
+          <el-menu-item index="8">
+            <el-icon><setting /></el-icon>
+            <span @click="adminperson" >个人中心</span>
+          </el-menu-item>
+        </el-menu>
+      </el-col>
 
-      </el-aside >
+        </el-aside >
       <el-container>
         <el-header>
           <el-input v-model="search" placeholder="请输入学校名称" style="width: 240px"/>
@@ -60,6 +59,14 @@
           <!-- <el-button @click="onSearch">搜索</el-button>  -->
         </el-header>
         <el-main>
+          <el-button
+        key="primary"
+        type="primary"
+        text
+        bg
+        @click=" showmodal = true "
+         >{{ "上传文件" }}</el-button
+      >
           <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
               <el-table-column fixed prop="school" label="学校名称" width=auto />
               <el-table-column prop="count" label="管理员人数" width=auto />
@@ -71,6 +78,27 @@
                 </el-table-column>
           </el-table>
           
+          <teleport to="body">
+          <el-dialog v-if="showmodal" v-model="showmodal" title="上传文件" font-size="32px">
+            <el-upload
+              class="upload-demo"
+              drag
+              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" 
+              multiple
+              accept=".xlsx,.xls"
+            >
+              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <div class="el-upload__text">
+                Drop file here or <em>click to upload</em>
+              </div>
+              <template #tip>
+                <div class="el-upload__tip">
+                  <!-- jpg/png files with a size less than 500kb -->
+                </div>
+              </template>
+            </el-upload>
+          </el-dialog>
+        </teleport>
         </el-main>
       </el-container>
     </el-container>
@@ -103,6 +131,7 @@ Star,
       const store = useStore();
       const router = useRouter()
       const route = useRoute()
+      const showmodal = ref(false)
       const search = ref('') 
       const originData= []
       const schooladmins = computed(() => store.state.school_admins)  
@@ -305,7 +334,7 @@ store.commit('setNewarr', Newarr)
           bookchange,
           handleRowDblClick,
           Delete,
-
+          showmodal,
           search,
           originData,
           tableData,

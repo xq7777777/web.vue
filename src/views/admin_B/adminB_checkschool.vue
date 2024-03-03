@@ -42,7 +42,6 @@
             <span >书架管理</span>
           </template>
           <el-menu-item @click="bookshelf">查看书架</el-menu-item>
-          <el-menu-item @click="addbookshelf">书架增添</el-menu-item>
         </el-sub-menu>
          
           <el-menu-item index="8">
@@ -51,7 +50,7 @@
           </el-menu-item>
         </el-menu>
       </el-col>
-  
+
         </el-aside >
         <el-container>
           <el-header>

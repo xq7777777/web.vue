@@ -21,8 +21,9 @@
           <el-menu-item @click="bookreturn">图书归还</el-menu-item>
         </el-sub-menu>
         <el-menu-item index="1">
-        
+          <template #title>
             <span @click="peolpe" >用户管理</span>
+          </template>
           </el-menu-item>
           <el-sub-menu  index="3">
           <template #title>
@@ -48,6 +49,7 @@
           </el-menu-item>
         </el-menu>
       </el-col>
+
         </el-aside >
         <el-container>
           <el-header>

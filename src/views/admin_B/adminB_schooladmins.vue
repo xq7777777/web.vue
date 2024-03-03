@@ -42,7 +42,6 @@
             <span >书架管理</span>
           </template>
           <el-menu-item @click="bookshelf">查看书架</el-menu-item>
-          <el-menu-item @click="addbookshelf">书架增添</el-menu-item>
         </el-sub-menu>
          
           <el-menu-item index="8">
@@ -51,7 +50,7 @@
           </el-menu-item>
         </el-menu>
       </el-col>
-  
+
         </el-aside >
         <el-container>
           <el-header>
@@ -68,6 +67,14 @@
         @click=" showModal = true "
          >{{ "添加用户" }}</el-button
       >
+      <el-button
+        key="primary"
+        type="primary"
+        text
+        bg
+        @click=" ShowModal = true "
+         >{{ "上传文件" }}</el-button
+      >
           <br><br>
             <el-table :data="tableData" style="width: 100%"  @row-dblclick="handleRowDblClick">
                 <el-table-column fixed prop="userID" label="管理员账户" width=auto />
@@ -83,58 +90,75 @@
             </el-table>
            
             <teleport to="body">
-                <el-dialog v-if="showModal" :model-value="showModal" title="修改密码"
-                  font-size="32px">
+              <el-dialog v-if="showModal" v-model="showModal" title="添加用户" font-size="32px">
                 <el-form v-model="addForm" label-width="80px">
-              <el-form-item label="用户账户">
-                <el-input v-model="addForm.userID"></el-input>
-              </el-form-item>
-              <el-form-item label="用户密码">
-                <el-input v-model="addForm.password"></el-input>
-              </el-form-item>
-              <el-form-item label="用户姓名">
-                <el-input v-model="addForm.username"></el-input>
-              </el-form-item>
-              <el-form-item label="工作单位">
-                <el-input v-model="addForm.work_unit"></el-input>
-              </el-form-item>
-              <el-form-item label="管理账户">
-                <el-input v-model="addForm.adminID"></el-input>
-              </el-form-item>
-              <el-form-item label="管理密码">
-                <el-input v-model="addForm.company_password"></el-input>
-              </el-form-item>
-              <el-button type="primary" @click="adduser">确定修改</el-button>
-            </el-form>
-            <el-button @click="showModal = false">关闭</el-button>
+                  <el-form-item label="用户账户">
+                    <el-input v-model="addForm.userID"></el-input>
+                  </el-form-item>
+                  <el-form-item label="用户密码">
+                    <el-input v-model="addForm.password"></el-input>
+                  </el-form-item>
+                  <el-form-item label="用户姓名">
+                    <el-input v-model="addForm.username"></el-input>
+                  </el-form-item>
+                  <el-form-item label="工作单位">
+                    <el-input v-model="addForm.work_unit"></el-input>
+                  </el-form-item>
+                  <el-form-item label="管理账户">
+                    <el-input v-model="addForm.adminID"></el-input>
+                  </el-form-item>
+                  <el-form-item label="管理密码">
+                    <el-input v-model="addForm.company_password"></el-input>
+                  </el-form-item>
+                  <el-button type="primary" @click="adduser">确定修改</el-button>
+                </el-form>
               </el-dialog>
-        </teleport>         
+            </teleport>
             <teleport to="body">
-                <el-dialog v-if="showmodal" :model-value="showmodal" title="修改密码"
-                  font-size="32px">
-                <el-form v-model="changeForm" label-width="80px">
-              <el-form-item label="用户账户">
-                <el-input v-model="changeForm.userID"></el-input>
-              </el-form-item>
-              <el-form-item label="用户密码">
-                <el-input v-model="changeForm.password"></el-input>
-              </el-form-item>
-              <el-form-item label="用户姓名">
-                <el-input v-model="changeForm.username"></el-input>
-              </el-form-item>
-              <el-form-item label="工作单位">
-                <el-input v-model="changeForm.work_unit"></el-input>
-              </el-form-item>
-              <el-form-item label="管理账户">
-                <el-input v-model="changeForm.adminID"></el-input>
-              </el-form-item>
-              <el-form-item label="管理密码">
-                <el-input v-model="changeForm.company_password"></el-input>
-              </el-form-item>
-              <el-button type="primary" @click="changepass">确定修改</el-button>
-            </el-form>
-            <el-button @click="showmodal = false">关闭</el-button>
+              <el-dialog v-if="showmodal" v-model="showmodal" title="修改密码" font-size="32px">
+                <el-form v-model="addForm" label-width="80px">
+                  <el-form-item label="用户账户">
+                    <el-input v-model="addForm.userID"></el-input>
+                  </el-form-item>
+                  <el-form-item label="用户密码">
+                    <el-input v-model="addForm.password"></el-input>
+                  </el-form-item>
+                  <el-form-item label="用户姓名">
+                    <el-input v-model="addForm.username"></el-input>
+                  </el-form-item>
+                  <el-form-item label="工作单位">
+                    <el-input v-model="addForm.work_unit"></el-input>
+                  </el-form-item>
+                  <el-form-item label="管理账户">
+                    <el-input v-model="addForm.adminID"></el-input>
+                  </el-form-item>
+                  <el-form-item label="管理密码">
+                    <el-input v-model="addForm.company_password"></el-input>
+                  </el-form-item>
+                  <el-button type="primary" @click="changepass">确定修改</el-button>
+                </el-form>
               </el-dialog>
+        </teleport>
+        <teleport to="body">
+          <el-dialog v-if="ShowModal" v-model="ShowModal" title="上传文件" font-size="32px">
+            <el-upload
+              class="upload-demo"
+              drag
+              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" 
+              multiple
+              accept=".xlsx,.xls"
+            >
+              <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+              <div class="el-upload__text">
+                Drop file here or <em>click to upload</em>
+              </div>
+              <template #tip>
+                <div class="el-upload__tip">
+                  <!-- jpg/png files with a size less than 500kb -->
+                </div>
+              </template>
+            </el-upload>
+          </el-dialog>
         </teleport>
           </el-main>
         </el-container>
@@ -170,7 +194,7 @@
         const originData = []
         const showModal = ref(false);
         const showmodal = ref(false);
-      
+        const ShowModal = ref(false);      
         const addForm = ref({
           userID: "",       //检查是否存在，不存在则创建，存在则修改
           password: "",
@@ -427,6 +451,7 @@
             changepass,
             showModal,
             showmodal,
+            ShowModal,
             addForm,
             changeForm,
             search,
