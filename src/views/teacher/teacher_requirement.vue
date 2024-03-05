@@ -70,12 +70,7 @@
                 <el-form-item label="图书数量">
                 <el-input v-model="formLabelAlign.Tquantity" />
                 </el-form-item>
-                <el-form-item label="申请人">
-                <el-input v-model="formLabelAlign.username" />
-                </el-form-item>
-                <el-form-item label="接收人">
-                <el-input v-model="formLabelAlign.res_userID" />
-                </el-form-item>
+
                 <el-button type="info" @click="requirement">确认申请</el-button>
             </el-form>
           </el-main>
@@ -119,9 +114,7 @@
             publisher:"",
             author:"",
             Tquantity:"",
-            username:"",
             req_userID:"",
-            res_userID:"Atest9",
             })
         const clicktask =()=>{
           router.push({
@@ -168,14 +161,11 @@
         }
         const requirement =async()=>{
          console.log(formLabelAlign)
-         router.push({
-          name:'teacher_index'
-         })
          try{
             
             const response = await axios.post('http://139.9.118.223:3000/api/B_application/T',formLabelAlign)
             if(response.status){
-              console.log(response.data)
+              alert("提交成功")
             } 
             router.push({
             name:'teacher_index'

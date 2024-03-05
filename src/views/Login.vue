@@ -125,14 +125,13 @@
 
                       });
             }
-            else if(work_unit==="智慧图书")
+            else if(work_unit==="education")
             {
               const {userID, username, work_unit, books} = response.data.data;
 
               store.commit('setUserName', username);
               store.commit('setID', userID); 
               store.commit('setWork_unit', work_unit);
-              store.commit('setBooks', books);
               router.push({
                         name: "adminC_index",
 

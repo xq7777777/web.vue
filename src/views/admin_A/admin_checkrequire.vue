@@ -158,11 +158,11 @@
         const checkrequire =async()=>{
           try{
                 const userid =computed(() => store.state.userID)
-                const res_userID = toRaw(userid.value)
+                const userID = toRaw(userid.value)
                 const Userid = reactive({
-                res_userID,
-               
+                userID,
             })
+            console.log(Userid)
             const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,Userid)
             if(response.status){
               console.log(response.data)

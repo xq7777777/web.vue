@@ -77,12 +77,6 @@
                 <el-form-item label="图书数量">
                 <el-input v-model="formLabelAlign.Tquantity" />
                 </el-form-item>
-                <el-form-item label="申请人">
-                <el-input v-model="formLabelAlign.username" />
-                </el-form-item>
-                <el-form-item label="接收人">
-                <el-input v-model="formLabelAlign.res_userID" />
-                </el-form-item>
                 <el-button type="info" @click="requirement">确认申请</el-button>
             </el-form>
             
@@ -120,9 +114,7 @@
             publisher:"",
             author:"",
             Tquantity:"",
-            username:"",
             req_userID:"",
-            res_userID:"",
             })
             const bookborrow =()=>{
           router.push({
@@ -139,10 +131,7 @@
                
             const response =await axios.post(`http://139.9.118.223:3000/api/B_application/A`,formLabelAlign)
             if(response.status){
-              console.log(response.data)
-              const{data}=response.data
-              const  Data = response.data.data
-              store.commit('setdata', Data)
+              alert("提交成功")
               
             } 
             router.push({
@@ -152,9 +141,6 @@
         // 请求错误处理
         console.log(error.message)
       }
-          router.push({
-            name:'adminA_requirement'
-          }) 
         }
         const maintenance =()=>{
           router.push({
