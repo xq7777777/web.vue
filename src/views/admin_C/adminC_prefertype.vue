@@ -42,9 +42,11 @@
           </el-header>
           <el-main>
             <div>
-              
-              <div ref="lineChart" style="width: 600px; height: 400px;"></div>
-              <div ref="pieChart" style="width: 600px; height: 400px;"></div>
+              <el-card shadow="hover" style="height: 500px;margin-top: 20px">
+                <div style="height: 100%;">
+                  <div ref="combinedChart" style="width: 100%; height: 500px;"></div>
+                </div>
+              </el-card>
             </div>
           </el-main>
         </el-container>
@@ -63,90 +65,113 @@
     setup() {
       const store = useStore();
       const router = useRouter();
-      const chart = computed(() => store.state.data);
-      const chartData = chart.value;
-  
+      const preferType = computed(() => store.state.prefertype);
+      const combinedChart = ref(null);
+      const lineChart = ref(null);
+     const pieChart = ref(null);
       const goback = () => {
         router.back();
       };
   
-      const lineChart = ref(null);
-      const pieChart = ref(null);
-  
       onMounted(() => {
-        initCharts();
-      });
+       initCombinedChart();
+     });
   
-      const initCharts = () => {
-        const myLineChart = echarts.init(lineChart.value);
-        const myPieChart = echarts.init(pieChart.value);
-  
-        const schools = chartData.map(data => data.school);
-  
-        const lineSeriesData = chartData[0]?.bookTypes.map(type => ({
-          type: 'line',
-          smooth: true,
-          seriesLayoutBy: 'row',
-          emphasis: { focus: 'series' },
-          name: type.type,
-          data: chartData.map(data => {
-            const bookType = data.bookTypes.find(bt => bt.type === type.type);
-            return bookType ? bookType.count : 0;
-          }),
-        }));
-  
-        const pieOption = {
-          legend: {},
-          tooltip: { trigger: 'item', formatter: '{a} <br/>{b}: {c} ({d}%)' },
-          series: [
-            {
-              type: 'pie',
-              id: 'pie',
-              radius: '30%',
-              center: ['50%', '25%'],
-              emphasis: { focus: 'self' },
-              label: { formatter: '{b}: {@2012} ({d}%)' },
-              encode: { itemName: 'product', value: '2012', tooltip: '2012' },
-              data: chartData[0]?.bookTypes.map(type => ({
-                name: type.type,
-                value: type.count,
-              })) || [],
-            },
-          ],
-        };
-  
-        myLineChart.setOption({
-          legend: {},
-          tooltip: { trigger: 'axis', showContent: false },
-          xAxis: { type: 'category', data: schools },
-          yAxis: { gridIndex: 0 },
-          grid: { top: '55%' },
-          series: lineSeriesData,
-        });
-  
-        myPieChart.setOption(pieOption);
-  
-        myLineChart.on('mousemove', function (params) {
-          const schoolIndex = params.dataIndex;
-          myPieChart.setOption({
-            series: [
-              {
-                id: 'pie',
-                data: chartData[schoolIndex]?.bookTypes.map(type => ({
-                  name: type.type,
-                  value: type.count,
-                })) || [],
-              },
-            ],
-          });
-        });
-      }
+      const initCombinedChart = () => {
+       const chart = echarts.init(combinedChart.value);
+ 
+       const bookTypes = preferType.value.reduce((acc, curr) => {
+         curr.bookTypes.forEach((type) => {
+           if (!acc.includes(type.type)) {
+             acc.push(type.type);
+           }
+         });
+         return acc;
+       }, []);
+       const dataset = {
+         source: [
+           ["product", ...preferType.value.map((_, index) => `学校${index + 1}`)],
+           ...bookTypes.map((type) => [
+             type,
+             ...preferType.value.map((data) => {
+               const bookType = data.bookTypes.find((bt) => bt.type === type);
+               return bookType ? bookType.count : 0;
+             }),
+           ]),
+         ],
+       };
+       const option = {
+  title: {
+    text: "不同学校对不同类型图书的喜好",
+    left: "center",
+    top: 0, // 调整 top 属性
+  },
+  legend: {
+    top: 35, // 调整 top 属性
+    data: bookTypes,
+  },
+  tooltip: {
+    trigger: "axis",
+    showContent: false,
+  },
+  dataset: dataset,
+  xAxis: { type: "category" },
+  yAxis: { gridIndex: 0 },
+  grid: { top: "55%" },
+  series: [
+    ...bookTypes.map((type) => ({
+      type: "line",
+      smooth: true,
+      seriesLayoutBy: "row",
+      emphasis: { focus: "series" },
+      name: type, // 添加图例名称
+    })),
+    {
+      type: "pie",
+      id: "pie",
+      radius: "30%",
+      center: ["50%", "33%"],
+      emphasis: {
+        focus: "self",
+      },
+      label: {
+        formatter: "{b}: {@学校1} ({d}%)",
+      },
+      encode: {
+        itemName: "product",
+        value: "学校1",
+        tooltip: "学校1",
+      },
+    },
+  ],
+};
+       chart.on("updateAxisPointer", function (event) {
+         const xAxisInfo = event.axesInfo[0];
+         if (xAxisInfo) {
+           const dimension = xAxisInfo.value + 1;
+           chart.setOption({
+             series: {
+               id: "pie",
+               label: {
+                 formatter: "{b}: {@[" + dimension + "]} ({d}%)",
+               },
+               encode: {
+                 value: dimension,
+                 tooltip: dimension,
+               },
+             },
+           });
+         }
+       });
+       chart.setOption(option);
+     };
   
       return {
         goback,
-        chartData,
         lineChart,
         pieChart,
+        combinedChart,
+        preferType,
       };
     },
   });

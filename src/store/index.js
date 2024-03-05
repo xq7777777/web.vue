@@ -115,7 +115,18 @@ export default createStore({
     {
       state.students = students
     },
-
+    setbooktype(state,booktype)
+    {
+      state.booktype = booktype
+    },
+    setprefertype(state,prefertype)
+    {
+      state.prefertype = prefertype
+    },
+    setreadtime(state,readtime)
+    {
+      state.readtime = readtime
+    },
     // updateIsCollapse(state, payload) {
     //   // console.log(payload);
     //   state.isCollapse = !state.isCollapse

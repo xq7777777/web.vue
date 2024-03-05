@@ -34,65 +34,234 @@
         </el-menu-item>
       </el-menu>
     </el-col>
-
       </el-aside >
       <el-container>
         <el-header>
-          <!-- <el-button @click="onSearch">搜索</el-button>  -->
         </el-header>
         <el-main>
           <el-row class="home" :gutter="20">
-      <el-col :span="8" style="margin-top: 20px">
-        <el-card shadow="hover">
-          <div class="user">
+            <el-col :span="9" style="margin-top: 20px;">
+              <el-card shadow="hover">
+                <div class="user">
+                  <div class="user-info">
+                    <p class="name">{{ username }}</p>
+                    <br />
+                  </div>
+                </div>
+                <div class="login-info">
+                  <p>账号：<span>{{ userID }}</span></p>
+                </div>
+              </el-card>
+              <el-card shadow="hover" style="margin-top: 20px;">
+                <div>
+                  <div ref="pieChart1" style="width: 100%; height: 600px;"></div>
+                </div>
+              </el-card>
+            </el-col>
+            <el-col :span="15" style="width: 100%;">
+      <!-- 联合图 -->
+      <el-card shadow="hover" style="height: 500px;margin-top: 20px">
+        <div style="height: 100%;">
+          <div ref="combinedChart" style="width: 100%; height: 500px;"></div>
+        </div>
+      </el-card>
 
-            <div class="user-info">
-              <p class="name" >{{username}}</p>
-              <br>
-              <p class="role">教育局</p>
-            </div>
-          </div>
-          <div class="login-info">
-            <p>账户：<span>{{userID}}</span></p>
-          </div>
-        </el-card>
-        <el-card shadow="hover" style="margin-top: 20px" height="450px">
-          </el-card> 
-          </el-col></el-row>         
-        </el-main>
+      <!-- 折线图 -->
+      <el-card shadow="hover" style="margin-top: 20px; height: 300px;">
+        <div style="height: 100%;">
+          <div ref="LineChart" style="width: 100%; height: 300px;"></div>
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
+</el-main>
       </el-container>
     </el-container>
   </div>
   </template>
-  <script>
-  import {
-    defineComponent,
-    onMounted,
-    ref,
-    reactive,
-    watch,
-  } from "vue";
-  import {
-Check,
-Delete,
-Edit,
-Message,
-Search,
-Star,
-} from '@element-plus/icons-vue';
-  import { useRouter } from "vue-router";
-  import { computed ,toRaw} from 'vue'
-  import { useStore } from 'vuex'
-  import axios from 'axios'
-  import * as echarts from 'echarts';
-  export default defineComponent({
-    setup() {
-      const store = useStore();
-      const router = useRouter()
-      const search = ref('') 
-      const username = computed(() => store.state.username)
-      const userID = computed(() => store.state.userID)
-      const bookshelf =async()=>{
+ <script>
+ import { defineComponent, onMounted, ref, computed } from "vue";
+ import { useStore } from "vuex";
+ import { useRouter} from "vue-router";
+ import * as echarts from "echarts";
+ import axios from 'axios'
+ export default defineComponent({
+   setup() {
+     const store = useStore();
+     const router = useRouter()
+     const username = computed(() => store.state.username);
+     const userID = computed(() => store.state.userID);
+     const chartData = computed(() => store.state.booktype);
+     const readTime = computed(() => store.state.readtime);
+     const preferType = computed(() => store.state.prefertype);
+     const lineChart = ref(null);
+     const pieChart = ref(null);
+     const LineChart = ref(null);
+     const pieChart1 = ref(null);
+     const combinedChart = ref(null);
+     const initPieChart1 = () => {
+  
+    const chart = echarts.init(pieChart1.value);
+    const option = {
+  title: {
+    text: "不同类型图书的阅读量",
+    left: "center",
+    top: 20, // 调整标题距离顶部的距离
+  },
+  tooltip: {
+    trigger: "item",
+    formatter: "{a} <br/>{b} : {c} ({d}%)",
+  },
+  series: [
+    {
+      name: "",
+      type: "pie",
+      radius: "80%",
+      center: ["50%", "50%"], // 调整图表的中心位置
+      data: chartData.value.map((item) => ({
+        value: item.count,
+        name: item.type || "未知类型",
+      })),
+      emphasis: {
+        itemStyle: {
+          shadowBlur: 10,
+          shadowOffsetX: 0,
+          shadowColor: "rgba(0, 0, 0, 0.5)",
+        },
+      },
+    },
+  ],
+};
+    chart.setOption(option);
+};
+     const initCombinedChart = () => {
+       const chart = echarts.init(combinedChart.value);
+ 
+       const bookTypes = preferType.value.reduce((acc, curr) => {
+         curr.bookTypes.forEach((type) => {
+           if (!acc.includes(type.type)) {
+             acc.push(type.type);
+           }
+         });
+         return acc;
+       }, []);
+       const dataset = {
+         source: [
+           ["product", ...preferType.value.map((_, index) => `学校${index + 1}`)],
+           ...bookTypes.map((type) => [
+             type,
+             ...preferType.value.map((data) => {
+               const bookType = data.bookTypes.find((bt) => bt.type === type);
+               return bookType ? bookType.count : 0;
+             }),
+           ]),
+         ],
+       };
+       const option = {
+  title: {
+    text: "不同学校对不同类型图书的喜好",
+    left: "center",
+    top: 0, // 调整 top 属性
+  },
+  legend: {
+    top: 35, // 调整 top 属性
+    data: bookTypes,
+  },
+  tooltip: {
+    trigger: "axis",
+    showContent: false,
+  },
+  dataset: dataset,
+  xAxis: { type: "category" },
+  yAxis: { gridIndex: 0 },
+  grid: { top: "55%" },
+  series: [
+    ...bookTypes.map((type) => ({
+      type: "line",
+      smooth: true,
+      seriesLayoutBy: "row",
+      emphasis: { focus: "series" },
+      name: type, // 添加图例名称
+    })),
+    {
+      type: "pie",
+      id: "pie",
+      radius: "30%",
+      center: ["50%", "33%"],
+      emphasis: {
+        focus: "self",
+      },
+      label: {
+        formatter: "{b}: {@学校1} ({d}%)",
+      },
+      encode: {
+        itemName: "product",
+        value: "学校1",
+        tooltip: "学校1",
+      },
+    },
+  ],
+};
+       chart.on("updateAxisPointer", function (event) {
+         const xAxisInfo = event.axesInfo[0];
+         if (xAxisInfo) {
+           const dimension = xAxisInfo.value + 1;
+           chart.setOption({
+             series: {
+               id: "pie",
+               label: {
+                 formatter: "{b}: {@[" + dimension + "]} ({d}%)",
+               },
+               encode: {
+                 value: dimension,
+                 tooltip: dimension,
+               },
+             },
+           });
+         }
+       });
+       chart.setOption(option);
+     };
+     // 初始化折线图
+     const initLineChart = () => {
+  if (LineChart.value) {
+    const chart = echarts.init(LineChart.value);
+    const option = {
+      title: {
+        text: "不同学校的平均阅读时长",
+        left: "center",
+      },
+      tooltip: {
+        trigger: "axis",
+        formatter: "{a} <br/>{b} : {c} 小时",
+      },
+      xAxis: {
+        type: "category",
+        boundaryGap: false,
+        data: readTime.value.map((item) => item.school || "未知类型"),
+      },
+      yAxis: {
+        type: "value",
+      },
+      series: [
+        {
+          name: "",
+          data: readTime.value.map((item) => item.avgReadTime),
+          type: "line",
+          areaStyle: {},
+        },
+      ],
+    };
+
+    chart.setOption(option);
+  }
+};
+     onMounted(() => {
+       initPieChart1();
+       initCombinedChart();
+       initLineChart();
+     });
+     const bookshelf =async()=>{
         try{
             
             const response =await axios.get(`http://139.9.118.223:3000/api/book_type_stats`)
@@ -151,22 +320,24 @@ Star,
       }
        
       }
-      return{  
-          username,
-          userID,
-          bookshelf,
-          prefer,
-          readtime,
-          chartData: [
-      { name: 'Category 1', value: 30 },
-      { name: 'Category 2', value: 50 },
-      { name: 'Category 3', value: 20 },
-    ],
-      }
-    }
-  })
-  </script> 
-  
+     return {
+      bookshelf,
+      readtime,
+      prefer,
+       username,
+       userID,
+       chartData,
+       readTime,
+       preferType,
+       lineChart,
+       pieChart,
+       LineChart,
+       pieChart1,
+       combinedChart,
+     };
+   },
+ });
+ </script>
   <style lang="less" scoped>
   .home {
     .user {
@@ -238,26 +409,22 @@ Star,
     width: 18px;
     height: 18px;
   }
-  
   .box-card {
 width: 500px;
 margin: 20px auto;
 }
-
 .user-info {
 display: flex;
 align-items: center;
 padding-bottom: 20px;
 border-bottom: 1px solid #ddd;
 }
-
 .user-info img {
 width: 100px;
 height: 100px;
 border-radius: 50%;
 margin-right: 50px;
 }
-
 .user-info .info p {
 display: flex;
 align-items: center; 
@@ -265,25 +432,15 @@ font-size: 14px;
 color: #666;
 padding: 5px 0;
 }
-
-
 .user-info .info i {
 font-size: 18px;
 margin-right: 10px;
 }
-
-
-
-
   }
 .el-menu-item {
   padding:30px;
 font-size: 20px;
 }
-
-
-
-  
 header {
   display: flex;
   justify-content: space-between;
@@ -309,7 +466,6 @@ html,body {
       margin: 0;
       height: 100%;
 }
-
 </style>
 
 

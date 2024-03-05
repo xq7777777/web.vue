@@ -132,10 +132,45 @@
               store.commit('setUserName', username);
               store.commit('setID', userID); 
               store.commit('setWork_unit', work_unit);
-              router.push({
+             
+            try{
+            const response =await axios.get(`http://139.9.118.223:3000/api/book_type_stats`)
+            if(response.status){
+              console.log(response.data)
+              const booktype = response.data
+              store.commit('setbooktype', booktype)
+            } 
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+          try{
+                
+                const response =await axios.get(`http://139.9.118.223:3000/api/school_book_type_stats`)
+                if(response.status){
+                  console.log(response.data)
+                  const prefertype = response.data
+                  store.commit('setprefertype', prefertype)
+                } 
+              }catch (error) {  
+            // 请求错误处理
+            console.log(error.message)
+          }
+          try{
+            
+            const response =await axios.get(`http://139.9.118.223:3000/api/school_average_read_time`)
+            if(response.status){
+              console.log(response.data)
+              const readtime = response.data
+              store.commit('setreadtime', readtime)
+            } 
+            router.push({
                         name: "adminC_index",
-
                       });
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
             }
             else 
             
