@@ -38,15 +38,27 @@
       </el-aside >
       <el-container>
         <el-header>
-          <el-input v-model="search" placeholder="请输入图书名称或书架编号" style="width: 240px"/>
           <!-- <el-button @click="onSearch">搜索</el-button>  -->
         </el-header>
         <el-main>
-          <div >
-            <h1>Vue ECharts Pie Chart</h1>
-            <div ref="pieChart" style="width: 600px; height: 400px;"></div>
+          <el-row class="home" :gutter="20">
+      <el-col :span="8" style="margin-top: 20px">
+        <el-card shadow="hover">
+          <div class="user">
+
+            <div class="user-info">
+              <p class="name" >{{username}}</p>
+              <br>
+              <p class="role">教育局</p>
+            </div>
           </div>
-                    
+          <div class="login-info">
+            <p>账户：<span>{{userID}}</span></p>
+          </div>
+        </el-card>
+        <el-card shadow="hover" style="margin-top: 20px" height="450px">
+          </el-card> 
+          </el-col></el-row>         
         </el-main>
       </el-container>
     </el-container>
@@ -78,6 +90,8 @@ Star,
       const store = useStore();
       const router = useRouter()
       const search = ref('') 
+      const username = computed(() => store.state.username)
+      const userID = computed(() => store.state.userID)
       const bookshelf =async()=>{
         try{
             
@@ -138,6 +152,8 @@ Star,
        
       }
       return{  
+          username,
+          userID,
           bookshelf,
           prefer,
           readtime,
@@ -147,46 +163,7 @@ Star,
       { name: 'Category 3', value: 20 },
     ],
       }
-    },methods: {
-  initPieChart() {
-    // 使用ECharts初始化饼状图
-    const pieChart = echarts.init(this.$refs.pieChart);
-
-    // 配置图表
-    const option = {
-      title: {
-        text: 'Pie Chart',
-        left: 'center',
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)',
-      },
-      series: [
-        {
-          name: 'Pie Chart',
-          type: 'pie',
-          radius: '55%',
-          center: ['50%', '60%'],
-          data: this.chartData,
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
-        },
-      ],
-    };
-
-    // 使用配置项设置图表
-    pieChart.setOption(option);
-  },
-},mounted() {
-  // 在需要时手动调用初始化方法
-  this.initPieChart();
-},
+    }
   })
   </script> 
   

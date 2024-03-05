@@ -127,7 +127,7 @@
             }
             else if(work_unit==="education")
             {
-              const {userID, username, work_unit, books} = response.data.data;
+              const {userID, username, work_unit} = response.data.data;
 
               store.commit('setUserName', username);
               store.commit('setID', userID); 
