@@ -101,12 +101,13 @@
         const route = useRoute()
         const search = ref('') 
         const {school} = route.query
-        const books =computed(() => store.state.data.books)
+        const books =computed(() => store.state.data)
         const originData= []  
         for (let item of books.value) {
   originData.push({
     bookid: item.bookid,
     title: item.title,
+    quantity: item.quantity,
   });
   }
         const addbook =()=>{

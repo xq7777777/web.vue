@@ -116,8 +116,8 @@
     {
       name: "",
       type: "pie",
-      radius: "80%",
-      center: ["50%", "50%"], // 调整图表的中心位置
+      radius: "65%",
+      center: ["45%", "50%"], // 调整图表的中心位置
       data: chartData.value.map((item) => ({
         value: item.count,
         name: item.type || "未知类型",

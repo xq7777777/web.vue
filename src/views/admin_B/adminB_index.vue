@@ -247,9 +247,9 @@
           try{
                 const userid =computed(() => store.state.userID)
                 console.log(userid.value)
-                const res_userID = userid.value
+                const userID = userid.value
                 const Userid = reactive({
-                res_userID,
+                userID,
             })
             console.log(Userid)
             const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/A`,Userid)

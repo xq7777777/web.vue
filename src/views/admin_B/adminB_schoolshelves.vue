@@ -243,7 +243,7 @@ originData.push({
             
           } 
           router.push({
-           path:"/adminB_bookofschool",
+           path:"/adminB_bookofshelf",
            
          })
         }catch (error) {  
