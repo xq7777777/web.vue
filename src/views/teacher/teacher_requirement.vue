@@ -39,6 +39,10 @@
             <el-icon><setting /></el-icon>
             <span @click = person>个人中心</span>
           </el-menu-item>
+          <el-menu-item index="9">
+          <el-icon><setting /></el-icon>
+          <span @click="logout" >退出登录</span>
+        </el-menu-item>
         </el-menu>
       </el-col>
 
@@ -197,9 +201,14 @@
       },
  
       methods: {
-       
-       
-    },
+    logout() {
+      // 清除所有 Vuex store 缓存
+      this.$store.commit('clearAllState')
+      // 其他退出登录的逻辑，比如跳转到登录页面等
+      // 例如：
+      this.$router.push({ name: 'login' })
+    }
+  }
  
     })
     

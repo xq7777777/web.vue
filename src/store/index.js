@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 export default createStore({
   state: {
-    
+    isLoggedIn: false, // 表示用户是否已登录
     isCollapse: true,
     currentMenu: null,
     tabsList: [
@@ -42,6 +42,14 @@ export default createStore({
     userID:{}
   },
   mutations: {
+    login(state, user) {
+      state.isLoggedIn = true;
+      state.user = user;
+    },
+    logout(state) {
+      state.isLoggedIn = false;
+      state.user = {};
+    },
     setUser(state, users) {
       state.users = users 
     },
@@ -157,5 +165,23 @@ export default createStore({
       state.menu = []
       localStorage.removeItem('menu')
     },
-  }
+    clearAllState(state) {
+      // 清除所有状态
+      Object.keys(state).forEach(key => {
+        state[key] = null
+      })
+    }
+  },
+  actions: {
+    // 其他 actions...
+    login({ commit }, user) {
+      // 假设这里是处理用户登录逻辑，然后将用户信息存储到 state 中
+      commit('login', user);
+    },
+    logout({ commit }) {
+      // 清除用户登录状态
+      commit('logout');
+    },
+  },
+  
 })
