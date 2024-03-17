@@ -348,7 +348,7 @@
       this.$store.commit('clearAllState')
       // 其他退出登录的逻辑，比如跳转到登录页面等
       // 例如：
-      this.$router.push({ name: 'login' })
+      this.$router.push({ name: 'ogin' })
     }
   }
  });
