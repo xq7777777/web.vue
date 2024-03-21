@@ -90,7 +90,8 @@
       defineComponent,
       onMounted,
       ref,
-      reactive
+      reactive,
+      watch,
     } from "vue";
     import {
   Check,
@@ -121,7 +122,7 @@
     const handleCurrentChange = (val) => {
       currentPage.value = val;
     };
-        const bookborrow =()=>{
+    const bookborrow =()=>{
           router.push({
             name:'adminA_borrow'
           }) 
@@ -146,18 +147,58 @@
             name:'adminA_person'
           }) 
         }
-        const peolpe =()=>{
-          router.push({
+        const peolpe =async()=>{
+          try{
+                const userid =computed(() => store.state.userID)
+                const userID = toRaw(userid.value)
+                const Userid = reactive({
+                userID,
+               
+            })
+            const response =await axios.post(`http://121.36.23.117:3000/api/admin/users/school/look`,Userid)
+            if(response.status){
+              const{admins,teachers,students}=response.data
+              const Newadmins = admins.map(item => {
+                return {
+                  username: item.username,
+                  userID: item.userID,
+                  _id: item._id,
+                }
+              });
+              const Newteachers = teachers.map(item => {
+                return {
+                  username: item.username,
+                  userID: item.userID,
+                  _id: item._id,
+                  className:item.className,
+                }
+              });
+              const Newstudents = students.map(item => {
+                return {
+                  username: item.username,
+                  userID: item.userID,
+                  _id: item._id,
+                  className:item.className,
+                }
+              });
+              store.commit('setadmins', Newadmins)
+              store.commit('setteachers', Newteachers)
+              store.commit('setstudents', Newstudents)
+              
+            } 
+            router.push({
             name:'adminA_peolpe'
           }) 
+          }catch (error) {  
+        // 请求错误处理
+        console.log(error.message)
+      }
+          
         }
         const shelfrequire =()=>{
           router.push({
             name:'adminA_shelfrequire'
           }) 
-        }
-        const goback =()=>{
-          router.back() 
         }
         const checkrequire =async()=>{
           try{
@@ -165,8 +206,8 @@
                 const userID = toRaw(userid.value)
                 const Userid = reactive({
                 userID,
+               
             })
-            console.log(Userid)
             const response =await axios.post(`http://121.36.23.117:3000/api/B_application/check/T`,Userid)
             if(response.status){
               const{data}=response.data
@@ -205,6 +246,10 @@
       }
          
         }
+        const goback =()=>{
+          router.back() 
+        }
+
     
       
         return{
