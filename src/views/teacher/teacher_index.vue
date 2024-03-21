@@ -53,8 +53,8 @@
           <el-header>
             <el-button type="info"  @click="settasks">布置作业</el-button>
           </el-header>
-          <el-main>
-            <el-table :data="tasks" style="width: 100%" >
+          <el-main style="height: calc(100vh - 60px); overflow: auto;">
+            <el-table :data="tasks"  style="width: 100%" >
               <el-table-column fixed prop="task_title" label="作业标题" width="auto"/>
               <el-table-column prop="task_book" label="阅读书目" width="auto"/>
               <el-table-column prop="startedAt" label="布置时间" width="auto"/>
@@ -110,11 +110,10 @@
         const router = useRouter()
         const showModal = ref(false)
         const filteredTasks = ref([])
-
        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
-       
+         //侧边栏函数
        function filterTasks(className) {
 
         // 根据传入的班级参数过滤
@@ -125,7 +124,7 @@
         })
 
         }
-     
+      
         const clicktask =(className)=>{
           filteredTasks.value = filterTasks(className)
           console.log(filteredTasks.value)
@@ -172,6 +171,12 @@
           }) 
         }
 
+        const person =()=>{
+          router.push({
+            name:'teacher_person'
+          })
+        }
+        //表格函数
         const handlechange =async(row)=>{
            router.push({
              path:"/teacher_changetask",
@@ -204,27 +209,23 @@
           })
         }
     
-        const person =()=>{
-          router.push({
-            name:'teacher_person'
-          })
-        }
+
         return {
           clicktask,
           clickread,
           clickteacherperson,
-          users,
-          tasks,
-          handledelete,
-          settasks,
-          deleteTask,
           className,
           filteredTasks,
           filterTasks,
           cls,
-          handlechange,
-          clickbookborrow,
           person,
+          users,
+          tasks,
+          clickbookborrow,
+          settasks,
+          deleteTask,
+          handledelete,
+          handlechange,
         };
       },
      

@@ -18,23 +18,25 @@
           <template #title>
             <span >作业情况</span>
           </template>
-          <el-menu-item v-for="cls in className" @click = clicktask>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clicktask(cls)>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span>阅读情况</span>
+            <span >阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in className"  @click = clickread>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clickread(cls)>{{ cls }}</el-menu-item>
         </el-sub-menu>
-          <el-menu-item index="6">
-            <el-icon><setting /></el-icon>
-            <span @click = clickteacherperson>图书申请</span>
-          </el-menu-item>
-          <el-menu-item index="7">
+        
+        <el-menu-item index="6">
             <el-icon><setting /></el-icon>
             <span @click = clickbookborrow>图书借阅</span>
           </el-menu-item>
+          <el-menu-item index="7">
+            <el-icon><setting /></el-icon>
+            <span @click = clickteacherperson>图书申请</span>
+          </el-menu-item>
+          
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
             <span @click = person>个人中心</span>
@@ -89,27 +91,38 @@
         const store = useStore();
         const router = useRouter()
         const route = useRoute();
-        // const className = ref([
-
-        // ])
+        const filteredTasks = ref([])
         const cls = ref('')
        const users = computed(() => store.state.users)
        const students = computed(()=>store.state.student)
+       const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
        
-        const clicktask =()=>{
+       function filterTasks(className) {
+
+        // 根据传入的班级参数过滤
+        return tasks.value.filter(task => {
+          if(task.className === className) {
+            return true 
+          }
+        })
+
+        }
+
+        const clicktask =(className)=>{
+          filteredTasks.value = filterTasks(className)
+          console.log(filteredTasks.value)
           router.push({
-            name:""
+            path:"/teacher_classtask",
+            query: {
+                task: JSON.stringify(filteredTasks.value) 
+                }
           })
         };
-        
-       
         const clickread =async(className)=>{
           try{
             cls.value = className
             const school = users.value.school
-            console.log(className)
-            console.log(school)
            const checklist = {school,className,}
        
             const response =await axios.post(`http://121.36.23.117:3000/api/class`,checklist)
@@ -189,6 +202,8 @@
           clicktask,
           clickread,
           clickteacherperson,
+          filteredTasks,
+          filterTasks,
           person,
           students,
           clickbookborrow,

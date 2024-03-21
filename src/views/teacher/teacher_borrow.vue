@@ -18,23 +18,25 @@
           <template #title>
             <span >作业情况</span>
           </template>
-          <el-menu-item v-for="cls in className" @click = clicktask>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clicktask(cls)>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span>阅读情况</span>
+            <span >阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in className"  @click = clickread(cls)>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clickread(cls)>{{ cls }}</el-menu-item>
         </el-sub-menu>
-          <el-menu-item index="6">
-            <el-icon><setting /></el-icon>
-            <span @click = clickteacherperson>图书申请</span>
-          </el-menu-item>
-          <el-menu-item index="7">
+
+        <el-menu-item index="6">
             <el-icon><setting /></el-icon>
             <span @click = clickbookborrow>图书借阅</span>
           </el-menu-item>
+          <el-menu-item index="7">
+            <el-icon><setting /></el-icon>
+            <span @click = clickteacherperson>图书申请</span>
+          </el-menu-item>
+          
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
             <span @click = person>个人中心</span>
@@ -44,7 +46,7 @@
           <span @click="logout" >退出登录</span>
         </el-menu-item>
         </el-menu>
-      </el-col>
+        </el-col>
 
         </el-aside >
         <el-container>
@@ -106,30 +108,41 @@
         // const className = ref([
 
         // ])
-        const cls = ref('')
-       const users = computed(() => store.state.users)
+        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
-       const formLabelAlign = reactive({
-                userId:"",
-                bookid:"",
-                pressmark:"",  
-            })
-        const clicktask =()=>{
+        const filteredTasks = ref([])
+        function filterTasks(className) {
+        // 根据传入的班级参数过滤
+        return tasks.value.filter(task => {
+          if(task.className === className) {
+            return true 
+          }
+        })
+
+        }
+
+        const clicktask =(className)=>{
+          console.log(className.value)
+          filteredTasks.value = filterTasks(className)
+          console.log(filteredTasks.value)
           router.push({
-            name:""
+            path:"/teacher_classtask",
+            query: {
+                task: JSON.stringify(filteredTasks.value) 
+                }
           })
         };
-        
-      
+
+        const cls = ref('')
         const clickread =async(className)=>{
           try{
             cls.value = className
             const school = users.value.school
             console.log(className)
             console.log(school)
-           const checklist = {school,className,}
-       
+          const checklist = {school,className,}
+
             const response =await axios.post(`http://121.36.23.117:3000/api/class`,checklist)
             if(response.status){
               console.log(response.data)
@@ -143,11 +156,11 @@
           }catch (error) {  
         // 请求错误处理
         console.log(error.message)
-      }}
+        }}
         const clickteacherperson=()=>{
-            router.push({
-                name:"teacher_requirement"
-            })
+          router.push({
+            name:"teacher_requirement"
+          })
         }
 
         const clickbookborrow =()=>{
@@ -156,6 +169,16 @@
           }) 
         }
 
+        const person =()=>{
+          router.push({
+            name:'teacher_person'
+          })
+        }
+       const formLabelAlign = reactive({
+                userId:"",
+                bookid:"",
+                pressmark:"",  
+            })
         const borrow =async()=>{
             console.log(formLabelAlign)
             if(!formLabelAlign.userId || !formLabelAlign.bookid || !formLabelAlign.pressmark){
@@ -185,25 +208,22 @@
          console.log(formLabelAlign)
         };
 
-        const person =()=>{
-          router.push({
-            name:'teacher_person'
-          })
-        }
-
         return {
           clicktask,
           clickread,
           clickteacherperson,
+          className,
+          filteredTasks,
+          filterTasks,
+          cls,
+          person,
           users,
           tasks,
-          className,
+          clickbookborrow,
           goback, 
           formLabelAlign,
           requirement,
-          clickbookborrow,
           borrow,
-          person,
         };
       },
  

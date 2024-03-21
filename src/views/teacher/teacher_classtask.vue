@@ -18,23 +18,25 @@
           <template #title>
             <span >作业情况</span>
           </template>
-          <el-menu-item v-for="cls in className" @click = clicktask>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clicktask(cls)>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span>阅读情况</span>
+            <span >阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in className"  @click = clickread(cls)>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clickread(cls)>{{ cls }}</el-menu-item>
         </el-sub-menu>
-          <el-menu-item index="6">
-            <el-icon><setting /></el-icon>
-            <span @click = clickteacherperson>图书申请</span>
-          </el-menu-item>
-          <el-menu-item index="7">
+        
+        <el-menu-item index="6">
             <el-icon><setting /></el-icon>
             <span @click = clickbookborrow>图书借阅</span>
           </el-menu-item>
+          <el-menu-item index="7">
+            <el-icon><setting /></el-icon>
+            <span @click = clickteacherperson>图书申请</span>
+          </el-menu-item>
+          
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
             <span @click = person>个人中心</span>
@@ -51,7 +53,7 @@
           <el-header>
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
-          <el-main>
+          <el-main style="height: calc(100vh - 60px); overflow: auto;">
             <el-table :data="taskData" style="width: 100%">
               <el-table-column prop="className" label="班级" width=auto />
               <el-table-column prop="task_book" label="阅读书目" width=auto />
@@ -69,6 +71,7 @@
       defineComponent,
       onMounted,
       ref,
+      watch ,
       reactive
     
     } from "vue";
@@ -90,26 +93,35 @@
         const store = useStore();
         const router = useRouter()
         const route = useRoute()
-        const taskData = ref([])
+        const taskData = ref([]);
 
-        const { task } = route.query
-        taskData.value = JSON.parse(task)
-        console.log(taskData.value)
-        // const className = ref([
-
-        // ])
-        const cls = ref('')
+        onMounted(() => {
+          const { task } = useRoute().query;
+          taskData.value = JSON.parse(task);
+        });
+ 
+        const filteredTasks = ref([])
        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
        const className = ref(users.value.className)
+         //侧边栏函数
+       function filterTasks(className) {
+
+        // 根据传入的班级参数过滤
+        return tasks.value.filter(task => {
+          if(task.className === className) {
+            return true 
+          }
+        })
+
+        }
       
-        const clicktask =()=>{
-          router.push({
-            name:""
-          })
-        };
+        const clicktask = (className) => {
+      const filteredTasks = filterTasks(className);
+      taskData.value = filteredTasks;
+    };
         
-      
+        const cls = ref('')
         const clickread =async(className)=>{
           try{
             cls.value = className
@@ -133,9 +145,9 @@
         console.log(error.message)
       }}
         const clickteacherperson=()=>{
-            router.push({
-                name:"teacher_requirement"
-            })
+          router.push({
+            name:"teacher_requirement"
+          })
         }
 
         const clickbookborrow =()=>{
@@ -144,31 +156,34 @@
           }) 
         }
 
-        
-        const goback =()=>{
-          router.back() 
-        }
-
         const person =()=>{
           router.push({
             name:'teacher_person'
           })
         }
+        const goback =()=>{
+          router.back() 
+        }
+        watch(taskData, () => {
+        // 在这里更新表格的内容
+        taskData.value = [...taskData.value];
+      });
 
         return {
           clicktask,
           clickread,
           clickteacherperson,
-          clickbookborrow,
+          className,
+          filteredTasks,
+          filterTasks,
+          cls,
           person,
-          goback, 
           users,
           tasks,
-          taskData,
-          className,
-                
-        
-          
+          clickbookborrow,
+          goback, 
+ 
+          taskData,          
         };
       },
       methods: {

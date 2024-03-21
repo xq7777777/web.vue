@@ -16,21 +16,27 @@
 
         <el-sub-menu  index="0">
           <template #title>
-            <span>作业情况</span>
+            <span >作业情况</span>
           </template>
-          <el-menu-item v-for="cls in classname" @click = clicktask>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clicktask(cls)>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
             <span >阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in classname" @click = clickread>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clickread(cls)>{{ cls }}</el-menu-item>
         </el-sub-menu>
+        
         <el-menu-item index="6">
+            <el-icon><setting /></el-icon>
+            <span @click = clickbookborrow>图书借阅</span>
+          </el-menu-item>
+          <el-menu-item index="7">
             <el-icon><setting /></el-icon>
             <span @click = clickteacherperson>图书申请</span>
           </el-menu-item>
+          
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
             <span @click = person>个人中心</span>
@@ -99,17 +105,35 @@
         const route = useRoute()
         const router = useRouter()
 		    const {className,endedAt,startedAt,task_book,task_title,address} = JSON.parse(route.query.task)
-        const cls = ref('')
         const store = useStore();
-        const users = computed(() => store.state.users)
-        const classname = ref(users.value.className)
-        const showModal = ref(false)
-        const clicktask =()=>{
-          router.push({
-            name:""
-          })
+        const filteredTasks = ref([])
+       const users = computed(() => store.state.users)
+       const tasks = computed(() => store.state.tasks)
+       const className = ref(users.value.className)
+         //侧边栏函数
+       function filterTasks(className) {
+
+        // 根据传入的班级参数过滤
+        return tasks.value.filter(task => {
+          if(task.className === className) {
+            return true 
+          }
+        })
+
+        }
+      
+        const clicktask =(className)=>{
+          filteredTasks.value = filterTasks(className)
+          console.log(filteredTasks.value)
+           router.push({
+             path:"/teacher_classtask",
+             query: {
+                task: JSON.stringify(filteredTasks.value) 
+                }
+           })
         };
-  
+        
+        const cls = ref('')
         const clickread =async(className)=>{
           try{
             cls.value = className
@@ -132,7 +156,7 @@
         // 请求错误处理
         console.log(error.message)
       }}
-      const clickteacherperson=()=>{
+        const clickteacherperson=()=>{
           router.push({
             name:"teacher_requirement"
           })
@@ -144,32 +168,35 @@
           }) 
         }
 
-        const goback =()=>{
-          router.back() 
-        }
-
         const person =()=>{
           router.push({
             name:'teacher_person'
           })
         }
 
+        const goback =()=>{
+          router.back() 
+        }
+
         return {
-    
           clicktask,
           clickread,
           clickteacherperson,
-          goback,
           className,
+          filteredTasks,
+          filterTasks,
+          cls,
+          person,
+          users,
+          tasks,
+          clickbookborrow,
+          goback,
           endedAt,
           startedAt,
           task_book,
           task_title,
           address,
           classname,
-          cls,
-          clickbookborrow,
-          person,
         };
       },
       methods: {

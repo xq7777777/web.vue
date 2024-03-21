@@ -60,7 +60,7 @@
             <el-input v-model="search" placeholder="请输入图书名称或书架编号" style="width: 240px"/>
             <!-- <el-button @click="onSearch">搜索</el-button>  -->
           </el-header>
-          <el-main>
+          <el-main style="height: calc(100vh - 60px); overflow: auto;">
             <el-table :data="tableData" style="width: 100%">
                 <el-table-column fixed prop="title" label="图书名称" width=auto />
                 <el-table-column prop="bookid" label="图书编号" width=auto />

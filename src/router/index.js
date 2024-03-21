@@ -248,11 +248,7 @@ const routes = [
     name:'adminC_readtime',
     component:()=>import('../views/admin_C/adminC_readtime.vue')
   },
-  {
-    path:'/adminC_test',
-    name:'adminC_test',
-    component:()=>import('../views/admin_C/adminC_test.vue')
-  },
+
   // {
   //   path: '/login',
   //   name: 'login',

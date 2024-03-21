@@ -59,7 +59,7 @@
           <el-header>
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
-          <el-main>
+          <el-main style="height: calc(100vh - 60px); overflow: auto;">
         <el-table :data="currentPageData" stripe style="width: 100%">
           <el-table-column prop="title" label="图书名称" width="auto" />
           <el-table-column prop="author" label="图书作者" width="auto" />

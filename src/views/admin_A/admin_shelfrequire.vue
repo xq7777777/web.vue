@@ -59,7 +59,7 @@
           <el-header>
             <el-button type="info" @click="goback">返回</el-button>
           </el-header>
-          <el-main>
+          <el-main style="height: calc(100vh - 60px); overflow: auto;">
             <el-form
                 label-width="100px"
                 :model="formLabelAlign"

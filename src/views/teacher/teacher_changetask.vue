@@ -16,25 +16,27 @@
 
         <el-sub-menu  index="0">
           <template #title>
-            <span>作业情况</span>
+            <span >作业情况</span>
           </template>
-          <el-menu-item v-for="cls in classname"  @click = clicktask>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clicktask(cls)>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
             <span >阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in classname" @click = clickread>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clickread(cls)>{{ cls }}</el-menu-item>
         </el-sub-menu>
+        
         <el-menu-item index="6">
-            <el-icon><setting /></el-icon>
-            <span @click = clickteacherperson>图书申请</span>
-          </el-menu-item>
-          <el-menu-item index="7">
             <el-icon><setting /></el-icon>
             <span @click = clickbookborrow>图书借阅</span>
           </el-menu-item>
+          <el-menu-item index="7">
+            <el-icon><setting /></el-icon>
+            <span @click = clickteacherperson>图书申请</span>
+          </el-menu-item>
+          
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
             <span @click = person>个人中心</span>
@@ -129,10 +131,7 @@
       setup() {
         const store = useStore();
         const route = useRoute()
-        const users = computed(() => store.state.users)
         const router = useRouter()
-        const cls = ref('')
-        const showModal = ref(false) 
         const {className,endedAt,startedAt,task_book,task_title,address} = JSON.parse(route.query.task)
         const classname = ref(users.value.className)
         const form = reactive({
@@ -143,23 +142,41 @@
           task_title,
           address,
         })
-        const clicktask =()=>{
-          router.push({
-            name:""
-          })
+        const filteredTasks = ref([])
+       const users = computed(() => store.state.users)
+       const tasks = computed(() => store.state.tasks)
+         //侧边栏函数
+       function filterTasks(classname) {
+
+        // 根据传入的班级参数过滤
+        return tasks.value.filter(task => {
+          if(task.className === classname) {
+            return true 
+          }
+        })
+
+        }
+      
+        const clicktask =(classname)=>{
+          filteredTasks.value = filterTasks(classname)
+          console.log(filteredTasks.value)
+           router.push({
+             path:"/teacher_classtask",
+             query: {
+                task: JSON.stringify(filteredTasks.value) 
+                }
+           })
         };
-       
-        const clickread =async(className)=>{
+        
+        const cls = ref('')
+        const clickread =async(classname)=>{
           try{
-            cls.value = className
+            cls.value = classname
             const school = users.value.school
-            console.log(className)
-            console.log(school)
-           const checklist = {school,className,}
+           const checklist = {school,classname,}
        
             const response =await axios.post(`http://121.36.23.117:3000/api/class`,checklist)
             if(response.status){
-              console.log(response.data)
               const { students} = response.data;
               const student = response.data.students
               store.commit('setstudent',student)
@@ -171,22 +188,12 @@
         // 请求错误处理
         console.log(error.message)
       }}
-      const clickteacherperson=()=>{
+        const clickteacherperson=()=>{
           router.push({
             name:"teacher_requirement"
           })
         }
 
-        const goback =()=>{
-          router.back() 
-        }
-
-        const onSubmit = () => {
-          console.log(form)
-          router.push({
-            name:'teacher_index'
-          })
-        }
         const clickbookborrow =()=>{
           router.push({
             name:'teacher_borrow'
@@ -198,14 +205,29 @@
             name:'teacher_person'
           })
         }
+        const goback =()=>{
+          router.back() 
+        }
 
+        const onSubmit = () => {
+          console.log(form)
+          router.push({
+            name:'teacher_index'
+          })
+        }
         return {
-    
           clicktask,
           clickread,
           clickteacherperson,
-          goback,
           className,
+          filteredTasks,
+          filterTasks,
+          cls,
+          person,
+          users,
+          tasks,
+          clickbookborrow,
+          goback,
           endedAt,
           startedAt,
           task_book,
@@ -214,9 +236,6 @@
           onSubmit,
           form,
           classname,
-          cls,
-          clickbookborrow,
-          person,
         };
       },
       methods: {

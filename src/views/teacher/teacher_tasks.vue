@@ -18,23 +18,25 @@
           <template #title>
             <span >作业情况</span>
           </template>
-          <el-menu-item v-for="cls in classname" @click = clicktask>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clicktask(cls)>{{ cls }}</el-menu-item>
             
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
-            <span>阅读情况</span>
+            <span >阅读情况</span>
           </template>
-          <el-menu-item v-for="cls in classname"  @click = clickread>{{ cls }}</el-menu-item>
+          <el-menu-item v-for="cls in className" @click = clickread(cls)>{{ cls }}</el-menu-item>
         </el-sub-menu>
+        
         <el-menu-item index="6">
-            <el-icon><setting /></el-icon>
-            <span @click = clickteacherperson>图书申请</span>
-          </el-menu-item>
-          <el-menu-item index="7">
             <el-icon><setting /></el-icon>
             <span @click = clickbookborrow>图书借阅</span>
           </el-menu-item>
+          <el-menu-item index="7">
+            <el-icon><setting /></el-icon>
+            <span @click = clickteacherperson>图书申请</span>
+          </el-menu-item>
+          
           <el-menu-item index="8">
             <el-icon><setting /></el-icon>
             <span @click = person>个人中心</span>
@@ -142,40 +144,11 @@
     export default defineComponent({
       setup() {
         const store = useStore();
-        const users = computed(() => store.state.users)
-        const classname = ref(users.value.className)
         const router = useRouter()
-        const showModal = ref(false)
-        const cls = ref('')
         const options = Object.values(classname.value)
           .slice(0, 2)
           .map((label, index) => ({ value: index, label }));
-        const clicktask =async(className)=>{
-          try{
-            cls.value = className
-            const school = users.value.school
-            
-            const a ={
-              className,
-              school
-            }
-            const response =await axios.get('http://121.36.23.117:3000/api/class', JSON.stringify(a))
-            if(response.status){
-              console.log(response.data)
-              const { students} = response.data;
-              const student = response.data.students
-              store.commit('setstudent',student)
-            } 
-            router.push({
-              name:"teacher_studentlist",
-            })
-          }catch (error) {  
-        // 请求错误处理
-        console.log(error.message)
-      }
-         
-        };
-  
+       
         const taskForm = reactive({
           task_title:"",
           task_book:"",
@@ -185,11 +158,40 @@
           task_description:"",
           school:"",
       });
+      const filteredTasks = ref([])
+       const users = computed(() => store.state.users)
+       const tasks = computed(() => store.state.tasks)
+       const className = ref(users.value.className)
+         //侧边栏函数
+       function filterTasks(className) {
 
-      const clickread =async(className)=>{
+        // 根据传入的班级参数过滤
+        return tasks.value.filter(task => {
+          if(task.className === className) {
+            return true 
+          }
+        })
+
+        }
+      
+        const clicktask =(className)=>{
+          filteredTasks.value = filterTasks(className)
+          console.log(filteredTasks.value)
+           router.push({
+             path:"/teacher_classtask",
+             query: {
+                task: JSON.stringify(filteredTasks.value) 
+                }
+           })
+        };
+        
+        const cls = ref('')
+        const clickread =async(className)=>{
           try{
             cls.value = className
             const school = users.value.school
+            console.log(className)
+            console.log(school)
            const checklist = {school,className,}
        
             const response =await axios.post(`http://121.36.23.117:3000/api/class`,checklist)
@@ -206,28 +208,28 @@
         // 请求错误处理
         console.log(error.message)
       }}
-      const clickteacherperson=()=>{
+        const clickteacherperson=()=>{
           router.push({
             name:"teacher_requirement"
           })
         }
-      
+
         const clickbookborrow =()=>{
           router.push({
             name:'teacher_borrow'
           }) 
         }
-        
-        const goback =()=>{
-          router.back() 
-        }
-        
-    
+
         const person =()=>{
           router.push({
             name:'teacher_person'
           })
         }
+     
+        const goback =()=>{
+          router.back() 
+        }
+
         const set =async()=>{
           //加上核验表单是否完整
           try{
@@ -253,14 +255,19 @@
           clicktask,
           clickread,
           clickteacherperson,
+          className,
+          filteredTasks,
+          filterTasks,
+          cls,
+          person,
+          users,
+          tasks,
+          clickbookborrow,
           set,
           taskForm,
           goback,
           classname,
-          cls,
           options,
-          clickbookborrow,
-          person,
         };
       },
       methods: {
