@@ -296,7 +296,7 @@ originData.push({
       }
       const adduser =async()=>{
         try{
-            const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/company`,addForm.value)
+            const response =await axios.post(`http://121.36.23.117:3000/api/admin/users/company`,addForm.value)
             if(response.status){
               console.log(response.data)
              
@@ -309,7 +309,7 @@ originData.push({
       }
       const changepass =async()=>{
         try{
-            const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/company`,changeForm.value)
+            const response =await axios.post(`http://121.36.23.117:3000/api/admin/users/company`,changeForm.value)
             if(response.status){
               console.log(response.data)
              
@@ -323,7 +323,7 @@ originData.push({
       const checkpeople_s =async()=>{
         try{
             
-            const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+            const response =await axios.get(`http://121.36.23.117:3000/api/admin/R_application`)
             if(response.status){
               console.log(response.data)
               const  maintenance = response.data
@@ -341,7 +341,7 @@ originData.push({
       const maintenancerequire =async()=>{
         try{
             
-            const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+            const response =await axios.get(`http://121.36.23.117:3000/api/admin/R_application`)
             if(response.status){
               console.log(response.data)
               const  maintenance = response.data
@@ -366,7 +366,7 @@ originData.push({
       const checkshelfrequire =async()=>{
         try{
               
-          const response =await axios.get(`http://139.9.118.223:3000/api/bookshelf/school/application_G`)
+          const response =await axios.get(`http://121.36.23.117:3000/api/bookshelf/school/application_G`)
           if(response.status){
             console.log(response.data)
             const{data}=response.data
@@ -391,7 +391,7 @@ originData.push({
               res_userID,
           })
           console.log(Userid)
-          const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/A`,Userid)
+          const response =await axios.post(`http://121.36.23.117:3000/api/B_application/check/A`,Userid)
           if(response.status){
             console.log(response.data)
             const{data}=response.data
@@ -410,7 +410,7 @@ originData.push({
       const bookshelf =async()=>{
         try{
             
-            const response =await axios.get(`http://139.9.118.223:3000/api/bookshelves`)
+            const response =await axios.get(`http://121.36.23.117:3000/api/bookshelves`)
             if(response.status){
               console.log(response.data.bookshelves)
               const{data}=response.data.bookshelves
@@ -435,7 +435,7 @@ originData.push({
               })
               console.log(Bookid)
         try{
-          const response =await axios.post(`http://139.9.118.223:3000/api/admin/bookid`,Bookid)
+          const response =await axios.post(`http://121.36.23.117:3000/api/admin/bookid`,Bookid)
           if(response.status){
             console.log(response.data.Books)
             const  Data = response.data.Books

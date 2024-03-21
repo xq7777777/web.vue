@@ -149,7 +149,7 @@
                 res_userID,
                
             })
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,Userid)
+            const response =await axios.post(`http://121.36.23.117:3000/api/B_application/check/T`,Userid)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -173,7 +173,7 @@
                 const schoolname = reactive({
                   school,
                 })
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
+            const response =await axios.post(`http://121.36.23.117:3000/api/bookshelf/school`,schoolname)
             if(response.status){
               console.log(response.data.bookshelfs)
               const{data}=response.data.bookshelfs
@@ -198,16 +198,10 @@
                   _id,
                 })
                 console.log(schoolname)
-            const response =await axios.put(`http://139.9.118.223:3000/api/admin/R_application/Y`,schoolname)
+            const response =await axios.put(`http://121.36.23.117:3000/api/admin/R_application/Y`,schoolname)
             if(response.status){
               console.log(response.data)
             } 
-          //   router.push({
-          //    path:"/adminB_schoolshelves",
-          //    query: {
-          //     school,
-          //     }
-          //  })
           }catch (error) {  
         // 请求错误处理
         console.log(error.message)
@@ -220,7 +214,7 @@
                   _id,
                 })
                 console.log(schoolname)
-            const response =await axios.put(`http://139.9.118.223:3000/api/admin/R_application/N`,schoolname)
+            const response =await axios.put(`http://121.36.23.117:3000/api/admin/R_application/N`,schoolname)
             if(response.status){
               console.log(response.data)
               
@@ -232,29 +226,6 @@
         console.log(error.message)
       }   
       }
-      //   const handleRowDblClick =async(row)=> {
-      //     try{
-      //       const response =await axios.post(`http://139.9.118.223:3000/api/B_application/:YN`)
-      //       if(response.status){
-      //         console.log(response.data.Books)
-      //         const  Data = response.data.Books
-              
-      //         store.commit('setdata', Data)
-              
-      //       } 
-      //       router.push({
-      //        path:"/adminB_bookofschool",
-      //        query: {
-      //         bookid:row.bookid,
-      //         author:row.author,
-      //           }
-      //      })
-      //     }catch (error) {  
-      //   // 请求错误处理
-      //   console.log(error.message)
-      // }
-          
-      // }//请求信息不完整！
       
         return{
             bookborrow,

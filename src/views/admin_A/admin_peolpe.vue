@@ -208,15 +208,15 @@
         const showmodal = ref(false);
         const options = [
 
-    {
-      value: 'T',
-      label: '老师',
-    },
-    {
-      value: 'S',
-      label: '学生',
-    },
-  ]
+          {
+            value: 'T',
+            label: '老师',
+          },
+          {
+            value: 'S',
+            label: '学生',
+          },
+        ]
         const addForm = reactive({
             userID:"",       //检查是否存在，不存在则创建，存在则修改
             password:"",
@@ -273,7 +273,7 @@
                 res_userID,
                
             })
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,Userid)
+            const response =await axios.post(`http://121.36.23.117:3000/api/B_application/check/T`,Userid)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -297,7 +297,7 @@
                 const schoolname = reactive({
                   school,
                 })
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
+            const response =await axios.post(`http://121.36.23.117:3000/api/bookshelf/school`,schoolname)
             if(response.status){
               console.log(response.data.bookshelfs)
               const{data}=response.data.bookshelfs
@@ -319,7 +319,7 @@
         }
         const adduser =async()=>{
           try{
-              const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/school`,addForm.value)
+              const response =await axios.post(`http://121.36.23.117:3000/api/admin/users/school`,addForm.value)
               if(response.status){
                 console.log(response.data)
                

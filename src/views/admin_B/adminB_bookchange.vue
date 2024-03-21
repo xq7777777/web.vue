@@ -108,7 +108,6 @@
         const router = useRouter()
         const route = useRoute()
         const _ID =computed(() => store.state.books)
-        console.log(_ID.value)
         
         const formLabelAlign = reactive({
             bookid: "",
@@ -129,13 +128,7 @@
         const goback =()=>{
           router.back() 
         }
-        
-        
-        //     router.push({
-        //     name:'adminB_bookofschool'
-        //   }) 
         const change =async()=>{
-    console.log(formLabelAlign)
             if(!formLabelAlign.school || !formLabelAlign.bookid || !formLabelAlign.Tquantity ){
               alert('请输入完整信息')
               return
@@ -143,7 +136,7 @@
             alert('确认图书信息无误,再次点击确认')
             try{  
            
-            const response =await axios.put('http://139.9.118.223:3000/api/admin/bookid/school', formLabelAlign)
+            const response =await axios.put('http://121.36.23.117:3000/api/admin/bookid/school', formLabelAlign)
             if(response.status){
               console.log(response.data)
             } 

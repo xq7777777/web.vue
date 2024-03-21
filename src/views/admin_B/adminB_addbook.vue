@@ -144,7 +144,7 @@
         const maintenancerequire =async()=>{
           try{
               
-              const response =await axios.get(`http://139.9.118.223:3000/api/admin/R_application`)
+              const response =await axios.get(`http://121.36.23.117:3000/api/admin/R_application`)
               if(response.status){
                 console.log(response.data)
                 const  maintenance = response.data
@@ -173,7 +173,7 @@
         const checkshelfrequire =async()=>{
           try{
                 
-            const response =await axios.get(`http://139.9.118.223:3000/api/bookshelf/school/application_G`)
+            const response =await axios.get(`http://121.36.23.117:3000/api/bookshelf/school/application_G`)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -192,13 +192,12 @@
         const checkrequire =async()=>{
           try{
                 const userid =computed(() => store.state.userID)
-                console.log(userid.value)
                 const res_userID = userid.value
                 const Userid = reactive({
                 res_userID,
             })
             console.log(Userid)
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/A`,Userid)
+            const response =await axios.post(`http://121.36.23.117:3000/api/B_application/check/A`,Userid)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -217,7 +216,7 @@
         const bookshelf =async()=>{
           try{
               
-              const response =await axios.get(`http://139.9.118.223:3000/api/bookshelves`)
+              const response =await axios.get(`http://121.36.23.117:3000/api/bookshelves`)
               if(response.status){
                 console.log(response.data.bookshelves)
                 const{data}=response.data.bookshelves
@@ -236,8 +235,7 @@
         }
         const submitbook =async()=>{
           try{
-              console.log(formLabelAlign)
-              const response =await axios.post(`http://139.9.118.223:3000/api/bookfuben`,formLabelAlign)
+              const response =await axios.post(`http://121.36.23.117:3000/api/bookfuben`,formLabelAlign)
               if(response.status){
                 console.log(response.data)
                 alert('添加成功')

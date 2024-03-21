@@ -137,10 +137,10 @@
         const work_unit = computed(() => store.state.Work_unit)
         const showModal = ref(false);
         const passwordForm = ref({
-      oldPass: '',
-      newPass: '',
-      confirmPass: '' 
-    })
+          oldPass: '',
+          newPass: '',
+          confirmPass: '' 
+        })
         const change =()=>{
           if(passwordForm.value.oldPass===passwordForm.value.newPass)
           {
@@ -152,10 +152,7 @@
             alert("请再次确认密码")
             
           }
-          else 
-          {
-            console.log(passwordForm.value)
-          }
+
         
         }
         const bookborrow =()=>{
@@ -201,7 +198,7 @@
                 res_userID,
                
             })
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,Userid)
+            const response =await axios.post(`http://121.36.23.117:3000/api/B_application/check/T`,Userid)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -221,13 +218,11 @@
             try{
                 const School =computed(() => store.state.Work_unit)
                 const school = toRaw(School.value)
-                console.log(school)
                 const schoolname = reactive({
                   school,
                 })
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
+            const response =await axios.post(`http://121.36.23.117:3000/api/bookshelf/school`,schoolname)
             if(response.status){
-              console.log(response.data.bookshelfs)
               const{data}=response.data.bookshelfs
               const  Data = response.data.bookshelfs
               store.commit('setdata', Data)

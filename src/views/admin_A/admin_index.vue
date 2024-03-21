@@ -146,9 +146,8 @@
                 userID,
                
             })
-            const response =await axios.post(`http://139.9.118.223:3000/api/admin/users/school/look`,Userid)
+            const response =await axios.post(`http://121.36.23.117:3000/api/admin/users/school/look`,Userid)
             if(response.status){
-              console.log(response.data)
               const{admins,teachers,students}=response.data
               const Newadmins = admins.map(item => {
                 return {
@@ -200,9 +199,8 @@
                 userID,
                
             })
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,Userid)
+            const response =await axios.post(`http://121.36.23.117:3000/api/B_application/check/T`,Userid)
             if(response.status){
-              console.log(response.data)
               const{data}=response.data
               const  Data = response.data.data
               store.commit('setdata', Data)
@@ -220,13 +218,11 @@
             try{
                 const School =computed(() => store.state.Work_unit)
                 const school = toRaw(School.value)
-                console.log(school)
                 const schoolname = reactive({
                   school,
                 })
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
+            const response =await axios.post(`http://121.36.23.117:3000/api/bookshelf/school`,schoolname)
             if(response.status){
-              console.log(response.data.bookshelfs)
               const{data}=response.data.bookshelfs
               const  Data = response.data.bookshelfs
               store.commit('setdata', Data)

@@ -203,7 +203,7 @@
                 res_userID,
                
             })
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,Userid)
+            const response =await axios.post(`http://121.36.23.117:3000/api/B_application/check/T`,Userid)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -222,7 +222,7 @@
         const addshelf =async()=>{
           try{
               
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelves`,addForm)
+            const response =await axios.post(`http://121.36.23.117:3000/api/bookshelves`,addForm)
             if(response.status){
               console.log(response.data)
               alert("添加成功")
@@ -239,8 +239,7 @@
         const bookshelf =async()=>{
            
          
-        }
-        
+        }    
         const Clickbook =async(row)=> {
           try{
             const school = row.school;
@@ -248,7 +247,7 @@
                 const schoolname = reactive({
                   school,
                 })
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
+            const response =await axios.post(`http://121.36.23.117:3000/api/bookshelf/school`,schoolname)
             if(response.status){
               console.log(response.data.bookshelfs)
               // const{bookshelfs}=response.data.bookshelfs
@@ -274,7 +273,7 @@
                 const schoolname = reactive({
                   school,
                 })
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school/space`,schoolname)
+            const response =await axios.post(`http://121.36.23.117:3000/api/bookshelf/school/space`,schoolname)
             if(response.status){
               console.log(response.data)
               // const{bookshelfs}=response.data.bookshelfs

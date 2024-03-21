@@ -55,7 +55,7 @@
       // console.log(loginForm.identity)
       try {
         // 发送登录请求
-        const response = await axios.post('http://139.9.118.223:3000/api/login', loginForm)
+        const response = await axios.post('http://121.36.23.117:3000/api/login', loginForm)
         
         // 处理成功响应 
         if(response.status === 200) {
@@ -134,7 +134,7 @@
               store.commit('setWork_unit', work_unit);
              
             try{
-            const response =await axios.get(`http://139.9.118.223:3000/api/book_type_stats`)
+            const response =await axios.get(`http://121.36.23.117:3000/api/book_type_stats`)
             if(response.status){
               console.log(response.data)
               const booktype = response.data
@@ -146,7 +146,7 @@
       }
           try{
                 
-                const response =await axios.get(`http://139.9.118.223:3000/api/school_book_type_stats`)
+                const response =await axios.get(`http://121.36.23.117:3000/api/school_book_type_stats`)
                 if(response.status){
                   console.log(response.data)
                   const prefertype = response.data
@@ -158,7 +158,7 @@
           }
           try{
             
-            const response =await axios.get(`http://139.9.118.223:3000/api/school_average_read_time`)
+            const response =await axios.get(`http://121.36.23.117:3000/api/school_average_read_time`)
             if(response.status){
               console.log(response.data)
               const readtime = response.data

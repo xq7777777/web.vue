@@ -85,7 +85,7 @@
         const bookshelf =async()=>{
           try{
               
-              const response =await axios.get(`http://139.9.118.223:3000/api/book_type_stats`)
+              const response =await axios.get(`http://121.36.23.117:3000/api/book_type_stats`)
               if(response.status){
                 console.log(response.data)
                 const chartData = response.data

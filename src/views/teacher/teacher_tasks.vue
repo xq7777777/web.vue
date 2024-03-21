@@ -159,7 +159,7 @@
               className,
               school
             }
-            const response =await axios.get('http://139.9.118.223:3000/api/class', JSON.stringify(a))
+            const response =await axios.get('http://121.36.23.117:3000/api/class', JSON.stringify(a))
             if(response.status){
               console.log(response.data)
               const { students} = response.data;
@@ -192,7 +192,7 @@
             const school = users.value.school
            const checklist = {school,className,}
        
-            const response =await axios.post(`http://139.9.118.223:3000/api/class`,checklist)
+            const response =await axios.post(`http://121.36.23.117:3000/api/class`,checklist)
             if(response.status){
               console.log(response.data)
               const { students} = response.data;
@@ -232,7 +232,7 @@
           //加上核验表单是否完整
           try{
            
-            const response =await axios.post(`http://139.9.118.223:3000/api/class/tasks`,taskForm)
+            const response =await axios.post(`http://121.36.23.117:3000/api/class/tasks`,taskForm)
             if(response.status){
               console.log(response.data)
               router.push({

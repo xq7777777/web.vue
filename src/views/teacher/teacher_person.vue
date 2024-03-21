@@ -149,7 +149,7 @@
             console.log(school)
            const checklist = {school,className,}
        
-            const response =await axios.post(`http://139.9.118.223:3000/api/class`,checklist)
+            const response =await axios.post(`http://121.36.23.117:3000/api/class`,checklist)
             if(response.status){
               console.log(response.data)
               const { students} = response.data;

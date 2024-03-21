@@ -150,7 +150,7 @@
                 userID,
                
             })
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/check/T`,Userid)
+            const response =await axios.post(`http://121.36.23.117:3000/api/B_application/check/T`,Userid)
             if(response.status){
               console.log(response.data)
               const{data}=response.data
@@ -174,7 +174,7 @@
                 const schoolname = reactive({
                   school,
                 })
-            const response =await axios.post(`http://139.9.118.223:3000/api/bookshelf/school`,schoolname)
+            const response =await axios.post(`http://121.36.23.117:3000/api/bookshelf/school`,schoolname)
             if(response.status){
               console.log(response.data.bookshelfs)
               const{data}=response.data.bookshelfs
@@ -193,7 +193,7 @@
         }
         const handleRowDblClick =async(row)=> {
           try{
-            const response =await axios.post(`http://139.9.118.223:3000/api/B_application/:YN`)
+            const response =await axios.post(`http://121.36.23.117:3000/api/B_application/:YN`)
             if(response.status){
               console.log(response.data.Books)
               const  Data = response.data.Books
@@ -214,14 +214,14 @@
       }
           
       }//请求信息不完整！
-      const agree =async(row)=> {
+        const agree =async(row)=> {
           try{
             const _id = row._id;
                 const schoolname = reactive({
                   _id,
                 })
                 console.log(schoolname)
-            const response =await axios.put(`http://139.9.118.223:3000/api/B_application/:Y`,schoolname)
+            const response =await axios.put(`http://121.36.23.117:3000/api/B_application/:Y`,schoolname)
             if(response.status){
               console.log(response.data)
             } 
@@ -236,14 +236,14 @@
         console.log(error.message)
       }   
       }
-      const disagree =async(row)=> {
+        const disagree =async(row)=> {
           try{
             const _id = row._id;
                 const schoolname = reactive({
                   _id,
                 })
                 console.log(schoolname)
-            const response =await axios.put(`http://139.9.118.223:3000/api/B_application/:N`,schoolname)
+            const response =await axios.put(`http://121.36.23.117:3000/api/B_application/:N`,schoolname)
             if(response.status){
               console.log(response.data)
               
