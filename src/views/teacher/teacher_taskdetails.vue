@@ -109,21 +109,21 @@
         const filteredTasks = ref([])
        const users = computed(() => store.state.users)
        const tasks = computed(() => store.state.tasks)
-       const className = ref(users.value.className)
+       const classname = ref(users.value.className)
          //侧边栏函数
-       function filterTasks(className) {
+       function filterTasks(classname) {
 
         // 根据传入的班级参数过滤
         return tasks.value.filter(task => {
-          if(task.className === className) {
+          if(task.classname === classname) {
             return true 
           }
         })
 
         }
       
-        const clicktask =(className)=>{
-          filteredTasks.value = filterTasks(className)
+        const clicktask =(classname)=>{
+          filteredTasks.value = filterTasks(classname)
           console.log(filteredTasks.value)
            router.push({
              path:"/teacher_classtask",
@@ -134,13 +134,13 @@
         };
         
         const cls = ref('')
-        const clickread =async(className)=>{
+        const clickread =async(classname)=>{
           try{
-            cls.value = className
+            cls.value = classname
             const school = users.value.school
-            console.log(className)
+            console.log(classname)
             console.log(school)
-           const checklist = {school,className,}
+           const checklist = {school,classname,}
        
             const response =await axios.post(`http://121.36.23.117:3000/api/class`,checklist)
             if(response.status){

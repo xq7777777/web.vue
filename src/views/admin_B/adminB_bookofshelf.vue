@@ -110,11 +110,18 @@
     quantity: item.quantity,
   });
   }
-        const addbook =()=>{
+  const addbook =()=>{
           router.push({
-            name:'adminA_borrow'
+            name:'adminB_addbook'
           }) 
         }
+
+        const bookchange =()=>{
+          router.push({
+            name:'adminB_bookchange'
+          }) 
+        }
+
         const bookreturn =()=>{
           router.push({
             name:'adminA_return'
@@ -125,19 +132,99 @@
             name:'adminA_requirement'
           }) 
         }
-        const maintenance =()=>{
-          router.push({
-            name:'adminA_maintenance'
-          }) 
+        //查看学校人员
+        const checkpeople_s =async()=>{
+          try{
+            const userid =computed(() => store.state.userID)
+                console.log(userid.value)
+                const userID = userid.value
+                const Userid = reactive({
+                userID,
+            })
+            console.log(Userid)
+              const response =await axios.post(`http://121.36.23.117:3000/api/admin/users/company/look`,Userid)
+              if(response.status){
+                console.log(response.data.school_admins)
+                const  school_admins = response.data.school_admins
+                store.commit('setschooladmins', school_admins)
+               
+
+                
+              } 
+              router.push({
+              name:'adminB_people_s'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error)
+        }
+        }
+        const checkpeople_a =async()=>{
+          try{
+            const userid =computed(() => store.state.userID)
+                console.log(userid.value)
+                const userID = userid.value
+                const Userid = reactive({
+                userID,
+            })
+            console.log(Userid)
+              const response =await axios.post(`http://121.36.23.117:3000/api/admin/users/company/look`,Userid)
+              if(response.status){
+                console.log(response.data.company_admins)
+                const  company_admins = response.data.company_admins
+                store.commit('setcompanyadmins', company_admins)
+              } 
+              router.push({
+              name:'adminB_people_a'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error)
+        }
+        }
+        const checkpeople_e =async()=>{
+          try{
+              
+              const response =await axios.get(`http://121.36.23.117:3000/api/admin/R_application`)
+              if(response.status){
+                console.log(response.data)
+                const  maintenance = response.data
+                store.commit('setmaintenance', maintenance)
+                
+              } 
+              router.push({
+              name:'adminB_people_s'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
+        }
+        const maintenancerequire =async()=>{
+          try{
+              
+              const response =await axios.get(`http://121.36.23.117:3000/api/admin/R_application`)
+              if(response.status){
+                console.log(response.data)
+                const  maintenance = response.data
+                store.commit('setmaintenance', maintenance)
+                
+              } 
+              router.push({
+              name:'adminB_maintenance'
+            })
+            }catch (error) {  
+          // 请求错误处理
+          console.log(error.message)
+        }
+         
         }
         const adminperson =()=>{
           router.push({
-            name:'adminA_person'
+            name:'adminB_person'
           }) 
         }
-        const goback =()=>{
-            router.back() 
-          }
+        //查看书架申请
         const checkshelfrequire =async()=>{
           try{
                 
@@ -148,22 +235,22 @@
               const  Data = response.data.data
               store.commit('setdata', Data)
               
-            } 
+            }
             router.push({
             name:'adminB_shelfrequire'
           })
           }catch (error) {  
         // 请求错误处理
-        console.log(error.message)
       }
         }
+        
         const checkrequire =async()=>{
           try{
                 const userid =computed(() => store.state.userID)
                 console.log(userid.value)
-                const res_userID = userid.value
+                const userID = userid.value
                 const Userid = reactive({
-                res_userID,
+                userID,
             })
             console.log(Userid)
             const response =await axios.post(`http://121.36.23.117:3000/api/B_application/check/A`,Userid)
@@ -174,8 +261,9 @@
               store.commit('setdata', Data)
               
             } 
+          
             router.push({
-            name:'adminA_checkrequire'
+            name:'adminB_checkrequire'
           })
           }catch (error) {  
         // 请求错误处理
@@ -189,10 +277,11 @@
               if(response.status){
                 console.log(response.data.bookshelves)
                 const{data}=response.data.bookshelves
-                const  Data = response.data.bookshelves
-                store.commit('setdata', Data)
+                const  bookshelves = response.data.bookshelves
+                store.commit('setbookshelves', bookshelves)
                 
               } 
+              
               router.push({
               name:'adminB_checkshelfrequire'
             })
@@ -202,6 +291,9 @@
         }
          
         }
+        const goback =()=>{
+            router.back() 
+          }
         const handleRowDblClick =async(row)=> {
           
           const pressmark = row.pressmark;
